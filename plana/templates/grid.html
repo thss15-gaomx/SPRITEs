@@ -2,6 +2,9 @@
 {% block content %}
   <div class="ui inverted vertical masthead segment">
     <div class="text-block">text test</div>
+    <div class="pic-block">
+      <img src="/static/pic-test.png">
+    </div>
     <table border="1" class="grid-table">
       {#      <td width="25% " rowspan="2"> 　</td>#}
       {#      <td width="25% " colspan="2"> 　</td>#}
@@ -74,14 +77,17 @@
     </div>
   </div>
 
+  <script type="text/javascript" src="/static/jquery-buzz.js"></script>
+  <script type="text/javascript" src="/static/sound.js"></script>
   <script type="text/javascript">
-    var blockWidth = $(".grid-table").width() / 10;
-    var blockHeight = $(".grid-table").height() / 5;
     var curRow = 0, curColumn = 0;
     var margin;
     $(document).keydown(function (event) {
-{#      var left = $(".text-block").css("margin-left");#}
-{#      left = parseFloat(left.slice(0, -2));#}
+      {#      var left = $(".text-block").css("margin-left");#}
+      {#      left = parseFloat(left.slice(0, -2));#}
+      var blockWidth = $(".grid-table").width() / 10;
+      var blockHeight = $(".grid-table").height() / 5;
+      playMoveSound();
       if (event.keyCode == 37) {   // left
         if (curColumn > 0) {
           curColumn--;
