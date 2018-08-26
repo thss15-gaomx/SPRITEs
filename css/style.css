@@ -1,0 +1,101 @@
+.ui.card > .content, .ui.cards > .card > .content {
+    padding: 5px;
+}
+
+.ui.card > .content > .header {
+    font-size: 15px !important;
+}
+
+.ui.card, .ui.cards > .card {
+    box-shadow: none;
+}
+
+.hidden.menu {
+    display: none;
+}
+
+.masthead.segment {
+    height: 100vh;
+    padding: 1em 0em;
+}
+
+.masthead .ui.menu .ui.button {
+    margin-left: 0.5em;
+}
+
+.masthead h1.ui.header {
+    margin-top: 3em;
+    margin-bottom: 0em;
+    font-size: 4em;
+    font-weight: normal;
+}
+
+.masthead h2 {
+    font-size: 1.7em;
+    font-weight: normal;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.ui.grid {
+    margin-bottom: 20px;
+}
+
+.ui.celled.grid > .row {
+    height: 120px !important;
+}
+
+.grid-table {
+    width: 100vw;
+    height: calc(100vh - 220px);
+    margin-top: 20px;
+}
+
+.text-block {
+    position: absolute;
+    z-index: 99;
+    width: 10vw;
+    height: calc(20vh - 44px);
+    background-color: white;
+    margin-top: 20px;
+    font-size: 16px;
+    text-align: center;
+}
+
+/*canvas setting*/
+
+body {
+    padding: 0;
+    margin: 0;
+    font-family: arial;
+    font-size: 12px;
+}
+
+.page {
+    width: 100vw;
+    height: calc(100vh - 220px);
+    margin: 0px auto;
+    margin-top: 6px;
+}
+
+#main {
+    width: 100vw;
+    height: calc(100vh - 220px);
+    position: relative;
+}
+
+#canvas_up, #canvas_down {
+    width: 100vw;
+    height: calc(100vh - 220px);
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#canvas_up {
+    z-index: 1;
+}
+
+#canvas_down {
+    z-index: 0;
+}

@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="ui inverted vertical masthead center aligned segment">
+{#    <div class="ui text container">#}
+      <h2>Please select a widget.</h2>
+      <div class="ui four column doubling stackable grid container">
+        <div class="column">
+          <div class="ui card">
+            <a class="image" href="#">
+              <img src="/static/picture.png">
+            </a>
+            <div class="content">
+              <a class="header" href="#">Pic</a>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="ui card">
+            <a class="image" href="{% url 'text' %}">
+              <img src="/static/text.png">
+            </a>
+            <div class="content">
+              <a class="header" href="{% url 'text' %}">Text</a>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="ui card">
+            <a class="image" href="#">
+              <img src="/static/input.png">
+            </a>
+            <div class="content">
+              <a class="header" href="#">Input</a>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="ui card">
+            <a class="image" href="#">
+              <img src="/static/button.png">
+            </a>
+            <div class="content">
+              <a class="header" href="#">Button</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui four column doubling stackable grid container">
+        <div class="column">
+          <div class="ui card">
+            <a class="image" href="#">
+              <img src="/static/music.png">
+            </a>
+            <div class="content">
+              <a class="header" href="#">Music</a>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="ui card">
+            <a class="image" href="#">
+              <img src="/static/menu.png">
+            </a>
+            <div class="content">
+              <a class="header" href="#">Menu</a>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="ui card">
+            <a class="image" href="#">
+              <img src="/static/filter.png">
+            </a>
+            <div class="content">
+              <a class="header" href="#">Filter</a>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="ui card">
+            <a class="image" href="#">
+              <img src="/static/chart.png">
+            </a>
+            <div class="content">
+              <a class="header" href="#">Chart</a>
+            </div>
+          </div>
+        </div>
+      </div>
+{#    </div>#}
+  </div>
+{% endblock %}

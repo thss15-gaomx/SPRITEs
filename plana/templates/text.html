@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="ui inverted vertical masthead center aligned segment">
+    <div class="ui text container">
+      <h2>Specify the size and content of text widget.</h2>
+      <div class="ui text container">
+        <div class="ui divided grid">
+{#          <div class="row">#}
+            <div class="eight wide column">
+              <div class="ui card">
+                <a class="image">
+                  <img src="/static/text.png">
+                </a>
+                <div class="content">
+                  <a class="header">Text</a>
+                </div>
+              </div>
+            </div>
+            <div class="eight wide column">
+              <form method="post" action="{% url 'text' %}" class="ui inverted form">
+                {% csrf_token %}
+                <div class="field">
+                  <label>Size</label>
+                  <div class="two fields">
+                    <div class="field">
+                      <div class="ui big left icon input">
+                        <input type="text" name="width" placeholder="Width" required/>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <div class="ui big input">
+                        <input type="text" name="height" placeholder="Height" required/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Content</label>
+                  <textarea rows="6" name="content" placeholder="Please input the text content..."
+                            required/></textarea>
+                </div>
+                <div class="ui center aligned container">
+                  <br>
+                  <button type="submit" class="ui huge teal button" href="{% url 'grid' %}"><i class="send icon"></i>Confirm
+                  </button>
+                  <a class="ui huge inverted orange basic button" href="{% url 'select' %}">Back</a>
+                  <br><br>
+                </div>
+              </form>
+            </div>
+{#          </div>#}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
