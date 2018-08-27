@@ -1,3 +1,3 @@
 # SPRITEs
 
-* a web design tool website
+* a web design tool website using SPRITEs

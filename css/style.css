@@ -45,6 +45,10 @@
     height: 120px !important;
 }
 
+select.ui.dropdown {
+    height: 47px;
+}
+
 .grid-table {
     width: 100vw;
     height: calc(100vh - 220px);
@@ -54,11 +58,11 @@
 .text-block {
     position: absolute;
     z-index: 99;
-    width: 10vw;
-    height: calc(20vh - 44px);
-    background-color: #FBBD08;
+    /*width: 10vw;*/
+    /*height: calc(20vh - 44px);*/
+    /*background-color: #FBBD08;*/
     margin-top: 20px;
-    font-size: 16px;
+    /*font-size: 16px;*/
     /*text-align: center;*/
     padding: 10px;
     overflow: auto;

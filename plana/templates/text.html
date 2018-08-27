@@ -5,50 +5,79 @@
       <h2>Specify the size and content of text widget.</h2>
       <div class="ui text container">
         <div class="ui divided grid">
-{#          <div class="row">#}
-            <div class="eight wide column">
-              <div class="ui card">
-                <a class="image">
-                  <img src="/static/text.png">
-                </a>
-                <div class="content">
-                  <a class="header">Text</a>
-                </div>
+          <div class="eight wide column">
+            <div class="ui card">
+              <a class="image">
+                <img src="/static/text.png">
+              </a>
+              <div class="content">
+                <a class="header">Text</a>
               </div>
             </div>
-            <div class="eight wide column">
-              <form method="post" action="{% url 'text' %}" class="ui inverted form">
-                {% csrf_token %}
-                <div class="field">
-                  <label>Size</label>
-                  <div class="two fields">
-                    <div class="field">
-                      <div class="ui big left icon input">
-                        <input type="text" name="width" placeholder="Width" required/>
-                      </div>
+          </div>
+          <div class="eight wide column">
+            <form method="post" action="{% url 'text' %}" class="ui inverted form">
+              {% csrf_token %}
+              <div class="field">
+                <label>Size</label>
+                <div class="two fields">
+                  <div class="field">
+                    <div class="ui big left icon input">
+                      <input type="text" name="width" placeholder="Width" required/>
                     </div>
-                    <div class="field">
-                      <div class="ui big input">
-                        <input type="text" name="height" placeholder="Height" required/>
-                      </div>
+                  </div>
+                  <div class="field">
+                    <div class="ui big input">
+                      <input type="text" name="height" placeholder="Height" required/>
                     </div>
                   </div>
                 </div>
-                <div class="field">
-                  <label>Content</label>
-                  <textarea rows="6" name="content" placeholder="Please input the text content..."
-                            required/></textarea>
+              </div>
+              <div class="field">
+                <label>Font Feature</label>
+                <div class="two fields">
+                  <div class="field">
+                    <select class="ui search dropdown" name="font-size">
+                      <option value="16px">normal</option>
+                      <option value="14px">small</option>
+                      <option value="18px">large</option>
+                      <option value="20px">huge</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <select class="ui search dropdown" name="font-color">
+                      <option value="white">white</option>
+                      <option value="#B03060">red</option>
+                      <option value="#FE9A76">orange</option>
+                      <option value="#FFD700">yellow</option>
+                      <option value="#32CD32">olive</option>
+                      <option value="#FE9A76">orange</option>
+                      <option value="#016936">green</option>
+                      <option value="#008080">teal</option>
+                      <option value="#0E6EB8">blue</option>
+                      <option value="#EE82EE">violet</option>
+                      <option value="#B413EC">purple</option>
+                      <option value="#FF1493">pink</option>
+                      <option value="#A52A2A">brown</option>
+                      <option value="#A0A0A0">grey</option>
+                      <option value="#000000">black</option>
+                    </select>
+                  </div>
                 </div>
-                <div class="ui center aligned container">
-                  <br>
-                  <button type="submit" class="ui huge teal button" href="{% url 'grid' %}"><i class="send icon"></i>Confirm
-                  </button>
-                  <a class="ui huge inverted orange basic button" href="{% url 'select' %}">Back</a>
-                  <br><br>
-                </div>
-              </form>
-            </div>
-{#          </div>#}
+              </div>
+              <div class="field">
+                <label>Content</label>
+                <textarea rows="6" name="content" placeholder="Please input the text content..."
+                          required/></textarea>
+              </div>
+              <div class="ui center aligned container">
+                <br><br>
+                <button type="submit" class="ui huge teal button" href="{% url 'grid' %}"><i class="send icon"></i>Confirm
+                </button>
+                <a class="ui huge inverted orange basic button" href="{% url 'select' %}">Back</a>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

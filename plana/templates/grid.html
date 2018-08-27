@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
   <div class="ui inverted vertical masthead segment">
-    <div class="text-block">text test</div>
+    <div class="text-block">{{ content }}</div>
     <div class="pic-block">
       <img src="/static/pic-test.png">
     </div>
@@ -80,36 +80,43 @@
   <script type="text/javascript" src="/static/jquery-buzz.js"></script>
   <script type="text/javascript" src="/static/sound.js"></script>
   <script type="text/javascript">
+    var blockWidth = parseInt({{ width }});
+    var blockHeight = parseInt({{ height }});
+    $(".text-block").css("width", (blockWidth * 10).toString() + "vw");
+    $(".text-block").css("height", "calc(" + (blockHeight * 20).toString() + "vh - " + (blockHeight * 44).toString() + "px)");
+    $(".text-block").css("font-size", "{{ font_size }}");
+    $(".text-block").css("color", "{{ font_color }}");
+    $(".text-block").css("background-color", "{{ block_color }}");
     var curRow = 0, curColumn = 0;
     var margin;
     $(document).keydown(function (event) {
       {#      var left = $(".text-block").css("margin-left");#}
       {#      left = parseFloat(left.slice(0, -2));#}
-      var blockWidth = $(".grid-table").width() / 10;
-      var blockHeight = $(".grid-table").height() / 5;
+      var unitWidth = $(".grid-table").width() / 10;
+      var unitHeight = $(".grid-table").height() / 5;
       playMoveSound();
       if (event.keyCode == 37) {   // left
         if (curColumn > 0) {
           curColumn--;
-          margin = (curColumn * blockWidth).toString() + 'px';
+          margin = (curColumn * unitWidth).toString() + 'px';
           $(".text-block").css("margin-left", margin);
         }
       } else if (event.keyCode == 39) { // right
-        if (curColumn < 9) {
+        if (curColumn + blockWidth < 10) {
           curColumn++;
-          margin = (curColumn * blockWidth).toString() + 'px';
+          margin = (curColumn * unitWidth).toString() + 'px';
           $(".text-block").css("margin-left", margin);
         }
       } else if (event.keyCode == 38) {   // up
         if (curRow > 0) {
           curRow--;
-          margin = (curRow * blockHeight + 20).toString() + 'px';
+          margin = (curRow * unitHeight + 20).toString() + 'px';
           $(".text-block").css("margin-top", margin);
         }
       } else if (event.keyCode == 40) { // down
-        if (curRow < 4) {
+        if (curRow + blockHeight < 5) {
           curRow++;
-          margin = (curRow * blockHeight + 20).toString() + 'px';
+          margin = (curRow * unitHeight + 20).toString() + 'px';
           $(".text-block").css("margin-top", margin);
         }
       }
