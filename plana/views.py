@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Block, Text, Pic
+from .forms import UploadForm
 
 
 color_map = ["#B03060", "#FE9A76", "#FFD700", "#32CD32", "#016936", "#008080", "#0E6EB8", "#EE82EE", "#B413EC",
@@ -20,10 +21,6 @@ def create_block(width, height):
 
 def select(request):
     return render(request, "select.html")
-
-
-def settings(request):
-    return render(request, "settings.html")
 
 
 def text(request):
@@ -55,6 +52,38 @@ def text(request):
             return render(request, "text.html")
     else:
         return render(request, "text.html")
+
+
+def pic(request):
+    if request.method == 'POST':
+        form = UploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            upload_pic = request.FILES['upload_pic']
+            width = form.cleaned_data['width']
+            height = form.cleaned_data['height']
+            if form.cleaned_data['name']:
+                name = form.cleaned_data['name']
+            else:
+                name = upload_pic.name
+            new_pic = Pic()
+            new_pic.name = name
+            new_pic.block = create_block(width, height)
+            new_pic.content = upload_pic
+            new_pic.save()
+
+            info = {
+                'width': width,
+                'height': height,
+                'pic': new_pic,
+                'name': name,
+                'type': "pic"
+            }
+            try:
+                return render(request, "grid.html", info)
+            except:
+                return render(request, "pic.html")
+    else:
+        return render(request, "pic.html")
 
 
 def grid(request):

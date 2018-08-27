@@ -16,13 +16,6 @@
 <body>
 <div class="ui inverted vertical masthead segment">
     <section id="content">
-      <div class="ui container">
-          <div class="ui large secondary inverted pointing menu">
-              <a href="{% url 'index' %}" class="active item">Home</a>
-              <a href="{% url 'select' %}" class="item">PlanA</a>
-              <a href="{% url 'select' %}" class="item">PlanB</a>
-          </div>
-      </div>
       {% block content %}{% endblock %}
     </section>
 </div>

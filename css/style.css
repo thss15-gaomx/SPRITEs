@@ -82,6 +82,12 @@ select.ui.dropdown {
     height: 100%;
 }
 
+.form-control {
+    margin-top: 10px;
+    width: 100%;
+    font-size: 16px;
+}
+
 /*canvas setting*/
 
 body {

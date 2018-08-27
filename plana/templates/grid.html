@@ -1,10 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
-  <div class="ui inverted vertical masthead segment">
-    <div class="text-block">{{ content }}</div>
-    <div class="pic-block">
-      <img src="/static/pic-test.png">
+  <div class="ui container">
+    <div class="ui large secondary inverted pointing menu">
+      <a href="{% url 'index' %}" class="item">Home</a>
+      <a href="{% url 'select' %}" class="active item">PlanA</a>
+      <a href="{% url 'select' %}" class="item">PlanB</a>
     </div>
+  </div>
+  <div class="ui inverted vertical masthead segment">
+    {% if type == "pic" %}
+      <div class="text-block">{{ content }}</div>
+    {% endif %}
+    {% if type == "pic" %}
+      <div class="pic-block">
+        <img src=".{{ pic.content.url }}"><br/>
+      </div>
+    {% endif %}
     <table border="1" class="grid-table">
       {#      <td width="25% " rowspan="2"> 　</td>#}
       {#      <td width="25% " colspan="2"> 　</td>#}
@@ -82,11 +93,14 @@
   <script type="text/javascript">
     var blockWidth = parseInt({{ width }});
     var blockHeight = parseInt({{ height }});
-    $(".text-block").css("width", (blockWidth * 10).toString() + "vw");
-    $(".text-block").css("height", "calc(" + (blockHeight * 20).toString() + "vh - " + (blockHeight * 44).toString() + "px)");
-    $(".text-block").css("font-size", "{{ font_size }}");
-    $(".text-block").css("color", "{{ font_color }}");
-    $(".text-block").css("background-color", "{{ block_color }}");
+    var type = "{{ type }}";
+    if (type === "text") {
+      $(".text-block").css("width", (blockWidth * 10).toString() + "vw");
+      $(".text-block").css("height", "calc(" + (blockHeight * 20).toString() + "vh - " + (blockHeight * 44).toString() + "px)");
+      $(".text-block").css("font-size", "{{ font_size }}");
+      $(".text-block").css("color", "{{ font_color }}");
+      $(".text-block").css("background-color", "{{ block_color }}");
+    }
     var curRow = 0, curColumn = 0;
     var margin;
     $(document).keydown(function (event) {
