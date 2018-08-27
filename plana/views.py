@@ -1,18 +1,20 @@
 from django.shortcuts import render
+from django.db.models import Q
 from .models import Block, Text, Pic
 from .forms import UploadForm
-
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 color_map = ["#B03060", "#FE9A76", "#FFD700", "#32CD32", "#016936", "#008080", "#0E6EB8", "#EE82EE", "#B413EC",
              "#FF1493", "#A52A2A", "#A0A0A0", "#000000"]
 
 
-def create_block(width, height):
+def create_block(width, height, type):
     new_block = Block()
     new_block.pos_x = 0
     new_block.pos_y = 0
     new_block.width = width
     new_block.height = height
+    new_block.type = type
     new_block.save()
     new_block.color = color_map[new_block.id % 13]
     new_block.save()
@@ -31,19 +33,15 @@ def text(request):
         font_size = request.POST.get('font-size')
         font_color = request.POST.get('font-color')
         new_text = Text()
-        new_text.block = create_block(width, height)
-        block_color = new_text.block.color
+        new_text.block = create_block(width, height, "text")
         new_text.content = content
         new_text.font_size = font_size
         new_text.font_color = font_color
         new_text.save()
         info = {
-            'width': width,
-            'height': height,
-            'content': content,
-            'font_size': font_size,
-            'font_color': font_color,
-            'block_color': block_color,
+            'text': Text.objects.filter(~Q(id=new_text.id)),
+            'pic': Pic.objects.all(),
+            'object': new_text,
             'type': "text"
         }
         try:
@@ -67,15 +65,13 @@ def pic(request):
                 name = upload_pic.name
             new_pic = Pic()
             new_pic.name = name
-            new_pic.block = create_block(width, height)
+            new_pic.block = create_block(width, height, "pic")
             new_pic.content = upload_pic
             new_pic.save()
-
             info = {
-                'width': width,
-                'height': height,
-                'pic': new_pic,
-                'name': name,
+                'pic': Pic.objects.filter(~Q(id=new_pic.id)),
+                'text': Text.objects.all(),
+                'object': new_pic,
                 'type': "pic"
             }
             try:
@@ -86,5 +82,16 @@ def pic(request):
         return render(request, "pic.html")
 
 
+@csrf_exempt
 def grid(request):
-    return render(request, "grid.html")
+    if request.method == 'POST':
+        column = request.POST.get('x')
+        row = request.POST.get('y')
+        id = request.POST.get('id')
+        object = Block.objects.get(id=id)
+        object.pos_x = column
+        object.pos_y = row
+        object.save()
+        return render(request, "grid.html")
+    else:
+        return render(request, "grid.html")

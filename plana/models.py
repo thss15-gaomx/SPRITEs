@@ -7,10 +7,7 @@ class Block(models.Model):
     width = models.IntegerField(default=1)
     height = models.IntegerField(default=1)
     color = models.CharField(max_length=64, default="#1b1c1d")
-
-    STATUS_DELETED = -1
-    STATUS_CREATED = 0
-    STATUS_PUBLISHED = 1
+    type = models.CharField(max_length=64, default="")
 
 
 class Text(models.Model):

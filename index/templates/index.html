@@ -1,12 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="ui inverted vertical masthead center aligned segment">
-        <div class="ui text container">
-            <h1 class="ui inverted header">Welcome back, designer!</h1>
-            <h2>Click to select one mode.</h2>
-            <br>
-            <a href="{% url 'select' %}" class="ui massive inverted teal button">PlanA</a>
-            <a href="{% url 'select' %}" class="ui massive inverted orange button">PlanB</a>
-        </div>
+  <div class="ui container">
+    <div class="ui large secondary inverted pointing menu">
+      <a href="{% url 'index' %}" class="active item">Home</a>
+      <a href="{% url 'select' %}" class="item">PlanA</a>
+      <a href="{% url 'select' %}" class="item">PlanB</a>
     </div>
+  </div>
+  <div class="ui inverted vertical masthead center aligned segment">
+    <div class="ui text container">
+      <h1 class="ui inverted header">Welcome back, designer!</h1>
+      <h2>Click to select one mode.</h2>
+      <br>
+      <a href="{% url 'select' %}" class="ui massive inverted teal button">PlanA</a>
+      <a href="{% url 'select' %}" class="ui massive inverted orange button">PlanB</a>
+    </div>
+  </div>
 {% endblock %}

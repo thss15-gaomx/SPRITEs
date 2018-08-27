@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Block, Text, Pic
 
-# Register your models here.
+admin.site.register(Block)
+admin.site.register(Text)
+admin.site.register(Pic)
