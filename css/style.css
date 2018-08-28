@@ -49,9 +49,13 @@ select.ui.dropdown {
     height: 47px;
 }
 
+.grid-page {
+    height: calc(180vh + 100px) !important;
+}
+
 .grid-table {
     width: 100vw;
-    height: calc(100vh - 220px);
+    height: 180vh;
     margin-top: 20px;
 }
 
@@ -60,11 +64,13 @@ select.ui.dropdown {
     z-index: 99;
     padding: 10px;
     overflow: auto;
+    opacity: 0.95;
 }
 
 .pic-block {
     position: absolute;
     z-index: 99;
+    opacity: 0.95;
 }
 
 .pic-block img {

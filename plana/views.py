@@ -3,6 +3,7 @@ from django.db.models import Q
 from .models import Block, Text, Pic
 from .forms import UploadForm
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+import json
 
 color_map = ["#B03060", "#FE9A76", "#FFD700", "#32CD32", "#016936", "#008080", "#0E6EB8", "#EE82EE", "#B413EC",
              "#FF1493", "#A52A2A", "#A0A0A0", "#000000"]
@@ -19,6 +20,15 @@ def create_block(width, height, type):
     new_block.color = color_map[new_block.id % 13]
     new_block.save()
     return new_block
+
+
+def get_all_blocks():
+    all = ""
+    for block in Block.objects.all():
+        all += str(block.id) + "," + str(block.pos_x) + "," + str(block.pos_y) + ";"
+    if all != "":
+        all = all[:-1]
+    return all
 
 
 def select(request):
@@ -41,6 +51,7 @@ def text(request):
         info = {
             'text': Text.objects.filter(~Q(id=new_text.id)),
             'pic': Pic.objects.all(),
+            'all': get_all_blocks(),
             'object': new_text,
             'type': "text"
         }
@@ -71,6 +82,7 @@ def pic(request):
             info = {
                 'pic': Pic.objects.filter(~Q(id=new_pic.id)),
                 'text': Text.objects.all(),
+                'all': get_all_blocks,
                 'object': new_pic,
                 'type': "pic"
             }
@@ -93,5 +105,21 @@ def grid(request):
         object.pos_y = row
         object.save()
         return render(request, "grid.html")
+    # elif request.method == 'GET':
+    #     column = request.GET.get('x')
+    #     row = request.GET.get('y')
+    #     objects = Block.objects.filter(pos_x=column, pos_y=row)
+    #     ids = []
+    #     for object in objects:
+    #         ids.append(object.id)
+    #     info = {
+    #         "objects": ids,
+    #         "word": "great"
+    #     }
+    #     print(ids)
+    #     return render(request, "grid.html", info)
     else:
-        return render(request, "grid.html")
+        info = {
+            "all": get_all_blocks(),
+        }
+        return render(request, "grid.html", info)

@@ -7,29 +7,119 @@
       <a href="{% url 'select' %}" class="item">PlanB</a>
     </div>
   </div>
-  <div class="ui inverted vertical masthead segment">
+  <div class="ui inverted vertical masthead segment grid-page">
     {% for item in pic %}
-      <div class="pic-block" x="{{ item.block.pos_x }}" y="{{ item.block.pos_y }}" width="{{ item.block.width }}" height="{{ item.block.height }}">
+      <div class="pic-block" x="{{ item.block.pos_x }}" y="{{ item.block.pos_y }}"
+        width="{{ item.block.width }}" height="{{ item.block.height }}" id="{{ item.block.id }}">
         <img src=".{{ item.content.url }}">
       </div>
     {% endfor %}
     {% for item in text %}
-      <div class="text-block" x="{{ item.block.pos_x }}" y="{{ item.block.pos_y }}" width="{{ item.block.width }}" height="{{ item.block.height }}"
-           style="font-size: {{ item.font_size }}; color: {{ item.font_color }}; background-color: {{ item.block.color }}">
+      <div class="text-block" x="{{ item.block.pos_x }}" y="{{ item.block.pos_y }}"
+          width="{{ item.block.width }}" height="{{ item.block.height }}" id="{{ item.block.id }}"
+          style="font-size: {{ item.font_size }}; color: {{ item.font_color }}; background-color: {{ item.block.color }};">
         {{ item.content }}
       </div>
     {% endfor %}
     {% if type == "text" %}
-      <div class="text-block current">{{ object.content }}</div>
+      <div class="text-block current" x="{{ object.block.pos_x }}" y="{{ object.block.pos_y }}"
+          width="{{ object.block.width }}" height="{{ object.block.height }}" id="{{ object.block.id }}"
+          style="font-size: {{ object.font_size }}; color: {{ object.font_color }}; background-color: {{ object.block.color }};">
+        {{ object.content }}</div>
     {% endif %}
     {% if type == "pic" %}
-      <div class="pic-block current">
+      <div class="pic-block current" x="{{ object.block.pos_x }}" y="{{ object.block.pos_y }}"
+          width="{{ object.block.width }}" height="{{ object.block.height }}" id="{{ object.block.id }}">
         <img src=".{{ object.content.url }}">
       </div>
     {% endif %}
     <table border="1" class="grid-table">
-      {#      <td width="25% " rowspan="2"> 　</td>#}
-      {#      <td width="25% " colspan="2"> 　</td>#}
+            <!-- <td width="25% " rowspan="2"> 　</td>
+            <td width="25% " colspan="2"> 　</td> -->
+      <tr>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+      </tr>
+      <tr>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+      </tr>
+      <tr>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+      </tr>
+      <tr>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+      </tr>
+      <tr>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+      </tr>
+      <tr>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+      </tr>
+      <tr>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+        <td width="10%"> 　</td>
+      </tr>
       <tr>
         <td width="10%"> 　</td>
         <td width="10%"> 　</td>
@@ -91,20 +181,21 @@
         <td width="10%"> 　</td>
       </tr>
     </table>
-    <div class="ui center aligned container">
+    <!-- <div class="ui center aligned container">
       <br><br>
       <button type="submit" class="ui huge teal button" href="{% url 'grid' %}"><i class="send icon"></i>Confirm
       </button>
       <a class="ui huge inverted orange basic button" href="{% url 'select' %}">Back</a>
-    </div>
+    </div> -->
   </div>
 
   <script type="text/javascript" src="/static/jquery-buzz.js"></script>
   <script type="text/javascript" src="/static/sound.js"></script>
   <script type="text/javascript">
     var unitWidth = $(".grid-table").width() / 10;
-    var unitHeight = $(".grid-table").height() / 5;
+    var unitHeight = $(".grid-table").height() / 12;
     var marginLeft, marginTop, width, height;
+    var curPage = 1;
     $(".text-block").each(function(){
       marginLeft = (parseInt($(this).attr("x")) * unitWidth).toString() + 'px';
       $(this).css("margin-left", marginLeft);
@@ -112,7 +203,7 @@
       $(this).css("margin-top", marginTop);
       width = (parseInt($(this).attr("width")) * 10).toString() + 'vw';
       $(this).css("width", width);
-      height = "calc(" + (parseInt($(this).attr("height")) * 20).toString() + 'vh - ' + (parseInt($(this).attr("height")) * 44).toString() + 'px)';
+      height = (parseInt($(this).attr("height")) * 15).toString() + 'vh';
       $(this).css("height", height);
     });
     $(".pic-block").each(function(){
@@ -122,41 +213,33 @@
       $(this).css("margin-top", marginTop);
       width = (parseInt($(this).attr("width")) * 10).toString() + 'vw';
       $(this).css("width", width);
-      height = "calc(" + (parseInt($(this).attr("height")) * 20).toString() + 'vh - ' + (parseInt($(this).attr("height")) * 44).toString() + 'px)';
+      height = (parseInt($(this).attr("height")) * 15).toString() + 'vh';
       $(this).css("height", height);
     });
     var blockWidth = parseInt({{ object.block.width }});
     var blockHeight = parseInt({{ object.block.height }});
     var type = "{{ type }}";
-    if (type === "text") {
-      marginLeft = (parseInt({{ object.block.pos_x }}) * unitWidth).toString() + 'px';
-      $(".current").css("margin-left", marginLeft);
-      marginTop = (parseInt({{ object.block.pos_y }}) * unitHeight + 20).toString() + 'px';
-      $(".current").css("margin-top", marginTop);
-      width = (blockWidth * 10).toString() + 'vw';
-      $(".current").css("width", width);
-      height = "calc(" + (blockHeight * 20).toString() + 'vh - ' + (blockHeight * 44).toString() + 'px)';
-      $(".current").css("height", height);
-      $(".current").css("font-size", "{{ object.font_size }}");
-      $(".current").css("color", "{{ object.font_color }}");
-      $(".current").css("background-color", "{{ object.block.color }}");
-    } else if (type === "pic") {
-      marginLeft = (parseInt({{ object.block.pos_x }}) * unitWidth).toString() + 'px';
-      $(".current").css("margin-left", marginLeft);
-      marginTop = (parseInt({{ object.block.pos_y }}) * unitHeight + 20).toString() + 'px';
-      $(".current").css("margin-top", marginTop);
-      width = (blockWidth * 10).toString() + 'vw';
-      $(".current").css("width", width);
-      height = "calc(" + (blockHeight * 20).toString() + 'vh - ' + (blockHeight * 44).toString() + 'px)';
-      $(".current").css("height", height);
-    }
     var curRow = 0, curColumn = 0;
     var margin;
+    var focus = "null";  //null, row, column, both
+    var focusColumn = 0, focusRow = 0, focusObject = 0;
+    var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48]; //1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+    var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
+    var shift = 0;
+    var allString = ("{{ all }}").split(";");
+    var allDict = new Array();
+    for (var i = 0; i < allString.length; i++) {
+      item = allString[i].split(",");
+      allDict[i] = {'id': item[0], 'x': item[1], 'y': item[2]};
+    }
+    document.addEventListener("keydown", function(e){
+      shift = e.location;
+    });
     $(document).keydown(function (event) {
-      {#      var left = $(".text-block").css("margin-left");#}
-      {#      left = parseFloat(left.slice(0, -2));#}
+//      var left = $(".text-block").css("margin-left");
+//      left = parseFloat(left.slice(0, -2));
       unitWidth = $(".grid-table").width() / 10;
-      unitHeight = $(".grid-table").height() / 5;
+      unitHeight = $(".grid-table").height() / 12;
       playMoveSound();
       if (event.keyCode === 37) {   // left
         if (curColumn > 0) {
@@ -177,16 +260,65 @@
           $(".current").css("margin-top", margin);
         }
       } else if (event.keyCode === 40) { // down
-        if (curRow + blockHeight < 5) {
+        if (curRow + blockHeight < 12) {
           curRow++;
           margin = (curRow * unitHeight + 20).toString() + 'px';
           $(".current").css("margin-top", margin);
         }
       } else if (event.keyCode === 32) {   // space: set position
         $.post("{% url 'grid' %}",{'x':curColumn, 'y':curRow, 'id': {{object.block.id}}}, function(e){
+          $(".current").removeClass('current');
+          focusObject = -1;
+          focus = "null";
         });
+      } else if (event.keyCode === 220) {  // \: enter
+        if (focus === "both" && focusObject === -1) {
+          for (var i = 0; i < allDict.length - 1; i++) {
+            if (parseInt(allDict[i]['x']) === focusColumn && parseInt(allDict[i]['y']) === focusRow) {
+              var id = "#" + allDict[i]['id'];
+              $(id).addClass('current');
+              curRow = focusRow;
+              curColumn = focusColumn;
+            }
+            allDict[item[0]] = {'x': item[1], 'y': item[2]};
+          }
+        }
+      } else if (event.keyCode === 13) {  // enter: page up
+        if (curPage > 1) {
+          curPage--;
+        }
+      } else if (event.keyCode === 16 && shift === 2) {  // shift: page down
+        if (curPage < 3) {
+          curPage++;
+        }
+        shift = 0;
+      } else if (columnKey.indexOf(event.keyCode) >= 0) {
+        focusColumn = columnKey.indexOf(event.keyCode);
+        if (focus === "null" || focus === "both") {
+          focus = "column";
+        } else if (focus === "row") {
+          focus = "both";
+          curRow = focusRow;
+          curColumn = focusColumn;
+          margin = (curRow * unitHeight + 20).toString() + 'px';
+          $(".current").css("margin-top", margin)
+          margin = (curColumn * unitWidth).toString() + 'px';
+          $(".current").css("margin-left", margin);
+        }
+      } else if (rowKey.indexOf(event.keyCode) >= 0 && shift !== 2) {
+        focusRow = rowKey.indexOf(event.keyCode) + (curPage - 1) * 4;
+        if (focus === "null" || focus === "both") {
+          focus = "row";
+        } else if (focus === "column") {
+          focus = "both";
+          curRow = focusRow;
+          curColumn = focusColumn;
+          margin = (curRow * unitHeight + 20).toString() + 'px';
+          $(".current").css("margin-top", margin)
+          margin = (curColumn * unitWidth).toString() + 'px';
+          $(".current").css("margin-left", margin);
+        }
       }
     });
   </script>
 {% endblock %}
-
