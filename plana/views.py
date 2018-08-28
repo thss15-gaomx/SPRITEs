@@ -105,21 +105,5 @@ def grid(request):
         object.pos_y = row
         object.save()
         return render(request, "grid.html")
-    # elif request.method == 'GET':
-    #     column = request.GET.get('x')
-    #     row = request.GET.get('y')
-    #     objects = Block.objects.filter(pos_x=column, pos_y=row)
-    #     ids = []
-    #     for object in objects:
-    #         ids.append(object.id)
-    #     info = {
-    #         "objects": ids,
-    #         "word": "great"
-    #     }
-    #     print(ids)
-    #     return render(request, "grid.html", info)
     else:
-        info = {
-            "all": get_all_blocks(),
-        }
-        return render(request, "grid.html", info)
+        return render(request, "grid.html")

@@ -3,8 +3,8 @@
   <div class="ui container">
     <div class="ui large secondary inverted pointing menu">
       <a href="{% url 'index' %}" class="item">Home</a>
-      <a href="{% url 'select' %}" class="active item">PlanA</a>
-      <a href="{% url 'grid-b' %}" class="item">PlanB</a>
+      <a href="{% url 'select' %}" class="item">PlanA</a>
+      <a href="{% url 'grid-b' %}" class="active item">PlanB</a>
     </div>
   </div>
   <div class="ui inverted vertical masthead center aligned segment">
@@ -12,21 +12,21 @@
     <div class="ui four column doubling stackable grid container">
       <div class="column">
         <div class="ui card">
-          <a class="image" href="{% url 'pic' %}">
+          <a class="image" href="{% url 'pic-b' %}">
             <img src="/static/picture.png">
           </a>
           <div class="content">
-            <a class="header" href="{% url 'pic' %}">Pic</a>
+            <a class="header" href="{% url 'pic-b' %}">Pic</a>
           </div>
         </div>
       </div>
       <div class="column">
         <div class="ui card">
-          <a class="image" href="{% url 'text' %}">
+          <a class="image" href="{% url 'text-b' %}">
             <img src="/static/text.png">
           </a>
           <div class="content">
-            <a class="header" href="{% url 'text' %}">Text</a>
+            <a class="header" href="{% url 'text-b' %}">Text</a>
           </div>
         </div>
       </div>
@@ -126,9 +126,9 @@
         window.speechSynthesis.speak(utterThis);
       } else if (event.keyCode === 220) { // Enter
         if (utterThis.text === "picture") {
-          window.location.href = "{% url 'pic' %}";
+          window.location.href = "{% url 'pic-b' %}";
         } else if (utterThis.text === "text") {
-          window.location.href = "{% url 'text' %}";
+          window.location.href = "{% url 'text-b' %}";
         }
       }
     });

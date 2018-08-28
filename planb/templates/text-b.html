@@ -3,8 +3,8 @@
   <div class="ui container">
     <div class="ui large secondary inverted pointing menu">
       <a href="{% url 'index' %}" class="item" id='home'>Home</a>
-      <a href="{% url 'select' %}" class="active item" id='plan-a'>PlanA</a>
-      <a href="{% url 'grid-b' %}" class="item" id='plan-b'>PlanB</a>
+      <a href="{% url 'select' %}" class="item" id='plan-a'>PlanA</a>
+      <a href="{% url 'grid-b' %}" class="active item" id='plan-b'>PlanB</a>
     </div>
   </div>
   <div class="ui inverted vertical masthead center aligned segment">
@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="eight wide column">
-            <form method="post" action="{% url 'text' %}" class="ui inverted form">
+            <form method="post" action="{% url 'text-b' %}" class="ui inverted form">
               {% csrf_token %}
               <div class="field">
                 <label>Size</label>
@@ -141,7 +141,7 @@
         if (utterThis.text === "confirm") {
           $("#confirm").click();
         } else if (utterThis.text === "back") {
-          window.location.href = "{% url 'select' %}";
+          window.location.href = "{% url 'grid-b' %}";
         }
       }
     });

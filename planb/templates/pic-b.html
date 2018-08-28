@@ -3,29 +3,28 @@
   <div class="ui container">
     <div class="ui large secondary inverted pointing menu">
       <a href="{% url 'index' %}" class="item" id='home'>Home</a>
-      <a href="{% url 'select' %}" class="active item" id='plan-a'>PlanA</a>
-      <a href="{% url 'grid-b' %}" class="item" id='plan-b'>PlanB</a>
+      <a href="{% url 'select' %}" class="item" id='plan-a'>PlanA</a>
+      <a href="{% url 'grid-b' %}" class="active item" id='plan-b'>PlanB</a>
     </div>
   </div>
   <div class="ui inverted vertical masthead center aligned segment">
     <div class="ui text container">
       <br><br>
-      <h2>Specify the size and content of text widget.</h2>
+      <h2>Specify the size and content of pic widget.</h2>
       <div class="ui text container">
         <div class="ui divided grid">
           <div class="eight wide column">
-            <br>
             <div class="ui card">
               <a class="image">
-                <img src="/static/text.png">
+                <img src="/static/picture.png">
               </a>
               <div class="content">
-                <a class="header">Text</a>
+                <a class="header">Pic</a>
               </div>
             </div>
           </div>
           <div class="eight wide column">
-            <form method="post" action="{% url 'text' %}" class="ui inverted form">
+            <form method="post" action="{% url 'pic-b' %}" class="ui inverted form" enctype="multipart/form-data">
               {% csrf_token %}
               <div class="field">
                 <label>Size</label>
@@ -43,47 +42,20 @@
                 </div>
               </div>
               <div class="field">
-                <label>Font Feature</label>
-                <div class="two fields">
-                  <div class="field">
-                    <select class="ui search dropdown" id="font-size" name="font-size">
-                      <option value="16px">normal</option>
-                      <option value="14px">small</option>
-                      <option value="18px">large</option>
-                      <option value="20px">huge</option>
-                    </select>
-                  </div>
-                  <div class="field">
-                    <select class="ui search dropdown" id="font-color" name="font-color">
-                      <option value="white">white</option>
-                      <option value="#B03060">red</option>
-                      <option value="#FE9A76">orange</option>
-                      <option value="#FFD700">yellow</option>
-                      <option value="#32CD32">olive</option>
-                      <option value="#FE9A76">orange</option>
-                      <option value="#016936">green</option>
-                      <option value="#008080">teal</option>
-                      <option value="#0E6EB8">blue</option>
-                      <option value="#EE82EE">violet</option>
-                      <option value="#B413EC">purple</option>
-                      <option value="#FF1493">pink</option>
-                      <option value="#A52A2A">brown</option>
-                      <option value="#A0A0A0">grey</option>
-                      <option value="#000000">black</option>
-                    </select>
-                  </div>
+                <label>Name</label>
+                <div class="ui big input">
+                  <input type="text" name="name" id="name" placeholder="Please input the pic name..." required/>
                 </div>
               </div>
               <div class="field">
-                <label>Content</label>
-                <textarea rows="5" name="content" id="text-content" placeholder="Please input the text content..."
-                          required/></textarea>
+                <label>Upload File</label>
+                <input type="file" class="form-control" id="upload_pic" name="upload_pic">
               </div>
               <div class="ui center aligned container">
                 <br>
-                <button type="submit" class="ui huge teal button" id="confirm" href="{% url 'grid' %}">Confirm
+                <button type="submit" class="ui huge teal button" href="{% url 'grid' %}" id="confirm">Confirm
                 </button>
-                <a class="ui huge inverted orange basic button" id="back" href="{% url 'select' %}">Back</a>
+                <a class="ui huge inverted orange basic button" href="{% url 'select' %}" id="back">Back</a>
               </div>
             </form>
           </div>
@@ -94,7 +66,7 @@
 
   <script type="text/javascript">
     var utterThis = new window.SpeechSynthesisUtterance();
-    utterThis.text = 'specify the size and content of text widget';
+    utterThis.text = 'specify the size and content of picture widget';
     window.speechSynthesis.speak(utterThis);
     $('#home').focus(function() {
       utterThis.text = 'home';
@@ -116,16 +88,12 @@
       utterThis.text = 'height';
       window.speechSynthesis.speak(utterThis);
     });
-    $('#font-size').focus(function() {
-      utterThis.text = 'font size';
+    $('#name').focus(function() {
+      utterThis.text = 'name';
       window.speechSynthesis.speak(utterThis);
     });
-    $('#font-color').focus(function() {
-      utterThis.text = 'font color';
-      window.speechSynthesis.speak(utterThis);
-    });
-    $('#text-content').focus(function() {
-      utterThis.text = 'text content';
+    $('#upload_pic').focus(function() {
+      utterThis.text = 'upload picture';
       window.speechSynthesis.speak(utterThis);
     });
     $('#confirm').focus(function() {
@@ -141,7 +109,7 @@
         if (utterThis.text === "confirm") {
           $("#confirm").click();
         } else if (utterThis.text === "back") {
-          window.location.href = "{% url 'select' %}";
+          window.location.href = "{% url 'grid-b' %}";
         }
       }
     });
