@@ -94,4 +94,43 @@
       </div>
     </div>
   </div>
+
+  <script type="text/javascript">
+    var utterThis = new window.SpeechSynthesisUtterance();
+    utterThis.text = 'press one to eight to select a widget type';
+    window.speechSynthesis.speak(utterThis);
+    $(document).keydown(function (event) {
+      if (event.keyCode === 49) {   // Pic
+        utterThis.text = 'picture';
+        window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 50) { // Text
+        utterThis.text = 'text';
+        window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 51) { // Input
+        utterThis.text = 'input';
+        window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 52) { // Button
+        utterThis.text = 'button';
+        window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 53) { // Music
+        utterThis.text = 'music';
+        window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 54) { // Menu
+        utterThis.text = 'menu';
+        window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 55) { // Filter
+        utterThis.text = 'filter';
+        window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 56) { // Chart
+        utterThis.text = 'chart';
+        window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 220) { // Enter
+        if (utterThis.text === "picture") {
+          window.location.href = "{% url 'pic' %}";
+        } else if (utterThis.text === "text") {
+          window.location.href = "{% url 'text' %}";
+        }
+      }
+    });
+  </script>
 {% endblock %}

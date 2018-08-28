@@ -2,9 +2,9 @@
 {% block content %}
   <div class="ui container">
     <div class="ui large secondary inverted pointing menu">
-      <a href="{% url 'index' %}" class="item">Home</a>
-      <a href="{% url 'select' %}" class="active item">PlanA</a>
-      <a href="{% url 'select' %}" class="item">PlanB</a>
+      <a href="{% url 'index' %}" class="item" id='home'>Home</a>
+      <a href="{% url 'select' %}" class="active item" id='plan-a'>PlanA</a>
+      <a href="{% url 'select' %}" class="item" id='plan-b'>PlanB</a>
     </div>
   </div>
   <div class="ui inverted vertical masthead center aligned segment">
@@ -31,12 +31,12 @@
                 <div class="two fields">
                   <div class="field">
                     <div class="ui big left icon input">
-                      <input type="text" name="width" placeholder="Width" required/>
+                      <input type="text" name="width" id="width" placeholder="Width" required/>
                     </div>
                   </div>
                   <div class="field">
                     <div class="ui big input">
-                      <input type="text" name="height" placeholder="Height" required/>
+                      <input type="text" name="height" id="height" placeholder="Height" required/>
                     </div>
                   </div>
                 </div>
@@ -44,7 +44,7 @@
               <div class="field">
                 <label>Name</label>
                 <div class="ui big input">
-                  <input type="text" name="name" placeholder="Please input the pic name..." required/>
+                  <input type="text" name="name" id="name" placeholder="Please input the pic name..." required/>
                 </div>
               </div>
               <div class="field">
@@ -53,9 +53,9 @@
               </div>
               <div class="ui center aligned container">
                 <br>
-                <button type="submit" class="ui huge teal button" href="{% url 'grid' %}"><i class="send icon"></i>Confirm
+                <button type="submit" class="ui huge teal button" href="{% url 'grid' %}" id="confirm">Confirm
                 </button>
-                <a class="ui huge inverted orange basic button" href="{% url 'select' %}">Back</a>
+                <a class="ui huge inverted orange basic button" href="{% url 'select' %}" id="back">Back</a>
               </div>
             </form>
           </div>
@@ -63,4 +63,55 @@
       </div>
     </div>
   </div>
+
+  <script type="text/javascript">
+    var utterThis = new window.SpeechSynthesisUtterance();
+    utterThis.text = 'specify the size and content of picture widget';
+    window.speechSynthesis.speak(utterThis);
+    $('#home').focus(function() {
+      utterThis.text = 'home';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#plan-a').focus(function() {
+      utterThis.text = 'plan a';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#plan-b').focus(function() {
+      utterThis.text = 'plan b';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#width').focus(function() {
+      utterThis.text = 'width';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#height').focus(function() {
+      utterThis.text = 'height';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#name').focus(function() {
+      utterThis.text = 'name';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#upload_pic').focus(function() {
+      utterThis.text = 'upload picture';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#confirm').focus(function() {
+      utterThis.text = 'confirm';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#back').focus(function() {
+      utterThis.text = 'back';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $(document).keydown(function (event) {
+      if (event.keyCode === 220) {   // \: enter
+        if (utterThis.text === "confirm") {
+          $("#confirm").click();
+        } else if (utterThis.text === "back") {
+          window.location.href = "{% url 'select' %}";
+        }
+      }
+    });
+  </script>
 {% endblock %}

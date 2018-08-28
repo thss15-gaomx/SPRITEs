@@ -2,9 +2,9 @@
 {% block content %}
   <div class="ui container">
     <div class="ui large secondary inverted pointing menu">
-      <a href="{% url 'index' %}" class="item">Home</a>
-      <a href="{% url 'select' %}" class="active item">PlanA</a>
-      <a href="{% url 'select' %}" class="item">PlanB</a>
+      <a href="{% url 'index' %}" class="item" id='home'>Home</a>
+      <a href="{% url 'select' %}" class="active item" id='plan-a'>PlanA</a>
+      <a href="{% url 'select' %}" class="item" id='plan-b'>PlanB</a>
     </div>
   </div>
   <div class="ui inverted vertical masthead center aligned segment">
@@ -32,12 +32,12 @@
                 <div class="two fields">
                   <div class="field">
                     <div class="ui big left icon input">
-                      <input type="text" name="width" placeholder="Width" required/>
+                      <input type="text" name="width" id="width" placeholder="Width" required/>
                     </div>
                   </div>
                   <div class="field">
                     <div class="ui big input">
-                      <input type="text" name="height" placeholder="Height" required/>
+                      <input type="text" name="height" id="height" placeholder="Height" required/>
                     </div>
                   </div>
                 </div>
@@ -46,7 +46,7 @@
                 <label>Font Feature</label>
                 <div class="two fields">
                   <div class="field">
-                    <select class="ui search dropdown" name="font-size">
+                    <select class="ui search dropdown" id="font-size" name="font-size">
                       <option value="16px">normal</option>
                       <option value="14px">small</option>
                       <option value="18px">large</option>
@@ -54,7 +54,7 @@
                     </select>
                   </div>
                   <div class="field">
-                    <select class="ui search dropdown" name="font-color">
+                    <select class="ui search dropdown" id="font-color" name="font-color">
                       <option value="white">white</option>
                       <option value="#B03060">red</option>
                       <option value="#FE9A76">orange</option>
@@ -76,14 +76,14 @@
               </div>
               <div class="field">
                 <label>Content</label>
-                <textarea rows="5" name="content" placeholder="Please input the text content..."
+                <textarea rows="5" name="content" id="text-content" placeholder="Please input the text content..."
                           required/></textarea>
               </div>
               <div class="ui center aligned container">
                 <br>
-                <button type="submit" class="ui huge teal button" href="{% url 'grid' %}"><i class="send icon"></i>Confirm
+                <button type="submit" class="ui huge teal button" id="confirm" href="{% url 'grid' %}">Confirm
                 </button>
-                <a class="ui huge inverted orange basic button" href="{% url 'select' %}">Back</a>
+                <a class="ui huge inverted orange basic button" id="back" href="{% url 'select' %}">Back</a>
               </div>
             </form>
           </div>
@@ -91,4 +91,59 @@
       </div>
     </div>
   </div>
+
+  <script type="text/javascript">
+    var utterThis = new window.SpeechSynthesisUtterance();
+    utterThis.text = 'specify the size and content of text widget';
+    window.speechSynthesis.speak(utterThis);
+    $('#home').focus(function() {
+      utterThis.text = 'home';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#plan-a').focus(function() {
+      utterThis.text = 'plan a';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#plan-b').focus(function() {
+      utterThis.text = 'plan b';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#width').focus(function() {
+      utterThis.text = 'width';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#height').focus(function() {
+      utterThis.text = 'height';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#font-size').focus(function() {
+      utterThis.text = 'font size';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#font-color').focus(function() {
+      utterThis.text = 'font color';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#text-content').focus(function() {
+      utterThis.text = 'text content';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#confirm').focus(function() {
+      utterThis.text = 'confirm';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#back').focus(function() {
+      utterThis.text = 'back';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $(document).keydown(function (event) {
+      if (event.keyCode === 220) {   // \: enter
+        if (utterThis.text === "confirm") {
+          $("#confirm").click();
+        } else if (utterThis.text === "back") {
+          window.location.href = "{% url 'select' %}";
+        }
+      }
+    });
+  </script>
 {% endblock %}

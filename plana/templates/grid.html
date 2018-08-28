@@ -192,6 +192,10 @@
   <script type="text/javascript" src="/static/jquery-buzz.js"></script>
   <script type="text/javascript" src="/static/sound.js"></script>
   <script type="text/javascript">
+    var utterThis = new window.SpeechSynthesisUtterance();
+    utterThis.text = 'layout page';
+    utterThis.lang = 'en';
+    window.speechSynthesis.speak(utterThis);
     var unitWidth = $(".grid-table").width() / 10;
     var unitHeight = $(".grid-table").height() / 12;
     var marginLeft, marginTop, width, height;
@@ -222,7 +226,7 @@
     var curRow = 0, curColumn = 0;
     var margin;
     var focus = "null";  //null, row, column, both
-    var focusColumn = 0, focusRow = 0, focusObject = 0;
+    var focusColumn = 0, focusRow = 0, focusObject = parseInt({{ object.block.id }});
     var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48]; //1, 2, 3, 4, 5, 6, 7, 8, 9, 0
     var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
     var shift = 0;
@@ -231,6 +235,31 @@
     for (var i = 0; i < allString.length; i++) {
       item = allString[i].split(",");
       allDict[i] = {'id': item[0], 'x': item[1], 'y': item[2]};
+    }
+    function setBlock(params) {
+      focus = "both";
+      curRow = focusRow;
+      curColumn = focusColumn;
+      if (focusObject !== -1) {
+        margin = (curRow * unitHeight + 20).toString() + 'px';
+        $(".current").css("margin-top", margin)
+        margin = (curColumn * unitWidth).toString() + 'px';
+        $(".current").css("margin-left", margin);
+        for (var i = 0; i < allDict.length - 1; i++) {
+          if (parseInt(allDict[i]['x']) === curColumn && parseInt(allDict[i]['y']) === curRow) {
+            playOverlapSound();
+          }
+        }
+      } else {
+        var objectNum = 0;
+        for (var i = 0; i < allDict.length - 1; i++) {
+          if (parseInt(allDict[i]['x']) === focusColumn && parseInt(allDict[i]['y']) === focusRow) {
+            objectNum++;
+          }
+        }
+        utterThis.text = (objectNum).toString() + "objects";
+        window.speechSynthesis.speak(utterThis);
+      }
     }
     document.addEventListener("keydown", function(e){
       shift = e.location;
@@ -266,57 +295,56 @@
           $(".current").css("margin-top", margin);
         }
       } else if (event.keyCode === 32) {   // space: set position
-        $.post("{% url 'grid' %}",{'x':curColumn, 'y':curRow, 'id': {{object.block.id}}}, function(e){
+        $.post("{% url 'grid' %}",{'x':curColumn, 'y':curRow, 'id': focusObject}, function(e){
           $(".current").removeClass('current');
           focusObject = -1;
           focus = "null";
+          playDropSound();
         });
       } else if (event.keyCode === 220) {  // \: enter
         if (focus === "both" && focusObject === -1) {
           for (var i = 0; i < allDict.length - 1; i++) {
             if (parseInt(allDict[i]['x']) === focusColumn && parseInt(allDict[i]['y']) === focusRow) {
               var id = "#" + allDict[i]['id'];
+              utterThis.text = "i d " + (allDict[i]['id']).toString();
+              window.speechSynthesis.speak(utterThis);
               $(id).addClass('current');
               curRow = focusRow;
               curColumn = focusColumn;
+              focusObject = parseInt(allDict[i]['id']);
             }
-            allDict[item[0]] = {'x': item[1], 'y': item[2]};
           }
         }
       } else if (event.keyCode === 13) {  // enter: page up
         if (curPage > 1) {
           curPage--;
         }
+        utterThis.text = "page " + (curPage).toString();
+        window.speechSynthesis.speak(utterThis);
       } else if (event.keyCode === 16 && shift === 2) {  // shift: page down
         if (curPage < 3) {
           curPage++;
         }
+        utterThis.text = "page " + (curPage).toString();
+        window.speechSynthesis.speak(utterThis);
         shift = 0;
       } else if (columnKey.indexOf(event.keyCode) >= 0) {
         focusColumn = columnKey.indexOf(event.keyCode);
+        utterThis.text = "column " + (focusColumn + 1).toString();
+        window.speechSynthesis.speak(utterThis);
         if (focus === "null" || focus === "both") {
           focus = "column";
         } else if (focus === "row") {
-          focus = "both";
-          curRow = focusRow;
-          curColumn = focusColumn;
-          margin = (curRow * unitHeight + 20).toString() + 'px';
-          $(".current").css("margin-top", margin)
-          margin = (curColumn * unitWidth).toString() + 'px';
-          $(".current").css("margin-left", margin);
+          setBlock();
         }
       } else if (rowKey.indexOf(event.keyCode) >= 0 && shift !== 2) {
         focusRow = rowKey.indexOf(event.keyCode) + (curPage - 1) * 4;
+        utterThis.text = "row " + (focusRow + 1).toString();
+        window.speechSynthesis.speak(utterThis);
         if (focus === "null" || focus === "both") {
           focus = "row";
         } else if (focus === "column") {
-          focus = "both";
-          curRow = focusRow;
-          curColumn = focusColumn;
-          margin = (curRow * unitHeight + 20).toString() + 'px';
-          $(".current").css("margin-top", margin)
-          margin = (curColumn * unitWidth).toString() + 'px';
-          $(".current").css("margin-left", margin);
+          setBlock();
         }
       }
     });
