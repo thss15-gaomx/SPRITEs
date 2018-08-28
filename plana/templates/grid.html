@@ -36,7 +36,7 @@
     <table border="1" class="grid-table">
             <!-- <td width="25% " rowspan="2"> 　</td>
             <td width="25% " colspan="2"> 　</td> -->
-      <tr>
+      <tr class="page1">
         <td width="10%"> 　</td>
         <td width="10%"> 　</td>
         <td width="10%"> 　</td>
@@ -84,7 +84,7 @@
         <td width="10%"> 　</td>
         <td width="10%"> 　</td>
       </tr>
-      <tr>
+      <tr class="page2">
         <td width="10%"> 　</td>
         <td width="10%"> 　</td>
         <td width="10%"> 　</td>
@@ -132,7 +132,7 @@
         <td width="10%"> 　</td>
         <td width="10%"> 　</td>
       </tr>
-      <tr>
+      <tr class="page3">
         <td width="10%"> 　</td>
         <td width="10%"> 　</td>
         <td width="10%"> 　</td>
@@ -191,6 +191,7 @@
 
   <script type="text/javascript" src="/static/jquery-buzz.js"></script>
   <script type="text/javascript" src="/static/sound.js"></script>
+  {# todo: specify the focus id; add to the allString after drop; overlap judgement #}
   <script type="text/javascript">
     var utterThis = new window.SpeechSynthesisUtterance();
     utterThis.text = 'layout page';
@@ -245,14 +246,14 @@
         $(".current").css("margin-top", margin)
         margin = (curColumn * unitWidth).toString() + 'px';
         $(".current").css("margin-left", margin);
-        for (var i = 0; i < allDict.length - 1; i++) {
-          if (parseInt(allDict[i]['x']) === curColumn && parseInt(allDict[i]['y']) === curRow) {
+        for (var i = 0; i < allDict.length; i++) {
+          if (parseInt(allDict[i]['x']) === curColumn && parseInt(allDict[i]['y']) === curRow && parseInt(allDict[i]['id']) !== focusObject) {
             playOverlapSound();
           }
         }
       } else {
         var objectNum = 0;
-        for (var i = 0; i < allDict.length - 1; i++) {
+        for (var i = 0; i < allDict.length; i++) {
           if (parseInt(allDict[i]['x']) === focusColumn && parseInt(allDict[i]['y']) === focusRow) {
             objectNum++;
           }
@@ -295,15 +296,22 @@
           $(".current").css("margin-top", margin);
         }
       } else if (event.keyCode === 32) {   // space: set position
+        event.preventDefault();
         $.post("{% url 'grid' %}",{'x':curColumn, 'y':curRow, 'id': focusObject}, function(e){
           $(".current").removeClass('current');
+          playDropSound();
+          for (var i = 0; i < allDict.length; i++) {
+            if (parseInt(allDict[i]['id']) === focusObject) {
+              allDict[i]['x'] = (focusColumn).toString();
+              allDict[i]['y'] = (focusRow).toString();
+            }
+          }
           focusObject = -1;
           focus = "null";
-          playDropSound();
         });
       } else if (event.keyCode === 220) {  // \: enter
         if (focus === "both" && focusObject === -1) {
-          for (var i = 0; i < allDict.length - 1; i++) {
+          for (var i = 0; i < allDict.length; i++) {
             if (parseInt(allDict[i]['x']) === focusColumn && parseInt(allDict[i]['y']) === focusRow) {
               var id = "#" + allDict[i]['id'];
               utterThis.text = "i d " + (allDict[i]['id']).toString();
@@ -321,12 +329,20 @@
         }
         utterThis.text = "page " + (curPage).toString();
         window.speechSynthesis.speak(utterThis);
+        var pageClass = ".page" + (curPage).toString();
+        $('html, body').animate({
+          scrollTop: $(pageClass).offset().top
+        }, 500);
       } else if (event.keyCode === 16 && shift === 2) {  // shift: page down
         if (curPage < 3) {
           curPage++;
         }
         utterThis.text = "page " + (curPage).toString();
         window.speechSynthesis.speak(utterThis);
+        var pageClass = ".page" + (curPage).toString();
+        $('html, body').animate({
+          scrollTop: $(pageClass).offset().top
+        }, 500);
         shift = 0;
       } else if (columnKey.indexOf(event.keyCode) >= 0) {
         focusColumn = columnKey.indexOf(event.keyCode);
