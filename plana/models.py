@@ -10,28 +10,8 @@ class Page(models.Model):
 
 class Section(models.Model):
     page_id = models.IntegerField(default=0)
-    type = models.IntegerField(default=0)
-
-    TYPE_NULL = 0
-    TYPE_GRID = 1
-    TYPE_VERTICAL = 2
-    TYPE_HORIZONAL = 3
-
-
-class Grid(models.Model):
-    section_id = models.IntegerField(default=0)
     width = models.IntegerField(default=0)
     height = models.IntegerField(default=0)
-
-
-class Vertical(models.Model):
-    section_id = models.IntegerField(default=0)
-    size = models.IntegerField(default=0)
-
-
-class Horizonal(models.Model):
-    section_id = models.IntegerField(default=0)
-    size = models.IntegerField(default=0)
 
 
 class Block(models.Model):
@@ -40,13 +20,7 @@ class Block(models.Model):
     width = models.IntegerField(default=1)
     height = models.IntegerField(default=1)
     content_type = models.CharField(max_length=64, default="")
-    container_type = models.IntegerField(default=0)
-    container_id = models.IntegerField(default=0)
-
-    TYPE_NULL = 0
-    TYPE_GRID = 1
-    TYPE_VERTICAL = 2
-    TYPE_HORIZONAL = 3
+    section_id = models.IntegerField(default=0)
 
 
 class Text(models.Model):
