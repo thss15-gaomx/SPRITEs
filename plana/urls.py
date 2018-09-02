@@ -5,6 +5,7 @@ from django.conf import settings
 
 urlpatterns = [
     url(r'^grid$', views.grid, name='grid'),
+    url(r'^layout$', views.layout, name='layout'),
     url(r'^text$', views.text, name='text'),
     url(r'^pic$', views.pic, name='pic'),
     url(r'^$', views.select, name='select'),

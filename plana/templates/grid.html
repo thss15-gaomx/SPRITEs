@@ -181,12 +181,6 @@
         <td width="10%"> 　</td>
       </tr>
     </table>
-    <!-- <div class="ui center aligned container">
-      <br><br>
-      <button type="submit" class="ui huge teal button" href="{% url 'grid' %}"><i class="send icon"></i>Confirm
-      </button>
-      <a class="ui huge inverted orange basic button" href="{% url 'select' %}">Back</a>
-    </div> -->
   </div>
 
   <script type="text/javascript" src="/static/jquery-buzz.js"></script>
@@ -362,6 +356,9 @@
         } else if (focus === "column") {
           setBlock();
         }
+      } else if (event.keyCode === 27) { // Esc
+        window.location.href = "{% url 'select' %}";
+      } else if (event.keyCode === 8) { // Delete
       }
     });
   </script>

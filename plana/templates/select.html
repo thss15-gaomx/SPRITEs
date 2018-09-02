@@ -130,6 +130,8 @@
         } else if (utterThis.text === "text") {
           window.location.href = "{% url 'text' %}";
         }
+      } else if (event.keyCode === 27) { // Esc
+        window.location.href = "{% url 'index' %}";
       }
     });
   </script>

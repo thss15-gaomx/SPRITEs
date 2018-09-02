@@ -107,3 +107,7 @@ def grid(request):
         return render(request, "grid.html")
     else:
         return render(request, "grid.html")
+
+
+def layout(request):
+    return render(request, "layout.html")
