@@ -109,6 +109,19 @@ def input(request):
 def button(request):
     return render(request, "button.html")
 
+
+def section(request):
+    return render(request, "section.html")
+
+
+def part(request):
+    return render(request, "part.html")
+
+
+def page(request):
+    return render(request, "page.html")
+
+
 @csrf_exempt
 def grid(request):
     if request.method == 'POST':

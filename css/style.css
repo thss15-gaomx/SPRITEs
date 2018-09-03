@@ -55,6 +55,10 @@ select.ui.dropdown {
     height: 47px;
 }
 
+.ui.list {
+  font-size: 20px;
+}
+
 .grid-page {
     height: calc(180vh + 100px) !important;
 }
@@ -136,7 +140,6 @@ select.ui.dropdown {
 .content-section {
   height: 40vw;
   background: #f5c531;
-  padding-bottom: 20px;
   margin-bottom: 5px;
 }
 
