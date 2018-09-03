@@ -8,6 +8,12 @@
 
 .ui.card, .ui.cards > .card {
     box-shadow: none;
+    width: 80%;
+    margin-left: 10%;
+}
+
+.widget {
+    margin-top: 10px;
 }
 
 .hidden.menu {

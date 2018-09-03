@@ -94,6 +94,21 @@ def pic(request):
         return render(request, "pic.html")
 
 
+def pic_text(request):
+    return render(request, "pic-text.html")
+
+
+def video(request):
+    return render(request, "video.html")
+
+
+def input(request):
+    return render(request, "input.html")
+
+
+def button(request):
+    return render(request, "button.html")
+
 @csrf_exempt
 def grid(request):
     if request.method == 'POST':

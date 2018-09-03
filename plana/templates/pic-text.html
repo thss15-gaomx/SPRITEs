@@ -9,19 +9,35 @@
   </div>
   <div class="ui inverted vertical masthead center aligned segment">
     <div class="ui text container">
-      <br><br>
-      <h2>Specify the size and content of text widget.</h2>
+      <br>
+      <h2>Specify the size and content of pic-text widget.</h2>
+      <div class="ui three column doubling stackable grid container">
+        <div class="column">
+          <div class="ui card">
+            <a class="image">
+              <img src="/static/card.png">
+            </a>
+          </div>
+        </div>
+        <div class="column">
+          <div class="ui card">
+            <a class="image">
+              <img src="/static/comment.png">
+            </a>
+          </div>
+        </div>
+        <div class="column">
+          <div class="ui card">
+            <a class="image">
+              <img src="/static/background.png">
+            </a>
+          </div>
+        </div>
+      </div>
       <div class="ui text container">
         <div class="ui divided grid">
-          <div class="eight wide column">
-            <div class="widget">
-              <a class="image">
-                <img src="/static/text.png">
-              </a>
-            </div>
-          </div>
-          <div class="eight wide column">
-            <form method="post" action="{% url 'text' %}" class="ui inverted form">
+          <div class="sixteen wide column">
+            <form method="post" action="{% url 'pic' %}" class="ui inverted form" enctype="multipart/form-data">
               {% csrf_token %}
               <div class="field">
                 <label>Size</label>
@@ -36,6 +52,26 @@
                       <input type="text" name="height" id="height" placeholder="Height" required/>
                     </div>
                   </div>
+                </div>
+              </div>
+              <div class="three fields">
+                <div class="field">
+                  <label>Upload File</label>
+                  <input type="file" class="form-control" id="upload_pic" name="upload_pic">
+                </div>
+                <div class="field">
+                  <label>Name</label>
+                  <div class="ui big input">
+                    <input type="text" name="name" id="name" placeholder="Please input the pic name..." required/>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Type</label>
+                  <select class="ui search dropdown" id="type" name="type">
+                    <option value="16px">background</option>
+                    <option value="14px">card</option>
+                    <option value="18px">comment</option>
+                  </select>
                 </div>
               </div>
               <div class="field">
@@ -90,16 +126,11 @@
                   </div>
                 </div>
               </div>
-              <div class="field">
-                <label>Content</label>
-                <textarea rows="5" name="content" id="text-content" placeholder="Please input the text content..."
-                          required/></textarea>
-              </div>
               <div class="ui center aligned container">
                 <br>
-                <button type="submit" class="ui huge teal button" id="confirm" href="{% url 'grid' %}">Confirm
+                <button type="submit" class="ui huge teal button" href="{% url 'grid' %}" id="confirm">Confirm
                 </button>
-                <a class="ui huge inverted orange basic button" id="back" href="{% url 'select' %}">Back</a>
+                <a class="ui huge inverted orange basic button" href="{% url 'select' %}" id="back">Back</a>
               </div>
             </form>
           </div>
@@ -110,7 +141,7 @@
 
   <script type="text/javascript">
     var utterThis = new window.SpeechSynthesisUtterance();
-    utterThis.text = 'specify the size and content of text widget';
+    utterThis.text = 'specify the size and content of picture widget';
     window.speechSynthesis.speak(utterThis);
     $('#home').focus(function() {
       utterThis.text = 'home';
@@ -132,16 +163,12 @@
       utterThis.text = 'height';
       window.speechSynthesis.speak(utterThis);
     });
-    $('#font-size').focus(function() {
-      utterThis.text = 'font size';
+    $('#name').focus(function() {
+      utterThis.text = 'name';
       window.speechSynthesis.speak(utterThis);
     });
-    $('#font-color').focus(function() {
-      utterThis.text = 'font color';
-      window.speechSynthesis.speak(utterThis);
-    });
-    $('#text-content').focus(function() {
-      utterThis.text = 'text content';
+    $('#upload_pic').focus(function() {
+      utterThis.text = 'upload picture';
       window.speechSynthesis.speak(utterThis);
     });
     $('#confirm').focus(function() {

@@ -3,28 +3,25 @@
   <div class="ui container">
     <div class="ui large secondary inverted pointing menu">
       <a href="{% url 'index' %}" class="item" id='home'>Home</a>
-      <a href="{% url 'select' %}" class="item" id='plan-a'>PlanA</a>
-      <a href="{% url 'grid-b' %}" class="active item" id='plan-b'>PlanB</a>
+      <a href="{% url 'select' %}" class="active item" id='plan-a'>PlanA</a>
+      <a href="{% url 'grid-b' %}" class="item" id='plan-b'>PlanB</a>
     </div>
   </div>
   <div class="ui inverted vertical masthead center aligned segment">
     <div class="ui text container">
       <br><br>
-      <h2>Specify the size and content of pic widget.</h2>
+      <h2>Specify the size and content of input widget.</h2>
       <div class="ui text container">
         <div class="ui divided grid">
           <div class="eight wide column">
-            <div class="ui card">
+            <div class="widget">
               <a class="image">
-                <img src="/static/picture.png">
+                <img src="/static/input.png">
               </a>
-              <div class="content">
-                <a class="header">Pic</a>
-              </div>
             </div>
           </div>
           <div class="eight wide column">
-            <form method="post" action="{% url 'pic-b' %}" class="ui inverted form" enctype="multipart/form-data">
+            <form method="post" action="{% url 'pic' %}" class="ui inverted form" enctype="multipart/form-data">
               {% csrf_token %}
               <div class="field">
                 <label>Size</label>
@@ -44,12 +41,14 @@
               <div class="field">
                 <label>Name</label>
                 <div class="ui big input">
-                  <input type="text" name="name" id="name" placeholder="Please input the pic name..." required/>
+                  <input type="text" name="name" id="name" placeholder="Please input the input name..." required/>
                 </div>
               </div>
               <div class="field">
-                <label>Upload File</label>
-                <input type="file" class="form-control" id="upload_pic" name="upload_pic">
+                <label>Placeholder</label>
+                <div class="ui big input">
+                  <input type="text" name="placeholder" id="placeholder" placeholder="Please specify the input placeholder..." required/>
+                </div>
               </div>
               <div class="ui center aligned container">
                 <br>
@@ -109,7 +108,7 @@
         if (utterThis.text === "confirm") {
           $("#confirm").click();
         } else if (utterThis.text === "back") {
-          window.location.href = "{% url 'grid-b' %}";
+          window.location.href = "{% url 'select' %}";
         }
       }
     });

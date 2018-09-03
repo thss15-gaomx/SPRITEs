@@ -9,15 +9,12 @@
   </div>
   <div class="ui inverted vertical masthead center aligned segment">
     <h2>Please select a widget.</h2>
-    <div class="ui four column doubling stackable grid container">
+    <div class="ui three column doubling stackable grid container">
       <div class="column">
         <div class="ui card">
           <a class="image" href="{% url 'pic' %}">
-            <img src="/static/picture.png">
+            <img src="/static/pic.png">
           </a>
-          <div class="content">
-            <a class="header" href="{% url 'pic' %}">Pic</a>
-          </div>
         </div>
       </div>
       <div class="column">
@@ -25,71 +22,36 @@
           <a class="image" href="{% url 'text' %}">
             <img src="/static/text.png">
           </a>
-          <div class="content">
-            <a class="header" href="{% url 'text' %}">Text</a>
-          </div>
         </div>
       </div>
       <div class="column">
         <div class="ui card">
-          <a class="image" href="#">
-            <img src="/static/input.png">
+          <a class="image" href="{% url 'pic-text' %}">
+            <img src="/static/pic-text.png">
           </a>
-          <div class="content">
-            <a class="header" href="#">Input</a>
-          </div>
-        </div>
-      </div>
-      <div class="column">
-        <div class="ui card">
-          <a class="image" href="#">
-            <img src="/static/button.png">
-          </a>
-          <div class="content">
-            <a class="header" href="#">Button</a>
-          </div>
         </div>
       </div>
     </div>
-    <div class="ui four column doubling stackable grid container">
+    <div class="ui three column doubling stackable grid container">
       <div class="column">
         <div class="ui card">
-          <a class="image" href="#">
-            <img src="/static/music.png">
+          <a class="image" href="{% url 'video' %}">
+            <img src="/static/video.png">
           </a>
-          <div class="content">
-            <a class="header" href="#">Music</a>
-          </div>
         </div>
       </div>
       <div class="column">
         <div class="ui card">
-          <a class="image" href="#">
-            <img src="/static/menu.png">
+          <a class="image" href="{% url 'button' %}">
+            <img src="/static/button.png">
           </a>
-          <div class="content">
-            <a class="header" href="#">Menu</a>
-          </div>
         </div>
       </div>
       <div class="column">
         <div class="ui card">
-          <a class="image" href="#">
-            <img src="/static/filter.png">
+          <a class="image" href="{% url 'input' %}">
+            <img src="/static/input.png">
           </a>
-          <div class="content">
-            <a class="header" href="#">Filter</a>
-          </div>
-        </div>
-      </div>
-      <div class="column">
-        <div class="ui card">
-          <a class="image" href="#">
-            <img src="/static/chart.png">
-          </a>
-          <div class="content">
-            <a class="header" href="#">Chart</a>
-          </div>
         </div>
       </div>
     </div>

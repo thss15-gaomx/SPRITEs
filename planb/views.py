@@ -9,17 +9,5 @@ color_map = ["#B03060", "#FE9A76", "#FFD700", "#32CD32", "#016936", "#008080", "
              "#FF1493", "#A52A2A", "#A0A0A0", "#000000"]
 
 
-def select(request):
-    return render(request, "select-b.html")
-
-
-def text(request):
-    return render(request, "text-b.html")
-
-
-def pic(request):
-    return render(request, "pic-b.html")
-
-
 def grid(request):
     return render(request, "grid-b.html")
