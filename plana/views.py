@@ -31,8 +31,9 @@ def get_all_blocks():
     return all
 
 
-def select(request):
-    return render(request, "select.html")
+def select(request, section_id):
+    info = {'section': section_id}
+    return render(request, "select.html", info)
 
 
 def text(request):

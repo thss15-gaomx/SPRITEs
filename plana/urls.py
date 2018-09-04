@@ -13,6 +13,6 @@ urlpatterns = [
     url(r'^input$', views.input, name='input'),
     url(r'^button$', views.button, name='button'),
     url(r'^section$', views.section, name='section'),
-    url(r'^select$', views.select, name='select'),
+    url(r'^select/([0-9]*)$', views.select, name='select'),
     url(r'^$', views.page, name='page'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

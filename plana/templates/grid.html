@@ -3,7 +3,7 @@
   <div class="ui container">
     <div class="ui large secondary inverted pointing menu">
       <a href="{% url 'index' %}" class="item">Home</a>
-      <a href="{% url 'select' %}" class="active item">PlanA</a>
+      <a href="{% url 'page' %}" class="active item">PlanA</a>
       <a href="{% url 'grid-b' %}" class="item">PlanB</a>
     </div>
   </div>
@@ -347,7 +347,7 @@
           setBlock();
         }
       } else if (event.keyCode === 27) { // Esc
-        window.location.href = "{% url 'select' %}";
+        window.location.href = "{% url 'page' %}";
       } else if (event.keyCode === 8) { // Delete
       }
     });
