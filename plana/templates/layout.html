@@ -25,107 +25,26 @@
     </div>
   </div>
   <div class="grid content">
-    <div class='content-section'>
-      <div class="text-block block" x="1" y="0"
-          width="1" height="3" id="section1-1"
-          style="font-size: 16px; color: white; background-color: #32CD32;">
-        block 1
+    {% for item in section %}
+      <div class='content-section'>
+        {% for block in item.blocks %}
+          <div class="text-block block" x="{{ block.x }}" y="{{ block.y }}"
+              width="{{ block.width }}" height="{{ block.height }}" id="{{ block.id }}" section="{{ item.section }}"
+              style="font-size: 16px; color: white; background-color: #32CD32;">
+            block 1
+          </div>
+        {% endfor %}
+        <table border="1" class="grid-container" id='section{{ item.section }}'>
+          {% for row in item.height %}
+            <tr>
+              {% for column in item.width %}
+                <td> 　</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </table>
       </div>
-      <table border="1" class="grid-container" id='section1'>
-        <tr>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-        </tr>
-        <tr>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-        </tr>
-        <tr>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-        </tr>
-        <tr>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-        </tr>
-      </table>
-    </div>
-    <div class='content-section'>
-      <div class="text-block block" x="2" y="2"
-          width="2" height="2" id="section2-1"
-          style="font-size: 16px; color: white; background-color: #32CD32;">
-        block 2
-      </div>
-      <table border="1" class="grid-container" id='section2'>
-        <tr>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-        </tr>
-        <tr>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-        </tr>
-        <tr>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-        </tr>
-        <tr>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-        </tr>
-        <tr>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-          <td> 　</td>
-        </tr>
-      </table>
-    </div>
+    {% endfor %}
   </div>
   <div class="grid sidebar">SideBar</div>
   <div class="grid footer">
@@ -156,6 +75,45 @@
     </div>
   </div>
 </div>
+<div class="ui basic modal">
+  <div class="ui icon header">
+    <i class="table icon"></i>
+    Add New Section
+  </div>
+  <div class="content">
+    <form method="post" action="{% url 'pic' %}" class="ui inverted form" enctype="multipart/form-data">
+      {% csrf_token %}
+        <div class="field">
+          <label>Size</label>
+          <div class="two fields">
+            <div class="field">
+              <div class="ui big left icon input">
+                <input type="text" name="width" id="width" placeholder="Width" required/>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui big input">
+                <input type="text" name="height" id="height" placeholder="Height" required/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Name</label>
+          <div class="ui big input">
+            <input type="text" name="name" id="name" placeholder="Name" required/>
+          </div>
+        </div>
+      <div class="ui center aligned container actions">
+        <br>
+        <button type="submit" class="ui huge teal ok button" href="{% url 'grid' %}" id="confirm">
+          <i class="add icon"></i>Create New Section
+        </button>
+        <a class="ui huge inverted orange basic cancel button" id="cancel">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
 </body>
 </html>
 
@@ -175,8 +133,7 @@
   $("#section2 tr").css("height", gridLength);
   var marginLeft, marginTop, width, height;
   $(".block").each(function(){
-    var id = $(this).attr("id");
-    var sectionIndex = id.substring(7, id.indexOf('-'));
+    var sectionIndex = $(this).attr("section");
     if (sectionIndex === "1") {
       sectionColumn = sectionColumn1;
     } else if (sectionIndex === "2") {
@@ -194,13 +151,13 @@
   var curUnit = 1, unitNum = 0, curSection = 0;
   var curLevel = "page"; // page, container, section, block
   var curBox = "page";  // page, header, body, sidebar, footer, section1, section2, block1, block2
-  var blockWidth = parseInt({{ object.block.width }});
-  var blockHeight = parseInt({{ object.block.height }});
+  var blockWidth = 0;
+  var blockHeight = 0;
   var type = "{{ type }}";
   var curRow = 0, curColumn = 0;
   var margin;
   var focus = "null";  //null, row, column, both
-  var focusColumn = 0, focusRow = 0, focusObject = parseInt({{ object.block.id }});
+  var focusColumn = 0, focusRow = 0, focusObject = -1;
   var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48]; //1, 2, 3, 4, 5, 6, 7, 8, 9, 0
   var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
   var shift = 0;
@@ -208,29 +165,35 @@
   var allDict = new Array();
   for (var i = 0; i < allString.length; i++) {
     item = allString[i].split(",");
-    allDict[i] = {'id': item[0], 'x': item[1], 'y': item[2]};
+    allDict[i] = {'section': item[0], 'width': item[1], 'height': item[2]};
   }
-  function setBlock(params) {
+  function setBlock() {
     focus = "both";
     curRow = focusRow;
     curColumn = focusColumn;
     if (focusObject !== -1) {
-      margin = (curRow * unitHeight + 20).toString() + 'px';
+      margin = (curRow * 75 / sectionColumn).toString() + 'vw';
       $(".current").css("margin-top", margin)
-      margin = (curColumn * unitWidth).toString() + 'px';
+      margin = (curColumn * 75 / sectionColumn).toString() + 'vw';
       $(".current").css("margin-left", margin);
-      for (var i = 0; i < allDict.length; i++) {
-        if (parseInt(allDict[i]['x']) === curColumn && parseInt(allDict[i]['y']) === curRow && parseInt(allDict[i]['id']) !== focusObject) {
+      $(".block").each(function(){
+        var sectionIndex = parseInt($(this).attr("section"));
+        var blockX = parseInt($(this).attr("x"));
+        var blockY = parseInt($(this).attr("y"));
+        if (sectionIndex === curSection && blockX === curColumn && blockY  === curRow) {
           playOverlapSound();
         }
-      }
+      });
     } else {
       var objectNum = 0;
-      for (var i = 0; i < allDict.length; i++) {
-        if (parseInt(allDict[i]['x']) === focusColumn && parseInt(allDict[i]['y']) === focusRow) {
+      $(".block").each(function(){
+        var sectionIndex = parseInt($(this).attr("section"));
+        var blockX = parseInt($(this).attr("x"));
+        var blockY = parseInt($(this).attr("y"));
+        if (sectionIndex === curSection && blockX === curColumn && blockY  === curRow) {
           objectNum++;
         }
-      }
+      });
       utterThis.text = (objectNum).toString() + "objects";
       window.speechSynthesis.speak(utterThis);
     }
@@ -239,15 +202,18 @@
     shift = e.location;
   });
   function enterSection() {
-    if (curSection === 1) {
-      sectionColumn = sectionColumn1;
-      sectionRow = sectionRow1;
-    } else if (curSection === 2) {
-      sectionColumn = sectionColumn2;
-      sectionRow = sectionRow2;
+    for (var i = 0; i < allDict.length; i++) {
+      if (parseInt(allDict[i]['section']) === curSection) {
+        sectionColumn = parseInt(allDict[i]['width']);
+        sectionRow = parseInt(allDict[i]['height']);
+      }
     }
     var curUnit = 1;
     unitNum = Math.ceil(sectionRow / 4);
+    focusObject = -1;
+    $(".current").each(function(){
+      $(this).removeClass('current');
+    });
   }
   function keyFunctionPage(keyCode) {
     if (keyCode === 220) {  // \: enter
@@ -263,6 +229,9 @@
       if (curBox !== 'page') {
         curLevel = "container";
       }
+      focus = "null";
+      focusColumn = 0;
+      focusRow = 0;
     } else if (columnKey.indexOf(keyCode) >= 0) {
       if (focus === "null") {
         utterThis.text = "select the row first";
@@ -355,6 +324,12 @@
         curBox = "page";
         utterThis.text = "enter" + curBox;
         window.speechSynthesis.speak(utterThis);
+      } else if (keyCode === 187) { // Add
+        utterThis.text = "add section";
+        window.speechSynthesis.speak(utterThis);
+        $('.ui.basic.modal')
+          .modal('show')
+        ;
       } else if (keyCode === 8) { // Delete
       }
     } else {
@@ -370,14 +345,6 @@
     }
   }
   function keyFunctionSection(keyCode) {
-    marginLeft = (parseInt($(this).attr("x")) * 75 / sectionColumn).toString() + 'vw';
-    $(this).css("margin-left", marginLeft);
-    marginTop = (parseInt($(this).attr("y")) * 75 / sectionColumn).toString() + 'vw';
-    $(this).css("margin-top", marginTop);
-    width = (parseInt($(this).attr("width")) * 75 / sectionColumn).toString() + 'vw';
-    $(this).css("width", width);
-    height = (parseInt($(this).attr("height")) * 75 / sectionColumn).toString() + 'vw';
-    $(this).css("height", height);
     if (keyCode === 37) {   // left
       if (curColumn > 0) {
         curColumn--;
@@ -416,21 +383,23 @@
       //   focus = "null";
       // });
     } else if (keyCode === 220) {  // \: enter
-      utterThis.text = "enter" + curBox;
-      window.speechSynthesis.speak(utterThis);
-      // if (focus === "both" && focusObject === -1) {
-      //   for (var i = 0; i < allDict.length; i++) {
-      //     if (parseInt(allDict[i]['x']) === focusColumn && parseInt(allDict[i]['y']) === focusRow) {
-      //       var id = "#" + allDict[i]['id'];
-      //       utterThis.text = "i d " + (allDict[i]['id']).toString();
-      //       window.speechSynthesis.speak(utterThis);
-      //       $(id).addClass('current');
-      //       curRow = focusRow;
-      //       curColumn = focusColumn;
-      //       focusObject = parseInt(allDict[i]['id']);
-      //     }
-      //   }
-      // }
+      if (focus === "both" && focusObject === -1) {
+        $(".block").each(function(){
+          var sectionIndex = parseInt($(this).attr("section"));
+          var blockX = parseInt($(this).attr("x"));
+          var blockY = parseInt($(this).attr("y"));
+          if (sectionIndex === curSection && blockX === focusColumn && blockY  === focusRow) {
+            utterThis.text = "i d " + ($(this).attr("id")).toString();
+            window.speechSynthesis.speak(utterThis);
+            $(this).addClass('current');
+            blockWidth = parseInt($(this).attr("width"));
+            blockHeight = parseInt($(this).attr("height"))
+            curRow = focusRow;
+            curColumn = focusColumn;
+            focusObject = parseInt($(this).attr("id"));
+          }
+        });
+      }
     } else if (keyCode === 13) {  // enter: unit up
       if (curUnit > 1) {
         curUnit--;
@@ -457,11 +426,11 @@
         focusColumn = columnKey.indexOf(keyCode);
         utterThis.text = "column " + (focusColumn + 1).toString();
         window.speechSynthesis.speak(utterThis);
-        // if (focus === "null" || focus === "both") {
-        //   focus = "column";
-        // } else if (focus === "row") {
-        //   setBlock();
-        // }
+        if (focus === "null" || focus === "both") {
+          focus = "column";
+        } else if (focus === "row") {
+          setBlock();
+        }
       } else {
         utterThis.text = "only " + (sectionColumn).toString() + "columns";
         window.speechSynthesis.speak(utterThis);
@@ -471,11 +440,11 @@
         focusRow = rowKey.indexOf(keyCode) + (curUnit - 1) * 4;
         utterThis.text = "row " + (focusRow + 1).toString();
         window.speechSynthesis.speak(utterThis);
-        // if (focus === "null" || focus === "both") {
-        //   focus = "row";
-        // } else if (focus === "column") {
-        //   setBlock();
-        // }
+        if (focus === "null" || focus === "both") {
+          focus = "row";
+        } else if (focus === "column") {
+          setBlock();
+        }
       } else {
         utterThis.text = "only " + (sectionRow).toString() + "rows";
         window.speechSynthesis.speak(utterThis);
@@ -485,6 +454,10 @@
       curBox = "body";
       utterThis.text = "enter" + curBox;
       window.speechSynthesis.speak(utterThis);
+    } else if (keyCode === 187) { // Add
+      utterThis.text = "add widget";
+      window.speechSynthesis.speak(utterThis);
+      window.location.href = "{% url 'select' %}";
     } else if (keyCode === 8) { // Delete
     }
   }
@@ -499,5 +472,25 @@
       event.preventDefault();
       keyFunctionSection(keyCode);
     }
+  });
+  $('#width').focus(function() {
+    utterThis.text = 'width';
+    window.speechSynthesis.speak(utterThis);
+  });
+  $('#height').focus(function() {
+    utterThis.text = 'height';
+    window.speechSynthesis.speak(utterThis);
+  });
+  $('#name').focus(function() {
+    utterThis.text = 'name';
+    window.speechSynthesis.speak(utterThis);
+  });
+  $('#confirm').focus(function() {
+    utterThis.text = 'confirm';
+    window.speechSynthesis.speak(utterThis);
+  });
+  $('#cancel').focus(function() {
+    utterThis.text = 'cancel';
+    window.speechSynthesis.speak(utterThis);
   });
 </script>

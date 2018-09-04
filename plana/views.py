@@ -111,11 +111,7 @@ def button(request):
 
 
 def section(request):
-    return render(request, "section.html")
-
-
-def part(request):
-    return render(request, "part.html")
+    return render(request, "layout.html")
 
 
 def page(request):
@@ -136,6 +132,16 @@ def grid(request):
     else:
         return render(request, "grid.html")
 
-
+@csrf_exempt
 def layout(request):
-    return render(request, "layout.html")
+    info = {
+        'sectionNum': 2,
+        'section': [
+            {"width": range(0,10), "height": range(0,4), "section": 1,
+                "blocks": [{"x": 1, "y": 0, "width": 1, "height": 2, "id": 1}]},
+            {"width": range(0,5), "height": range(0,5), "section": 2,
+                "blocks": [{"x": 2, "y": 2, "width": 2, "height": 2, "id": 2}]}
+        ],
+        'all': '1,10,4;2,5,5'
+    }
+    return render(request, "layout.html", info)
