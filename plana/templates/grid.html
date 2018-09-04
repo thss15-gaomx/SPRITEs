@@ -9,26 +9,26 @@
   </div>
   <div class="ui inverted vertical masthead segment grid-page">
     {% for item in pic %}
-      <div class="pic-block" x="{{ item.block.pos_x }}" y="{{ item.block.pos_y }}"
+      <div class="pic-block block" x="{{ item.block.pos_x }}" y="{{ item.block.pos_y }}"
         width="{{ item.block.width }}" height="{{ item.block.height }}" id="{{ item.block.id }}">
         <img src=".{{ item.content.url }}">
       </div>
     {% endfor %}
     {% for item in text %}
-      <div class="text-block" x="{{ item.block.pos_x }}" y="{{ item.block.pos_y }}"
+      <div class="text-block block" x="{{ item.block.pos_x }}" y="{{ item.block.pos_y }}"
           width="{{ item.block.width }}" height="{{ item.block.height }}" id="{{ item.block.id }}"
           style="font-size: {{ item.font_size }}; color: {{ item.font_color }}; background-color: {{ item.block.color }};">
         {{ item.content }}
       </div>
     {% endfor %}
     {% if type == "text" %}
-      <div class="text-block current" x="{{ object.block.pos_x }}" y="{{ object.block.pos_y }}"
+      <div class="text-block current block" x="{{ object.block.pos_x }}" y="{{ object.block.pos_y }}"
           width="{{ object.block.width }}" height="{{ object.block.height }}" id="{{ object.block.id }}"
           style="font-size: {{ object.font_size }}; color: {{ object.font_color }}; background-color: {{ object.block.color }};">
         {{ object.content }}</div>
     {% endif %}
     {% if type == "pic" %}
-      <div class="pic-block current" x="{{ object.block.pos_x }}" y="{{ object.block.pos_y }}"
+      <div class="pic-block current block" x="{{ object.block.pos_x }}" y="{{ object.block.pos_y }}"
           width="{{ object.block.width }}" height="{{ object.block.height }}" id="{{ object.block.id }}">
         <img src=".{{ object.content.url }}">
       </div>
@@ -195,17 +195,7 @@
     var unitHeight = $(".grid-table").height() / 12;
     var marginLeft, marginTop, width, height;
     var curPage = 1;
-    $(".text-block").each(function(){
-      marginLeft = (parseInt($(this).attr("x")) * unitWidth).toString() + 'px';
-      $(this).css("margin-left", marginLeft);
-      marginTop = (parseInt($(this).attr("y")) * unitHeight + 20).toString() + 'px';
-      $(this).css("margin-top", marginTop);
-      width = (parseInt($(this).attr("width")) * 10).toString() + 'vw';
-      $(this).css("width", width);
-      height = (parseInt($(this).attr("height")) * 15).toString() + 'vh';
-      $(this).css("height", height);
-    });
-    $(".pic-block").each(function(){
+    $(".block").each(function(){
       marginLeft = (parseInt($(this).attr("x")) * unitWidth).toString() + 'px';
       $(this).css("margin-left", marginLeft);
       marginTop = (parseInt($(this).attr("y")) * unitHeight + 20).toString() + 'px';
