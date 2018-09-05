@@ -37,10 +37,10 @@
                 style="font-size: {{ block.font_size }}; color: {{ block.font_color }}; background-color: {{ block.background_color }};">
               {{ block.text_content }}
             </div>
-          {% elif block.type == 'pic' %}
+          {% elif block.content_type == 'pic' %}
             <div class="pic-block block" x="{{ block.pos_x }}" y="{{ block.pos_y }}"
-                width="{{ block.width }}" height="{{ block.height }}" id="{{ block.id }}">
-              <img src=".{{ block.pic_content.url }}">
+                width="{{ block.width }}" height="{{ block.height }}" id="{{ block.id }}" section="{{ item.section }}">
+              <img src="..{{ block.pic_content.url }}">
             </div>
           {% endif %}
         {% endfor %}

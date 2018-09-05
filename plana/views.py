@@ -81,35 +81,29 @@ def text(request, section_id):
         return render(request, "text.html", {'section': section_id})
 
 
-def pic(request):
+def pic(request, section_id):
     if request.method == 'POST':
         form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
-            # upload_pic = request.FILES['upload_pic']
-            # width = form.cleaned_data['width']
-            # height = form.cleaned_data['height']
-            # if form.cleaned_data['name']:
-            #     name = form.cleaned_data['name']
-            # else:
-            #     name = upload_pic.name
-            # new_pic = Pic()
-            # new_pic.name = name
-            # new_pic.block = create_block(width, height, "pic")
-            # new_pic.content = upload_pic
-            # new_pic.save()
-            # info = {
-            #     'pic': Pic.objects.filter(~Q(id=new_pic.id)),
-            #     'text': Text.objects.all(),
-            #     'all': get_all_blocks,
-            #     'object': new_pic,
-            #     'type': "pic"
-            # }
+            upload_pic = request.FILES['upload_pic']
+            width = form.cleaned_data['width']
+            height = form.cleaned_data['height']
+            if form.cleaned_data['name']:
+                name = form.cleaned_data['name']
+            else:
+                name = upload_pic.name
+            block = create_block(width, height, "pic", section_id)
+            block.name = name
+            block.pic_content = upload_pic
+            block.save()
+            section = Section.objects.get(id=int(section_id))
+            info = get_layout(section.page_id, block.id)
             try:
-                return render(request, "grid.html", info)
+                return render(request, "layout.html", info)
             except:
-                return render(request, "pic.html")
+                return render(request, "pic.html", {'section': section_id})
     else:
-        return render(request, "pic.html")
+        return render(request, "pic.html", {'section': section_id})
 
 
 def pic_text(request):
@@ -158,20 +152,6 @@ def new_page(request):
     except:
         return render(request, "page.html", {"pages": Page.objects.all()})
 
-
-@csrf_exempt
-def grid(request):
-    if request.method == 'POST':
-        column = request.POST.get('x')
-        row = request.POST.get('y')
-        id = request.POST.get('id')
-        object = Block.objects.get(id=id)
-        object.pos_x = column
-        object.pos_y = row
-        object.save()
-        return render(request, "grid.html")
-    else:
-        return render(request, "grid.html")
 
 @csrf_exempt
 def layout(request, pageId):

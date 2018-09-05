@@ -12,7 +12,7 @@
     <div class="ui three column doubling stackable grid container">
       <div class="column">
         <div class="ui card">
-          <a class="image" href="{% url 'pic' %}">
+          <a class="image" href="{% url 'pic' section %}">
             <img src="/static/pic.png">
           </a>
         </div>
@@ -88,7 +88,7 @@
         window.speechSynthesis.speak(utterThis);
       } else if (event.keyCode === 220) { // Enter
         if (utterThis.text === "picture") {
-          window.location.href = "{% url 'pic' %}";
+          window.location.href = "{% url 'pic' section %}";
         } else if (utterThis.text === "text") {
           window.location.href = "{% url 'text' section %}";
         }
