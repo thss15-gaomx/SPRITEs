@@ -34,10 +34,7 @@
         <table class="ui inverted celled structured table">
           <thead>
             <tr>
-              <th rowspan="2">Pages</th>
-              <th colspan="4" class="center aligned">Parts</th>
-            </tr>
-            <tr>
+              <th>Pages</th>
               <th>Header</th>
               <th>Body</th>
               <th>SideBar</th>
@@ -45,38 +42,37 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Page 1</td>
-              <td class="center aligned">
-                <i class="large green checkmark icon"></i>
-              </td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>Page 2</td>
-              <td></td>
-              <td class="center aligned">
-                <i class="large green checkmark icon"></i>
-              </td>
-              <td></td>
-              <td></td>
-            </tr>
+            {% for page in pages %}
+              <tr>
+                <td><a href="{% url 'layout' page.id %}"> Page {{ forloop.counter }}</a></td>
+                <td class="center aligned">
+                  <i class="large green checkmark icon"></i>
+                </td>
+                <td class="center aligned">
+                  {{ page.section_num }} sections
+                </td>
+                <td class="center aligned">
+                  <i class="large green checkmark icon"></i>
+                </td>
+                <td class="center aligned">
+                  <i class="large green checkmark icon"></i>
+                </td>
+              <tr>
+            {% endfor %}
           </tbody>
         </table>
         <div class="ui center aligned container">
           <br>
-          <a class="ui huge teal button" href="{% url 'part' %}" id="confirm">New Page</a>
-          <a class="ui huge inverted orange basic button" href="{% url 'select' %}" id="back">Back</a>
+          <a class="ui huge teal button" id="confirm" href="{% url 'new-page' %}">New Page</a>
+          <a class="ui huge inverted orange basic button" href="{% url 'index' %}" id="back">Back</a>
         </div>
       </div>
     </div>
 
   <script type="text/javascript">
     var utterThis = new window.SpeechSynthesisUtterance();
-    utterThis.text = 'specify the size and content of picture widget';
-    window.speechSynthesis.speak(utterThis);
+    // utterThis.text = 'specify the size and content of picture widget';
+    // window.speechSynthesis.speak(utterThis);
     $('#home').focus(function() {
       utterThis.text = 'home';
       window.speechSynthesis.speak(utterThis);

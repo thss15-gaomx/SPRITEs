@@ -12,6 +12,7 @@ class Section(models.Model):
     page_id = models.IntegerField(default=0)
     width = models.IntegerField(default=0)
     height = models.IntegerField(default=0)
+    name = models.CharField(max_length=64, default="")
 
 
 class Block(models.Model):

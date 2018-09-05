@@ -19,12 +19,15 @@
         <div class="header item">
           SPRITEs Project
         </div>
-        <a href="#" class="item">Pages</a>
-        <a href="#" class="item">Sections</a>
+        <a href="{% url 'index' %}" class="item">Index</a>
+        <a href="{% url 'page' %}" class="item">Pages</a>
       </div>
     </div>
   </div>
   <div class="grid content">
+    {% if sectionNum == 0 %}
+      <div class='content-section' style="height:80vh;">NoSections</div>
+    {% endif %}
     {% for item in section %}
       <div class='content-section'>
         {% for block in item.blocks %}
@@ -34,7 +37,7 @@
             block 1
           </div>
         {% endfor %}
-        <table border="1" class="grid-container" id='section{{ item.section }}'>
+        <table class="grid-container" id='section{{ item.section }}'>
           {% for row in item.height %}
             <tr>
               {% for column in item.width %}
@@ -46,25 +49,24 @@
       </div>
     {% endfor %}
   </div>
-  <div class="grid sidebar">SideBar</div>
+  <div class="grid sidebar">
+    <div class="ui sticky fixed top">
+      <h4 class="ui header">Sidebar</h4>
+      <div class="ui vertical following fluid accordion text menu">
+        {% for item in section %}
+          <div class="item"><a class="title" href="#section{{ item.section }}">
+            <i class="dropdown icon"></i> <b>Section {{ item.section }}</b></a>
+            <div class="content menu">
+              <a class="item" href="#">Widget</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
   <div class="grid footer">
     <div class="ui inverted vertical footer segment">
       <div class="ui center aligned container">
-        <div class="ui stackable inverted divided grid">
-          <div class="three wide column">
-            <h4 class="ui inverted header" href="#">Section 1</h4>
-          </div>
-          <div class="three wide column">
-            <h4 class="ui inverted header" href="#">Section 2</h4>
-          </div>
-          <div class="three wide column">
-            <h4 class="ui inverted header" href="#">Section 3</h4>
-          </div>
-          <div class="seven wide column">
-            <h4 class="ui inverted header">Back to Top</h4>
-          </div>
-        </div>
-        <div class="ui inverted section divider"></div>
         <div class="ui horizontal inverted small divided link list">
           <a class="item" href="#">Site Help</a>
           <a class="item" href="#">Contact Us</a>
@@ -81,7 +83,7 @@
     Add New Section
   </div>
   <div class="content">
-    <form method="post" action="{% url 'pic' %}" class="ui inverted form" enctype="multipart/form-data">
+    <form method="post" action="{% url 'section' pageId %}" class="ui inverted form" enctype="multipart/form-data">
       {% csrf_token %}
         <div class="field">
           <label>Size</label>
@@ -106,7 +108,7 @@
         </div>
       <div class="ui center aligned container actions">
         <br>
-        <button type="submit" class="ui huge teal ok button" href="{% url 'layout' %}" id="confirm">
+        <button type="submit" class="ui huge teal ok button" id="confirm">
           <i class="add icon"></i>Create New Section
         </button>
         <a class="ui huge inverted orange basic cancel button" id="cancel">Cancel</a>
@@ -125,27 +127,33 @@
   // utterThis.text = 'layout page';
   utterThis.lang = 'en';
   // window.speechSynthesis.speak(utterThis);
-  var sectionNum = 2, sectionColumn, sectionRow;
-  var sectionColumn1 = 10, sectionColumn2 = 5, sectionRow1 = 4, sectionRow2 = 5;
-  var gridLength = (75 / sectionColumn1).toString() + "vw";
-  $("#section1 tr").css("height", gridLength);
-  gridLength = (75 / sectionColumn2).toString() + "vw";
-  $("#section2 tr").css("height", gridLength);
+  $(document).ready(function(){
+     $('.ui.accordion').accordion();
+  });
+  var sectionNum = {{ sectionNum }}, sectionColumn, sectionRow;
+  var allString = ("{{ all }}").split(";");
+  var allDict = new Array();
+  for (var i = 0; i < allString.length; i++) {
+    item = allString[i].split(",");
+    allDict[i] = {'section': item[0], 'width': item[1], 'height': item[2]};
+  }
+  for (var i = 0; i < allDict.length; i++) {
+    sectionColumn = parseInt(allDict[i]['width']);
+    var gridLength = (80 / sectionColumn).toString() + "vw";
+    var id = '#section' + (i + 1).toString() + ' tr';
+    $(id).css("height", gridLength);
+  }
   var marginLeft, marginTop, width, height;
   $(".block").each(function(){
-    var sectionIndex = $(this).attr("section");
-    if (sectionIndex === "1") {
-      sectionColumn = sectionColumn1;
-    } else if (sectionIndex === "2") {
-      sectionColumn = sectionColumn2;
-    }
-    marginLeft = (parseInt($(this).attr("x")) * 75 / sectionColumn).toString() + 'vw';
+    var sectionIndex = parseInt($(this).attr("section"));
+    sectionColumn = parseInt(allDict[sectionIndex - 1]['width']);
+    marginLeft = (parseInt($(this).attr("x")) * 80 / sectionColumn).toString() + 'vw';
     $(this).css("margin-left", marginLeft);
-    marginTop = (parseInt($(this).attr("y")) * 75 / sectionColumn).toString() + 'vw';
+    marginTop = (parseInt($(this).attr("y")) * 80 / sectionColumn).toString() + 'vw';
     $(this).css("margin-top", marginTop);
-    width = (parseInt($(this).attr("width")) * 75 / sectionColumn).toString() + 'vw';
+    width = (parseInt($(this).attr("width")) * 80 / sectionColumn).toString() + 'vw';
     $(this).css("width", width);
-    height = (parseInt($(this).attr("height")) * 75 / sectionColumn).toString() + 'vw';
+    height = (parseInt($(this).attr("height")) * 80 / sectionColumn).toString() + 'vw';
     $(this).css("height", height);
   });
   var curUnit = 1, unitNum = 0, curSection = 1;
@@ -161,20 +169,14 @@
   var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48]; //1, 2, 3, 4, 5, 6, 7, 8, 9, 0
   var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
   var shift = 0;
-  var allString = ("{{ all }}").split(";");
-  var allDict = new Array();
-  for (var i = 0; i < allString.length; i++) {
-    item = allString[i].split(",");
-    allDict[i] = {'section': item[0], 'width': item[1], 'height': item[2]};
-  }
   function setBlock() {
     focus = "both";
     curRow = focusRow;
     curColumn = focusColumn;
     if (focusObject !== -1) {
-      margin = (curRow * 75 / sectionColumn).toString() + 'vw';
+      margin = (curRow * 80 / sectionColumn).toString() + 'vw';
       $(".current").css("margin-top", margin)
-      margin = (curColumn * 75 / sectionColumn).toString() + 'vw';
+      margin = (curColumn * 80 / sectionColumn).toString() + 'vw';
       $(".current").css("margin-left", margin);
       $(".block").each(function(){
         var sectionIndex = parseInt($(this).attr("section"));
@@ -348,25 +350,25 @@
     if (keyCode === 37) {   // left
       if (curColumn > 0) {
         curColumn--;
-        margin = (curColumn * 75 / sectionColumn).toString() + 'vw';
+        margin = (curColumn * 80 / sectionColumn).toString() + 'vw';
         $(".current").css("margin-left", margin);
       }
     } else if (keyCode === 39) { // right
       if (curColumn + blockWidth < sectionColumn) {
         curColumn++;
-        margin = (curColumn * 75 / sectionColumn).toString() + 'vw';
+        margin = (curColumn * 80 / sectionColumn).toString() + 'vw';
         $(".current").css("margin-left", margin);
       }
     } else if (keyCode === 38) {   // up
       if (curRow > 0) {
         curRow--;
-        margin = (curRow * 75 / sectionColumn).toString() + 'vw';
+        margin = (curRow * 80 / sectionColumn).toString() + 'vw';
         $(".current").css("margin-top", margin);
       }
     } else if (keyCode === 40) { // down
       if (curRow + blockHeight < sectionRow) {
         curRow++;
-        margin = (curRow * 75 / sectionColumn).toString() + 'vw';
+        margin = (curRow * 80 / sectionColumn).toString() + 'vw';
         $(".current").css("margin-top", margin);
       }
     } else if (keyCode === 32) {   // space: set position
@@ -455,7 +457,7 @@
       utterThis.text = "enter" + curBox;
       window.speechSynthesis.speak(utterThis);
     } else if (keyCode === 187) { // Add
-      window.location.href = "/plana/select/" + (curSection).toString();
+      window.location.href = "/plana/select/" + allDict[curSection - 1]['section'];
     } else if (keyCode === 8) { // Delete
     }
   }

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Q
-from .models import Block, Text, Pic
+from .models import Block, Text, Pic, Page, Section, TextPic
 from .forms import UploadForm
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import json
@@ -29,6 +29,31 @@ def get_all_blocks():
     if all != "":
         all = all[:-1]
     return all
+
+def get_layout(pageId):
+    page = Page.objects.get(id=pageId)
+    sections = Section.objects.filter(page_id=pageId)
+    sectionList = []
+    index = 0
+    all = ''
+    for section in sections:
+        index += 1
+        sectionList.append({
+            "width": range(0, section.width),
+            "height": range(0, section.height),
+            "section": index,
+            "blocks": Block.objects.filter(section_id=section.id)
+        })
+        all += str(section.id) + ',' + str(section.width) + ',' + str(section.height) + ';'
+    if all != "":
+        all = all[:-1]
+    info = {
+        'pageId': pageId,
+        'sectionNum': page.section_num,
+        'section': sectionList,
+        'all': all
+    }
+    return info
 
 
 def select(request, section_id):
@@ -111,12 +136,35 @@ def button(request):
     return render(request, "button.html")
 
 
-def section(request):
-    return render(request, "layout.html")
+def section(request, pageId):
+    if request.method == 'POST':
+        section = Section()
+        section.page_id = pageId
+        section.width = request.POST.get('width')
+        section.height = request.POST.get('height')
+        section.name = request.POST.get('name')
+        section.save()
+        page = Page.objects.get(id=pageId)
+        page.section_num += 1
+        page.save()
+    return render(request, "layout.html", get_layout(pageId))
 
 
 def page(request):
-    return render(request, "page.html")
+    return render(request, "page.html", {"pages": Page.objects.all()})
+
+
+def new_page(request):
+    page = Page()
+    page.header = 1
+    page.sidebar = 1
+    page.footer = 1
+    page.section_num = 0
+    page.save()
+    try:
+        return render(request, "layout.html", get_layout(page.id))
+    except:
+        return render(request, "page.html", {"pages": Page.objects.all()})
 
 
 @csrf_exempt
@@ -134,15 +182,5 @@ def grid(request):
         return render(request, "grid.html")
 
 @csrf_exempt
-def layout(request):
-    info = {
-        'sectionNum': 2,
-        'section': [
-            {"width": range(0,10), "height": range(0,4), "section": 1,
-                "blocks": [{"x": 1, "y": 0, "width": 1, "height": 2, "id": 1}]},
-            {"width": range(0,5), "height": range(0,5), "section": 2,
-                "blocks": [{"x": 2, "y": 2, "width": 2, "height": 2, "id": 2}]}
-        ],
-        'all': '1,10,4;2,5,5'
-    }
-    return render(request, "layout.html", info)
+def layout(request, pageId):
+    return render(request, "layout.html", get_layout(pageId))
