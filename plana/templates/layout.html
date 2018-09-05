@@ -86,7 +86,7 @@
     </div>
   </div>
 </div>
-<div class="ui basic modal">
+<div class="ui basic modal one">
   <div class="ui icon header">
     <i class="table icon"></i>
     Add New Section
@@ -123,6 +123,23 @@
         <a class="ui huge inverted orange basic cancel button" id="cancel">Cancel</a>
       </div>
     </form>
+  </div>
+</div>
+<div class="ui basic modal two">
+  <div class="ui icon header" id="delete-title">
+  </div>
+  <div class="content">
+    <p id="delete-hint"></p>
+  </div>
+  <div class="actions">
+    <div class="ui red basic cancel inverted button">
+      <i class="remove icon"></i>
+      No
+    </div>
+    <a class="ui green ok inverted button" id="delete" href="">
+      <i class="checkmark icon"></i>
+      Yes
+    </a>
   </div>
 </div>
 </body>
@@ -165,7 +182,6 @@
     height = (parseInt($(this).attr("height")) * 80 / sectionColumn).toString() + 'vw';
     $(this).css("height", height);
   });
-  $('#' + ({{ current }}).toString()).addClass('current');
   var curUnit = 1, unitNum = 0, curSection = 1;
   var curLevel = "page"; // page, container, section, block
   var curBox = "page";  // page, header, body, sidebar, footer, section1, section2, block1, block2
@@ -179,6 +195,20 @@
   var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48]; //1, 2, 3, 4, 5, 6, 7, 8, 9, 0
   var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
   var shift = 0;
+  if ({{ block_id }} !== -1) {
+    $('#' + ({{ block_id }}).toString()).addClass('current');
+    focus = "both";
+    focusObject = {{ block_id }};
+    focusColumn = parseInt($('#' + ({{ block_id }}).toString()).attr('x'));
+    focusRow = parseInt($('#' + ({{ block_id }}).toString()).attr('y'));
+    curLevel = "section";
+    curSection = {{ section_id }};
+    curBox = "section" + (curSection).toString();
+    sectionColumn = parseInt(allDict[curSection - 1]['width']);
+    sectionRow = parseInt(allDict[curSection - 1]['height']);
+    var curUnit = 1;
+    unitNum = Math.ceil(sectionRow / 4);
+  }
   function setBlock() {
     focus = "both";
     curRow = focusRow;
@@ -302,7 +332,7 @@
     if (curBox === "body") {
       if (keyCode === 220) {  // \: enter
         curLevel = "section";
-        curBox = "section" + (curSection).toString()
+        curBox = "section" + (curSection).toString();
         utterThis.text = "enter " + curBox;
         window.speechSynthesis.speak(utterThis);
         enterSection();
@@ -335,10 +365,21 @@
       } else if (keyCode === 187) { // Add
         utterThis.text = "add section";
         window.speechSynthesis.speak(utterThis);
-        $('.ui.basic.modal')
+        $('.ui.basic.modal.one')
           .modal('show')
         ;
       } else if (keyCode === 8) { // Delete
+        utterThis.text = "delete section" + (curSection).toString()
+        window.speechSynthesis.speak(utterThis);
+        $("#delete-title").html("<i class='archive icon'></i>Delete Section");
+        var deleteHint = "You are tring to delete section " + (curSection).toString()
+                        + ". Are you sure to delete this section and the widgets in it?";
+        $("#delete-hint").html(deleteHint);
+        var deleteInfo = "/plana/delete/p" + {{ pageId }} + "s" + allDict[curSection - 1]['section'];
+        $("#delete").attr('href', deleteInfo);
+        $('.ui.basic.modal.two')
+          .modal('show')
+        ;
       }
     } else {
       if (keyCode === 27) { // Esc
@@ -465,6 +506,19 @@
     } else if (keyCode === 187) { // Add
       window.location.href = "/plana/select/" + allDict[curSection - 1]['section'];
     } else if (keyCode === 8) { // Delete
+      if (focus === "both" && focusObject !== -1) {
+        utterThis.text = "delete widget " + (focusObject).toString()
+        window.speechSynthesis.speak(utterThis);
+        $("#delete-title").html("<i class='archive icon'></i>Delete Widget");
+        var deleteHint = "You are tring to delete widget " + (focusObject).toString()
+                        + ". Are you sure to delete this widget and the content in it?";
+        $("#delete-hint").html(deleteHint);
+        var deleteInfo = "/plana/delete/p" + {{ pageId }} + "w" + (focusObject).toString();
+        $("#delete").attr('href', deleteInfo);
+        $('.ui.basic.modal.two')
+          .modal('show')
+        ;
+      }
     }
   }
   $(document).keydown(function (event) {

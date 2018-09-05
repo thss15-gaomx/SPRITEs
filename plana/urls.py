@@ -14,5 +14,6 @@ urlpatterns = [
     url(r'^section/([0-9]*)$', views.section, name='section'),
     url(r'^select/([0-9]*)$', views.select, name='select'),
     url(r'^new-page$', views.new_page, name='new-page'),
+    url(r'^delete/([a-zA-Z0-9]*)$', views.delete, name='delete'),
     url(r'^$', views.page, name='page'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -29,12 +29,13 @@ def get_all_blocks():
         all = all[:-1]
     return all
 
-def get_layout(pageId, block_id):
+def get_layout(pageId, block_id, section_id):
     page = Page.objects.get(id=pageId)
     sections = Section.objects.filter(page_id=pageId)
     sectionList = []
     index = 0
     all = ''
+    cur_section = 0
     for section in sections:
         index += 1
         sectionList.append({
@@ -43,6 +44,8 @@ def get_layout(pageId, block_id):
             "section": index,
             "blocks": Block.objects.filter(section_id=section.id)
         })
+        if int(section.id) == int(section_id):
+            cur_section = index
         all += str(section.id) + ',' + str(section.width) + ',' + str(section.height) + ';'
     if all != "":
         all = all[:-1]
@@ -51,7 +54,8 @@ def get_layout(pageId, block_id):
         'sectionNum': page.section_num,
         'section': sectionList,
         'all': all,
-        'current': block_id
+        'block_id': block_id,
+        'section_id': cur_section
     }
     return info
 
@@ -72,7 +76,7 @@ def text(request, section_id):
         block.background_color = request.POST.get('background-color')
         block.save()
         section = Section.objects.get(id=int(section_id))
-        info = get_layout(section.page_id, block.id)
+        info = get_layout(section.page_id, block.id, section_id)
         try:
             return render(request, "layout.html", info)
         except:
@@ -97,7 +101,7 @@ def pic(request, section_id):
             block.pic_content = upload_pic
             block.save()
             section = Section.objects.get(id=int(section_id))
-            info = get_layout(section.page_id, block.id)
+            info = get_layout(section.page_id, block.id, section_id)
             try:
                 return render(request, "layout.html", info)
             except:
@@ -148,7 +152,7 @@ def new_page(request):
     page.section_num = 0
     page.save()
     try:
-        return render(request, "layout.html", get_layout(page.id, -1))
+        return render(request, "layout.html", get_layout(page.id, -1, -1))
     except:
         return render(request, "page.html", {"pages": Page.objects.all()})
 
@@ -163,6 +167,28 @@ def layout(request, pageId):
         object.pos_x = column
         object.pos_y = row
         object.save()
-        return render(request, "layout.html", get_layout(pageId, -1))
+        return render(request, "layout.html", get_layout(pageId, -1, -1))
     else:
-        return render(request, "layout.html", get_layout(pageId, -1))
+        return render(request, "layout.html", get_layout(pageId, -1, -1))
+
+
+@csrf_exempt
+def delete(request, delete_info):
+    page_id = -1
+    if 's' in delete_info:
+        index = delete_info.find('s')
+        section_id = delete_info[index+1:]
+        page_id = delete_info[1:index]
+        page = Page.objects.get(id=int(page_id))
+        page.section_num -= 1
+        Section.objects.get(id=int(section_id)).delete()
+        Block.objects.filter(section_id=int(section_id)).delete()
+    elif 'w' in delete_info:
+        index = delete_info.find('w')
+        widget_id = delete_info[index+1:]
+        page_id = delete_info[1:index]
+        Block.objects.get(id=int(widget_id)).delete()
+    if page_id == -1:
+        return render(request, "page.html", {"pages": Page.objects.all()})
+    else:
+        return render(request, "layout.html", get_layout(page_id, -1, -1))

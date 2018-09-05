@@ -59,7 +59,7 @@
 
   <script type="text/javascript">
     var utterThis = new window.SpeechSynthesisUtterance();
-    utterThis.text = 'press one to eight to select a widget type';
+    utterThis.text = 'press one to six to select a widget type';
     window.speechSynthesis.speak(utterThis);
     $(document).keydown(function (event) {
       if (event.keyCode === 49) {   // Pic
@@ -68,23 +68,17 @@
       } else if (event.keyCode === 50) { // Text
         utterThis.text = 'text';
         window.speechSynthesis.speak(utterThis);
-      } else if (event.keyCode === 51) { // Input
-        utterThis.text = 'input';
+      } else if (event.keyCode === 51) { // Pic Text
+        utterThis.text = 'picture and text';
         window.speechSynthesis.speak(utterThis);
-      } else if (event.keyCode === 52) { // Button
+      } else if (event.keyCode === 52) { // Video
+        utterThis.text = 'video';
+        window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 53) { // Button
         utterThis.text = 'button';
         window.speechSynthesis.speak(utterThis);
-      } else if (event.keyCode === 53) { // Music
-        utterThis.text = 'music';
-        window.speechSynthesis.speak(utterThis);
-      } else if (event.keyCode === 54) { // Menu
-        utterThis.text = 'menu';
-        window.speechSynthesis.speak(utterThis);
-      } else if (event.keyCode === 55) { // Filter
-        utterThis.text = 'filter';
-        window.speechSynthesis.speak(utterThis);
-      } else if (event.keyCode === 56) { // Chart
-        utterThis.text = 'chart';
+      } else if (event.keyCode === 54) { // Input
+        utterThis.text = 'input';
         window.speechSynthesis.speak(utterThis);
       } else if (event.keyCode === 220) { // Enter
         if (utterThis.text === "picture") {
