@@ -8,7 +8,7 @@
     </div>
   </div>
   <div class="ui inverted vertical masthead center aligned segment">
-    <h2>Please select a widget.{{section}}</h2>
+    <h2>Please select a widget.</h2>
     <div class="ui three column doubling stackable grid container">
       <div class="column">
         <div class="ui card">
@@ -19,7 +19,7 @@
       </div>
       <div class="column">
         <div class="ui card">
-          <a class="image" href="{% url 'text' %}">
+          <a class="image" href="{% url 'text' section %}">
             <img src="/static/text.png">
           </a>
         </div>
@@ -90,7 +90,7 @@
         if (utterThis.text === "picture") {
           window.location.href = "{% url 'pic' %}";
         } else if (utterThis.text === "text") {
-          window.location.href = "{% url 'text' %}";
+          window.location.href = "{% url 'text' section %}";
         }
       } else if (event.keyCode === 27) { // Esc
         window.location.href = "{% url 'index' %}";

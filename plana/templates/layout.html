@@ -31,11 +31,18 @@
     {% for item in section %}
       <div class='content-section'>
         {% for block in item.blocks %}
-          <div class="text-block block" x="{{ block.x }}" y="{{ block.y }}"
-              width="{{ block.width }}" height="{{ block.height }}" id="{{ block.id }}" section="{{ item.section }}"
-              style="font-size: 16px; color: white; background-color: #32CD32;">
-            block 1
-          </div>
+          {% if block.content_type == 'text' %}
+            <div class="text-block block" x="{{ block.pos_x }}" y="{{ block.pos_y }}"
+                width="{{ block.width }}" height="{{ block.height }}" id="{{ block.id }}" section="{{ item.section }}"
+                style="font-size: {{ block.font_size }}; color: {{ block.font_color }}; background-color: {{ block.background_color }};">
+              {{ block.text_content }}
+            </div>
+          {% elif block.type == 'pic' %}
+            <div class="pic-block block" x="{{ block.pos_x }}" y="{{ block.pos_y }}"
+                width="{{ block.width }}" height="{{ block.height }}" id="{{ block.id }}">
+              <img src=".{{ block.pic_content.url }}">
+            </div>
+          {% endif %}
         {% endfor %}
         <table class="grid-container" id='section{{ item.section }}'>
           {% for row in item.height %}
@@ -57,7 +64,9 @@
           <div class="item"><a class="title" href="#section{{ item.section }}">
             <i class="dropdown icon"></i> <b>Section {{ item.section }}</b></a>
             <div class="content menu">
-              <a class="item" href="#">Widget</a>
+              {% for block in item.blocks %}
+                <a class="item" href="#">Widget {{ block.id }}</a>
+              {% endfor %}
             </div>
           </div>
         {% endfor %}
@@ -156,6 +165,7 @@
     height = (parseInt($(this).attr("height")) * 80 / sectionColumn).toString() + 'vw';
     $(this).css("height", height);
   });
+  $('#' + ({{ current }}).toString()).addClass('current');
   var curUnit = 1, unitNum = 0, curSection = 1;
   var curLevel = "page"; // page, container, section, block
   var curBox = "page";  // page, header, body, sidebar, footer, section1, section2, block1, block2
@@ -204,12 +214,8 @@
     shift = e.location;
   });
   function enterSection() {
-    for (var i = 0; i < allDict.length; i++) {
-      if (parseInt(allDict[i]['section']) === curSection) {
-        sectionColumn = parseInt(allDict[i]['width']);
-        sectionRow = parseInt(allDict[i]['height']);
-      }
-    }
+    sectionColumn = parseInt(allDict[curSection - 1]['width']);
+    sectionRow = parseInt(allDict[curSection - 1]['height']);
     var curUnit = 1;
     unitNum = Math.ceil(sectionRow / 4);
     focusObject = -1;
@@ -372,18 +378,18 @@
         $(".current").css("margin-top", margin);
       }
     } else if (keyCode === 32) {   // space: set position
-      // $.post("{% url 'grid' %}",{'x':curColumn, 'y':curRow, 'id': focusObject}, function(e){
-      //   $(".current").removeClass('current');
-      //   playDropSound();
-      //   for (var i = 0; i < allDict.length; i++) {
-      //     if (parseInt(allDict[i]['id']) === focusObject) {
-      //       allDict[i]['x'] = (focusColumn).toString();
-      //       allDict[i]['y'] = (focusRow).toString();
-      //     }
-      //   }
-      //   focusObject = -1;
-      //   focus = "null";
-      // });
+      $.post("{% url 'layout' pageId %}",{'x':curColumn, 'y':curRow, 'id': focusObject}, function(e){
+        $(".current").removeClass('current');
+        playDropSound();
+        $(".block").each(function(){
+          if (parseInt($(this).attr("id")) === focusObject) {
+            $(this).attr("x", (curColumn).toString());
+            $(this).attr("y", (curRow).toString());
+          }
+        });
+        focusObject = -1;
+        focus = "null";
+      });
     } else if (keyCode === 220) {  // \: enter
       if (focus === "both" && focusObject === -1) {
         $(".block").each(function(){

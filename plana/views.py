@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Q
-from .models import Block, Text, Pic, Page, Section, TextPic
+from .models import Block, Page, Section
 from .forms import UploadForm
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import json
@@ -9,15 +9,14 @@ color_map = ["#B03060", "#FE9A76", "#FFD700", "#32CD32", "#016936", "#008080", "
              "#FF1493", "#A52A2A", "#A0A0A0", "#000000"]
 
 
-def create_block(width, height, type):
+def create_block(width, height, type, section):
     new_block = Block()
     new_block.pos_x = 0
     new_block.pos_y = 0
     new_block.width = width
     new_block.height = height
-    new_block.type = type
-    new_block.save()
-    new_block.color = color_map[new_block.id % 13]
+    new_block.content_type = type
+    new_block.section_id = int(section)
     new_block.save()
     return new_block
 
@@ -30,7 +29,7 @@ def get_all_blocks():
         all = all[:-1]
     return all
 
-def get_layout(pageId):
+def get_layout(pageId, block_id):
     page = Page.objects.get(id=pageId)
     sections = Section.objects.filter(page_id=pageId)
     sectionList = []
@@ -51,7 +50,8 @@ def get_layout(pageId):
         'pageId': pageId,
         'sectionNum': page.section_num,
         'section': sectionList,
-        'all': all
+        'all': all,
+        'current': block_id
     }
     return info
 
@@ -61,57 +61,49 @@ def select(request, section_id):
     return render(request, "select.html", info)
 
 
-def text(request):
+def text(request, section_id):
     if request.method == 'POST':
         width = request.POST.get('width')
         height = request.POST.get('height')
-        content = request.POST.get('content')
-        font_size = request.POST.get('font-size')
-        font_color = request.POST.get('font-color')
-        new_text = Text()
-        new_text.block = create_block(width, height, "text")
-        new_text.content = content
-        new_text.font_size = font_size
-        new_text.font_color = font_color
-        new_text.save()
-        info = {
-            'text': Text.objects.filter(~Q(id=new_text.id)),
-            'pic': Pic.objects.all(),
-            'all': get_all_blocks(),
-            'object': new_text,
-            'type': "text"
-        }
+        block = create_block(width, height, "text", section_id)
+        block.text_content = request.POST.get('content')
+        block.font_size = request.POST.get('font-size')
+        block.font_color = request.POST.get('font-color')
+        block.background_color = request.POST.get('background-color')
+        block.save()
+        section = Section.objects.get(id=int(section_id))
+        info = get_layout(section.page_id, block.id)
         try:
-            return render(request, "grid.html", info)
+            return render(request, "layout.html", info)
         except:
-            return render(request, "text.html")
+            return render(request, "text.html", {'section': section_id})
     else:
-        return render(request, "text.html")
+        return render(request, "text.html", {'section': section_id})
 
 
 def pic(request):
     if request.method == 'POST':
         form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
-            upload_pic = request.FILES['upload_pic']
-            width = form.cleaned_data['width']
-            height = form.cleaned_data['height']
-            if form.cleaned_data['name']:
-                name = form.cleaned_data['name']
-            else:
-                name = upload_pic.name
-            new_pic = Pic()
-            new_pic.name = name
-            new_pic.block = create_block(width, height, "pic")
-            new_pic.content = upload_pic
-            new_pic.save()
-            info = {
-                'pic': Pic.objects.filter(~Q(id=new_pic.id)),
-                'text': Text.objects.all(),
-                'all': get_all_blocks,
-                'object': new_pic,
-                'type': "pic"
-            }
+            # upload_pic = request.FILES['upload_pic']
+            # width = form.cleaned_data['width']
+            # height = form.cleaned_data['height']
+            # if form.cleaned_data['name']:
+            #     name = form.cleaned_data['name']
+            # else:
+            #     name = upload_pic.name
+            # new_pic = Pic()
+            # new_pic.name = name
+            # new_pic.block = create_block(width, height, "pic")
+            # new_pic.content = upload_pic
+            # new_pic.save()
+            # info = {
+            #     'pic': Pic.objects.filter(~Q(id=new_pic.id)),
+            #     'text': Text.objects.all(),
+            #     'all': get_all_blocks,
+            #     'object': new_pic,
+            #     'type': "pic"
+            # }
             try:
                 return render(request, "grid.html", info)
             except:
@@ -162,7 +154,7 @@ def new_page(request):
     page.section_num = 0
     page.save()
     try:
-        return render(request, "layout.html", get_layout(page.id))
+        return render(request, "layout.html", get_layout(page.id, -1))
     except:
         return render(request, "page.html", {"pages": Page.objects.all()})
 
@@ -183,4 +175,14 @@ def grid(request):
 
 @csrf_exempt
 def layout(request, pageId):
-    return render(request, "layout.html", get_layout(pageId))
+    if request.method == 'POST':
+        column = request.POST.get('x')
+        row = request.POST.get('y')
+        id = request.POST.get('id')
+        object = Block.objects.get(id=id)
+        object.pos_x = column
+        object.pos_y = row
+        object.save()
+        return render(request, "layout.html", get_layout(pageId, -1))
+    else:
+        return render(request, "layout.html", get_layout(pageId, -1))

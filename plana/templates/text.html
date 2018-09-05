@@ -21,7 +21,7 @@
             </div>
           </div>
           <div class="eight wide column">
-            <form method="post" action="{% url 'text' %}" class="ui inverted form">
+            <form method="post" action="{% url 'text' section %}" class="ui inverted form">
               {% csrf_token %}
               <div class="field">
                 <label>Size</label>

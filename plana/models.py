@@ -23,28 +23,15 @@ class Block(models.Model):
     content_type = models.CharField(max_length=64, default="")
     section_id = models.IntegerField(default=0)
 
-
-class Text(models.Model):
-    block = models.OneToOneField(Block, on_delete=models.CASCADE)
-    content = models.TextField()
+    text_content = models.TextField(null = True)
     font_size = models.CharField(max_length=64, default="16px")
     font_color = models.CharField(max_length=64, default="black")
     background_color = models.CharField(max_length=64, default="white")
 
-
-class Pic(models.Model):
-    block = models.OneToOneField(Block, on_delete=models.CASCADE)
-    content = models.ImageField(upload_to='img')
+    pic_content = models.ImageField(upload_to='img', null = True)
     name = models.CharField(max_length=100, default="anonymous")
 
-
-class TextPic(models.Model):
-    block = models.OneToOneField(Block, on_delete=models.CASCADE)
-    content = models.TextField()
-    font_size = models.CharField(max_length=64, default="16px")
-    font_color = models.CharField(max_length=64, default="black")
-    background_image = models.ImageField(upload_to='img')
-    type = models.IntegerField(default=0)
+    pic_text_type = models.IntegerField(default=0)
 
     TYPE_BACKGROUND = 1
     TYPE_CARD = 2

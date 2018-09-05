@@ -6,7 +6,7 @@ from django.conf import settings
 urlpatterns = [
     url(r'^grid$', views.grid, name='grid'),
     url(r'^layout/([0-9]*)$', views.layout, name='layout'),
-    url(r'^text$', views.text, name='text'),
+    url(r'^text/([0-9]*)$', views.text, name='text'),
     url(r'^pic$', views.pic, name='pic'),
     url(r'^pic-text$', views.pic_text, name='pic-text'),
     url(r'^video$', views.video, name='video'),
