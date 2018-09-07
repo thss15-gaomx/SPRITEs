@@ -150,9 +150,9 @@
 {# todo: specify the focus id; add to the allString after drop; overlap judgement #}
 <script type="text/javascript">
   var utterThis = new window.SpeechSynthesisUtterance();
-  // utterThis.text = 'layout page';
+  utterThis.text = 'layout page';
   utterThis.lang = 'en';
-  // window.speechSynthesis.speak(utterThis);
+  window.speechSynthesis.speak(utterThis);
   $(document).ready(function(){
      $('.ui.accordion').accordion();
   });

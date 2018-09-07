@@ -9,28 +9,8 @@
   </div>
   <div class="ui inverted vertical masthead center aligned segment">
       <br>
-      <div class="ui ordered steps">
-        <div class="active step">
-          <div class="content">
-            <div class="title">Page</div>
-            <div class="description">Choose the page to edit.</div>
-          </div>
-        </div>
-        <div class="disabled step">
-          <div class="content">
-            <div class="title">Section</div>
-            <div class="description">Choose the section to edit.</div>
-          </div>
-        </div>
-        <div class="disabled step">
-          <div class="content">
-            <div class="title">Widget</div>
-            <div class="description">Select and specify the widget.</div>
-          </div>
-        </div>
-      </div>
+      <h2>Please select a page to edit or add a new page.</h2>
       <div class="ui text container">
-        <br>
         <table class="ui inverted celled structured table">
           <thead>
             <tr>
@@ -48,7 +28,7 @@
                 <td class="center aligned">
                   <i class="large green checkmark icon"></i>
                 </td>
-                <td class="center aligned">
+                <td class="center aligned" id="{{ forloop.counter }}">
                   {{ page.section_num }} sections
                 </td>
                 <td class="center aligned">
@@ -69,53 +49,83 @@
       </div>
     </div>
 
+  <script type="text/javascript" src="/static/jquery-buzz.js"></script>
+  <script type="text/javascript" src="/static/sound.js"></script>
   <script type="text/javascript">
     var utterThis = new window.SpeechSynthesisUtterance();
-    // utterThis.text = 'specify the size and content of picture widget';
-    // window.speechSynthesis.speak(utterThis);
-    $('#home').focus(function() {
-      utterThis.text = 'home';
-      window.speechSynthesis.speak(utterThis);
-    });
-    $('#plan-a').focus(function() {
-      utterThis.text = 'plan a';
-      window.speechSynthesis.speak(utterThis);
-    });
-    $('#plan-b').focus(function() {
-      utterThis.text = 'plan b';
-      window.speechSynthesis.speak(utterThis);
-    });
-    $('#width').focus(function() {
-      utterThis.text = 'width';
-      window.speechSynthesis.speak(utterThis);
-    });
-    $('#height').focus(function() {
-      utterThis.text = 'height';
-      window.speechSynthesis.speak(utterThis);
-    });
-    $('#name').focus(function() {
-      utterThis.text = 'name';
-      window.speechSynthesis.speak(utterThis);
-    });
-    $('#upload_pic').focus(function() {
-      utterThis.text = 'upload picture';
-      window.speechSynthesis.speak(utterThis);
-    });
-    $('#confirm').focus(function() {
-      utterThis.text = 'confirm';
-      window.speechSynthesis.speak(utterThis);
-    });
-    $('#back').focus(function() {
-      utterThis.text = 'back';
-      window.speechSynthesis.speak(utterThis);
+    utterThis.text = 'pages';
+    utterThis.lang = 'en';
+    window.speechSynthesis.speak(utterThis);
+    var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48]; //1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+    var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
+    var columnContent = ["pages", "header", "body", "side bar", "footer"];
+    var shift = 0;
+    var curUnit = 1;
+    var pageNum = {{ num }};
+    var focus = "null", focusColumn, focusRow;
+    document.addEventListener("keydown", function(e){
+      shift = e.location;
     });
     $(document).keydown(function (event) {
-      if (event.keyCode === 220) {   // \: enter
-        if (utterThis.text === "confirm") {
-          $("#confirm").click();
-        } else if (utterThis.text === "back") {
-          window.location.href = "{% url 'page' %}";
+      playMoveSound();
+      if (event.keyCode === 220) {  // \: enter
+        if (focus == "row" || focus == "both") {
+          utterThis.text = "enter page" + (focusRow + 1).toString();
+          window.speechSynthesis.speak(utterThis);
+          window.location.href = "/plana/layout/" + (focusRow + 1).toString();
         }
+      } if (event.keyCode === 13) {  // enter: unit up
+        if (curUnit > 1) {
+          curUnit--;
+        }
+        utterThis.text = "unit " + (curUnit).toString();
+        window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 16 && shift === 2) {  // shift: unit down
+        if (curUnit < pageNum) {
+          curUnit++;
+        }
+        utterThis.text = "unit " + (curUnit).toString();
+        window.speechSynthesis.speak(utterThis);
+        shift = 0;
+      } else if (columnKey.indexOf(event.keyCode) >= 0) {
+        if (columnKey.indexOf(event.keyCode) < 5) {
+          focusColumn = columnKey.indexOf(event.keyCode);
+          if (focus === "null" || focus === "both") {
+            focus = "column";
+            utterThis.text = columnContent[focusColumn];
+            window.speechSynthesis.speak(utterThis);
+          } else if (focus === "row") {
+            focus = "both";
+            if (focusColumn == 2) {
+              utterThis.text = $("#" + (focusRow + 1).toString()).text();
+              window.speechSynthesis.speak(utterThis);
+            } else {
+              utterThis.text = columnContent[focusColumn];
+              window.speechSynthesis.speak(utterThis);
+            }
+          }
+        } else {
+          utterThis.text = "only 5 columns";
+          window.speechSynthesis.speak(utterThis);
+        }
+      } else if (rowKey.indexOf(event.keyCode) >= 0 && shift !== 2) {
+        if (rowKey.indexOf(event.keyCode) + (curUnit - 1) * 4 < pageNum) {
+          focusRow = rowKey.indexOf(event.keyCode) + (curUnit - 1) * 4;
+          utterThis.text = "page " + (focusRow + 1).toString();
+          window.speechSynthesis.speak(utterThis);
+          if (focus === "null" || focus === "both") {
+            focus = "row";
+          } else if (focus === "column") {
+            focus = "both";
+          }
+        } else {
+          utterThis.text = "only " + (pageNum).toString() + "pages";
+          window.speechSynthesis.speak(utterThis);
+        }
+      } else if (event.keyCode === 187) {  // add new page
+        window.location.href = "{% url 'new-page' %}";
+      } else if(event.keyCode == 27) {  // back
+        window.location.href = "{% url 'index' %}";
       }
     });
   </script>

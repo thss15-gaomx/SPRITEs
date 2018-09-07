@@ -137,11 +137,13 @@ def section(request, pageId):
         page = Page.objects.get(id=pageId)
         page.section_num += 1
         page.save()
-    return render(request, "layout.html", get_layout(pageId))
+    return render(request, "layout.html", get_layout(pageId, -1, -1))
 
 
 def page(request):
-    return render(request, "page.html", {"pages": Page.objects.all()})
+    pages = Page.objects.all()
+    page_num = len(pages)
+    return render(request, "page.html", {"pages": pages, "num": page_num})
 
 
 def new_page(request):
@@ -181,6 +183,7 @@ def delete(request, delete_info):
         page_id = delete_info[1:index]
         page = Page.objects.get(id=int(page_id))
         page.section_num -= 1
+        page.save()
         Section.objects.get(id=int(section_id)).delete()
         Block.objects.filter(section_id=int(section_id)).delete()
     elif 'w' in delete_info:
