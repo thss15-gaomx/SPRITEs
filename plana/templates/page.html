@@ -67,6 +67,7 @@
       shift = e.location;
     });
     $(document).keydown(function (event) {
+      event.preventDefault();
       playMoveSound();
       if (event.keyCode === 220) {  // \: enter
         if (focus == "row" || focus == "both") {
@@ -95,7 +96,6 @@
             utterThis.text = columnContent[focusColumn];
             window.speechSynthesis.speak(utterThis);
           } else if (focus === "row") {
-            focus = "both";
             if (focusColumn == 2) {
               utterThis.text = $("#" + (focusRow + 1).toString()).text();
               window.speechSynthesis.speak(utterThis);
