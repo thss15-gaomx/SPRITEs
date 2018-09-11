@@ -49,6 +49,8 @@ def get_layout(pageId, block_id, section_id):
         all += str(section.id) + ',' + str(section.width) + ',' + str(section.height) + ';'
     if all != "":
         all = all[:-1]
+    if not section_id:
+        cur_section = -1;
     info = {
         'pageId': pageId,
         'sectionNum': page.section_num,
@@ -65,7 +67,15 @@ def select(request, section_id):
     return render(request, "select.html", info)
 
 
-def text(request, section_id):
+def text(request, info_str):
+    if 'w' in info_str:
+        index_1 = info_str.find('w')
+        section_id = info_str[1:index_1]
+        index_2 = info_str.find('h')
+        section_w= info_str[index_1+1:index_2]
+        section_h= info_str[index_2+1:]
+    else:
+        section_id = info_str
     if request.method == 'POST':
         width = request.POST.get('width')
         height = request.POST.get('height')
@@ -80,12 +90,20 @@ def text(request, section_id):
         try:
             return render(request, "layout.html", info)
         except:
-            return render(request, "text.html", {'section': section_id})
+            return render(request, "text.html", {'section': section_id, 'section_width': '1', 'section_height': '1'})
     else:
-        return render(request, "text.html", {'section': section_id})
+        return render(request, "text.html", {'section': section_id, 'section_width': section_w, 'section_height': section_h})
 
 
-def pic(request, section_id):
+def pic(request, info_str):
+    if 'w' in info_str:
+        index_1 = info_str.find('w')
+        section_id = info_str[1:index_1]
+        index_2 = info_str.find('h')
+        section_w= info_str[index_1+1:index_2]
+        section_h= info_str[index_2+1:]
+    else:
+        section_id = info_str
     if request.method == 'POST':
         form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
@@ -105,9 +123,9 @@ def pic(request, section_id):
             try:
                 return render(request, "layout.html", info)
             except:
-                return render(request, "pic.html", {'section': section_id})
+                return render(request, "pic.html", {'section': section_id, 'section_width': section_w, 'section_height': section_h})
     else:
-        return render(request, "pic.html", {'section': section_id})
+        return render(request, "pic.html", {'section': section_id, 'section_width': section_w, 'section_height': section_h})
 
 
 def pic_text(request):
@@ -137,7 +155,7 @@ def section(request, pageId):
         page = Page.objects.get(id=pageId)
         page.section_num += 1
         page.save()
-    return render(request, "layout.html", get_layout(pageId, -1, -1))
+    return render(request, "layout.html", get_layout(pageId, -1, section.id))
 
 
 def page(request):
@@ -156,7 +174,7 @@ def new_page(request):
     try:
         return render(request, "layout.html", get_layout(page.id, -1, -1))
     except:
-        return render(request, "page.html", {"pages": Page.objects.all()})
+        return render(request, "page.html", {"pages": Page.objects.all(), "num": len(Page.objects.all())})
 
 
 @csrf_exempt
@@ -176,7 +194,6 @@ def layout(request, pageId):
 
 @csrf_exempt
 def delete(request, delete_info):
-    page_id = -1
     if 's' in delete_info:
         index = delete_info.find('s')
         section_id = delete_info[index+1:]
@@ -186,12 +203,22 @@ def delete(request, delete_info):
         page.save()
         Section.objects.get(id=int(section_id)).delete()
         Block.objects.filter(section_id=int(section_id)).delete()
+        return render(request, "layout.html", get_layout(page_id, -1, 0))
     elif 'w' in delete_info:
         index = delete_info.find('w')
         widget_id = delete_info[index+1:]
         page_id = delete_info[1:index]
-        Block.objects.get(id=int(widget_id)).delete()
-    if page_id == -1:
-        return render(request, "page.html", {"pages": Page.objects.all()})
+        block = Block.objects.get(id=int(widget_id));
+        section_id = block.section_id
+        block.delete()
+        return render(request, "layout.html", get_layout(page_id, -1, section_id))
     else:
-        return render(request, "layout.html", get_layout(page_id, -1, -1))
+        page_id = delete_info[1:]
+        print('hello')
+        sections = Section.objects.filter(page_id=int(page_id))
+        for section in sections:
+            Block.objects.filter(section_id=int(section.id)).delete()
+            section.delete()
+        Page.objects.get(id=int(page_id)).delete()
+        return render(request, "page.html", {"pages": Page.objects.all(), "num": len(Page.objects.all())})
+    return render(request, "page.html", {"pages": Page.objects.all(), "num": len(Page.objects.all())})

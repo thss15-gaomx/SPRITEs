@@ -22,6 +22,9 @@
     utterThis.text = 'press one or two to select a plan';
     utterThis.lang = 'en';
     window.speechSynthesis.speak(utterThis);
+    $(document).keydown(function (event) {
+      event.preventDefault();
+    })
     $('#home').focus(function() {
       utterThis.text = 'home';
       window.speechSynthesis.speak(utterThis);

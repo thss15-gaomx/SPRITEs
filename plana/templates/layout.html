@@ -98,12 +98,12 @@
           <div class="two fields">
             <div class="field">
               <div class="ui big left icon input">
-                <input type="text" name="width" id="width" placeholder="Width" required/>
+                <input type="number" name="width" id="width" placeholder="Width" min="1" max="10" required/>
               </div>
             </div>
             <div class="field">
               <div class="ui big input">
-                <input type="text" name="height" id="height" placeholder="Height" required/>
+                <input type="number" name="height" id="height" placeholder="Height" min="1" required/>
               </div>
             </div>
           </div>
@@ -119,7 +119,7 @@
         <button type="submit" class="ui huge teal ok button" id="confirm">
           <i class="add icon"></i>Create New Section
         </button>
-        <button class="ui huge inverted orange basic cancel button" id="cancel" onclick="alterModal()">Cancel</button>
+        <a class="ui huge inverted orange basic cancel button" id="cancel1" onclick="alterModal()" href="javascript:void(0);">Cancel</a>
       </div>
     </form>
   </div>
@@ -131,10 +131,10 @@
     <p id="delete-hint"></p>
   </div>
   <div class="actions">
-    <button class="ui green ok inverted button" id="delete" href="">
+    <a class="ui green ok inverted button" id="delete" href="">
       <i class="checkmark icon"></i>
       Yes
-    </button>
+    </a>
     <button class="ui red basic cancel inverted button" id="cancel2" onclick="alterModal()">
       <i class="remove icon"></i>
       No
@@ -200,6 +200,13 @@
   }
   if ({{ block_id }} !== -1) {
     $('#' + ({{ block_id }}).toString()).addClass('current');
+    curSection = {{ section_id }};
+    var sectionId = "#section" + (curSection).toString();
+    $('html, body').animate({
+      scrollTop: $(sectionId).offset().top - 50
+    }, 500);
+    utterThis.text = "widget selected";
+    window.speechSynthesis.speak(utterThis);
     focus = "both";
     focusObject = {{ block_id }};
     focusColumn = parseInt($('#' + ({{ block_id }}).toString()).attr('x'));
@@ -211,6 +218,21 @@
     sectionRow = parseInt(allDict[curSection - 1]['height']);
     var curUnit = 1;
     unitNum = Math.ceil(sectionRow / 4);
+  }
+  if ({{ section_id }} !== 0 && {{ block_id }} === -1) {
+    curLevel = "container";
+    curBox = "body";
+    if ({{ section_id }} === -1) {
+      curSection = 1;
+    } else {
+      curSection = {{ section_id }};
+    }
+    utterThis.text = ({{ sectionNum }}).toString() + "sections, section " + (curSection).toString();
+    window.speechSynthesis.speak(utterThis);
+    var sectionId = "#section" + (curSection).toString();
+    $('html, body').animate({
+      scrollTop: $(sectionId).offset().top - 50
+    }, 500);
   }
   function setBlock() {
     focus = "both";
@@ -261,11 +283,18 @@
       utterThis.text = "enter" + curBox;
       window.speechSynthesis.speak(utterThis);
       if (curBox === "body") {
-        utterThis.text = (sectionNum).toString() + " sections";
+        if (sectionNum) {
+          utterThis.text = (sectionNum).toString() + " sections, section 1";
+        } else {
+          utterThis.text = "0 sections";
+        }
         window.speechSynthesis.speak(utterThis);
         if (sectionNum > 0) {
           curSection = 1;
         }
+      }
+      if (curBox === "sidebar") {
+
       }
       if (curBox !== 'page') {
         curLevel = "container";
@@ -328,7 +357,6 @@
       }
     } else if (keyCode === 27) { // Esc
       window.location.href = "{% url 'page' %}";
-    } else if (keyCode === 8) { // Delete
     }
   }
   function keyFunctionContainer(keyCode) {
@@ -384,7 +412,7 @@
         $('.ui.basic.modal.two')
           .modal('show')
         ;
-        modal = 1;
+        modal = 2;
       }
     } else {
       if (keyCode === 27) { // Esc
@@ -443,7 +471,7 @@
           var blockX = parseInt($(this).attr("x"));
           var blockY = parseInt($(this).attr("y"));
           if (sectionIndex === curSection && blockX === focusColumn && blockY  === focusRow) {
-            utterThis.text = "i d " + ($(this).attr("id")).toString();
+            utterThis.text = "i d " + ($(this).attr("id")).toString() + ' selected';
             window.speechSynthesis.speak(utterThis);
             $(this).addClass('current');
             blockWidth = parseInt($(this).attr("width"));
@@ -460,20 +488,12 @@
       }
       utterThis.text = "unit " + (curUnit).toString();
       window.speechSynthesis.speak(utterThis);
-      // var pageClass = ".page" + (curPage).toString();
-      // $('html, body').animate({
-      //   scrollTop: $(pageClass).offset().top
-      // }, 500);
     } else if (keyCode === 16 && shift === 2) {  // shift: unit down
       if (curUnit < unitNum) {
         curUnit++;
       }
       utterThis.text = "unit " + (curUnit).toString();
       window.speechSynthesis.speak(utterThis);
-      // var pageClass = ".page" + (curPage).toString();
-      // $('html, body').animate({
-      //   scrollTop: $(pageClass).offset().top
-      // }, 500);
       shift = 0;
     } else if (columnKey.indexOf(keyCode) >= 0) {
       if (columnKey.indexOf(keyCode) < sectionColumn) {
@@ -509,7 +529,10 @@
       utterThis.text = "enter" + curBox;
       window.speechSynthesis.speak(utterThis);
     } else if (keyCode === 187) { // Add
-      window.location.href = "/plana/select/" + allDict[curSection - 1]['section'];
+      utterThis.text = "add widget";
+      window.speechSynthesis.speak(utterThis);
+      window.location.href = "/plana/select/s" + allDict[curSection - 1]['section']
+                              + 'w' + (sectionColumn).toString() + 'h' + (sectionRow).toString();
     } else if (keyCode === 8) { // Delete
       if (focus === "both" && focusObject !== -1) {
         utterThis.text = "delete widget " + (focusObject).toString()
@@ -523,23 +546,78 @@
         $('.ui.basic.modal.two')
           .modal('show')
         ;
-        modal = 1;
+        modal = 3;
       }
     }
   }
   $(document).keydown(function (event) {
-    if (modal == 0) {
-      event.preventDefault();
-    }
     playMoveSound();
-    var keyCode = event.keyCode;
-    if (curLevel === "page") {
-      keyFunctionPage(keyCode);
-    } else if (curLevel === "container") {
-      keyFunctionContainer(keyCode);
-    } else if (curLevel === "section") {
+    if (modal === 0) {
       event.preventDefault();
-      keyFunctionSection(keyCode);
+      var keyCode = event.keyCode;
+      if (curLevel === "page") {
+        keyFunctionPage(keyCode);
+      } else if (curLevel === "container") {
+        keyFunctionContainer(keyCode);
+      } else if (curLevel === "section") {
+        event.preventDefault();
+        keyFunctionSection(keyCode);
+      }
+    } else if (modal === 1) {    // add section modal
+      if (event.keyCode === 32) {  // space: confirm
+        utterThis.text = "confirm";
+        window.speechSynthesis.speak(utterThis);
+        $("#confirm").click();
+      } else if (event.keyCode === 27) {  // esc: cancel
+        utterThis.text = "cancel";
+        window.speechSynthesis.speak(utterThis);
+        $("#cancel1").click();
+      } else if (columnKey.indexOf(event.keyCode) >= 0) {
+        if ($('#width').is(':focus')) {
+          var curNum = $('#width').val();
+          var inputNum = columnKey.indexOf(event.keyCode) + 1;
+          if (!curNum || (curNum === '1' && inputNum === 10)) {
+            utterThis.text = (columnKey.indexOf(event.keyCode) + 1).toString();
+            window.speechSynthesis.speak(utterThis);
+          } else {
+            event.preventDefault();
+            utterThis.text = "no more than 10 columns";
+            window.speechSynthesis.speak(utterThis);
+          }
+        } else {
+          var inputNum = columnKey.indexOf(event.keyCode) + 1;
+          if (inputNum === 10) {
+            inputNum = 0;
+          }
+          utterThis.text = (inputNum).toString();
+          window.speechSynthesis.speak(utterThis);
+        }
+      } else if (event.keyCode >= 65 && event.keyCode <= 90) {
+        var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+                        'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+        if (event.keyCode === 69 && !$('#name').is(':focus')) {
+          event.preventDefault();
+        }
+        if ($('#name').is(':focus')) {
+          utterThis.text = alphabet[event.keyCode - 65];
+          window.speechSynthesis.speak(utterThis);
+        }
+      }
+    } else {   // delete: 2 section, 3 widget
+      event.preventDefault();
+      if (event.keyCode === 32) {  // space: confirm
+        utterThis.text = "confirm";
+        window.speechSynthesis.speak(utterThis);
+        if (modal === 2) {
+          window.location.href = "/plana/delete/p" + {{ pageId }} + "s" + allDict[curSection - 1]['section'];
+        } else if (modal === 3) {
+          window.location.href = "/plana/delete/p" + {{ pageId }} + "w" + (focusObject).toString();
+        }
+      } if (event.keyCode === 27) {  // esc: cancel
+        utterThis.text = "cancel";
+        window.speechSynthesis.speak(utterThis);
+        $("#cancel2").click();
+      }
     }
   });
   $('#width').focus(function() {
@@ -558,16 +636,8 @@
     utterThis.text = 'confirm';
     window.speechSynthesis.speak(utterThis);
   });
-  $('#cancel').focus(function() {
+  $('#cancel1').focus(function() {
     utterThis.text = 'cancel';
-    window.speechSynthesis.speak(utterThis);
-  });
-  $('#cancel2').focus(function() {
-    utterThis.text = 'cancel';
-    window.speechSynthesis.speak(utterThis);
-  });
-  $('#delete').focus(function() {
-    utterThis.text = 'confirm';
     window.speechSynthesis.speak(utterThis);
   });
 </script>

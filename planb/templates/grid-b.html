@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-  <div class="ui container">
-    <div class="ui large secondary inverted pointing menu">
-      <a href="{% url 'index' %}" class="item">Home</a>
-      <a href="{% url 'select' %}" class="item">PlanA</a>
-      <a href="{% url 'grid-b' %}" class="active item">PlanB</a>
-    </div>
+<div class="ui container">
+  <div class="ui large secondary inverted pointing menu">
+    <a href="{% url 'index' %}" class="item" id='home'>Home</a>
+    <a href="{% url 'page' %}" class="item" id='plan-a'>PlanA</a>
+    <a href="{% url 'grid-b' %}" class="active item" id='plan-b'>PlanB</a>
   </div>
-  <div class="ui inverted vertical masthead segment grid-page">
+</div>
+  <div class="ui inverted vertical masthead segment grid-page" style="background: #FAFAFA;">
     <table border="1" class="grid-table">
       <tr class="page1">
         <td width="10%" id="0-0"> 　</td>
@@ -178,6 +178,7 @@
     });
     $(document).keydown(function (event) {
       playMoveSound();
+      event.preventDefault();
       if (event.keyCode === 37) {   // left
         if (curColumn > 0) {
           curColumn--;
@@ -195,7 +196,6 @@
           curRow++;
         }
       } else if (event.keyCode === 32) {   // space: set position
-        event.preventDefault();
         if (focus === "both") {
           var curId = "#" + curRow.toString() + "-" + curColumn.toString();
           $(curId).css("background-color", colorMap[curColor]);
@@ -245,6 +245,8 @@
         } else if (focus === "column") {
           focus = "both";
         }
+      } else if (event.keyCode === 27) { // Esc
+        window.location.href = "{% url 'index' %}";
       }
     });
   </script>
