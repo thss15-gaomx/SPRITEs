@@ -62,7 +62,7 @@
         {% for item in section %}
           <div class="item"><a class="title" href="#section{{ item.section }}">
             <i class="dropdown icon"></i> <b>Section {{ item.section }}</b></a>
-            <div class="content menu">
+            <div class="content menu sidebar-title" id='sidebar-{{ forloop.counter }}'>
               {% for block in item.blocks %}
                 <a class="item" href="#">Widget {{ block.id }}</a>
               {% endfor %}
@@ -193,6 +193,7 @@
   var focusColumn = 0, focusRow = 0, focusObject = -1;
   var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48]; //1, 2, 3, 4, 5, 6, 7, 8, 9, 0
   var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
+  var curWiget, sidebarId, widgetNum; // sidebar
   var shift = 0;
   var modal = 0;
   function alterModal() {
@@ -285,16 +286,20 @@
       if (curBox === "body") {
         if (sectionNum) {
           utterThis.text = (sectionNum).toString() + " sections, section 1";
+          curSection = 1;
         } else {
           utterThis.text = "0 sections";
         }
         window.speechSynthesis.speak(utterThis);
-        if (sectionNum > 0) {
-          curSection = 1;
-        }
       }
       if (curBox === "sidebar") {
-
+        if (sectionNum) {
+          utterThis.text = (sectionNum).toString() + " sections";
+          curSection = 0;
+        } else {
+          utterThis.text = "0 sections";
+        }
+        window.speechSynthesis.speak(utterThis);
       }
       if (curBox !== 'page') {
         curLevel = "container";
@@ -413,6 +418,48 @@
           .modal('show')
         ;
         modal = 2;
+      }
+    } else if (curBox === "sidebar") {
+      if (keyCode === 220) {  // \: enter
+        curLevel = "sidebar-section";
+        curBox = "sidebar-section" + (curSection).toString();
+        utterThis.text = "enter " + curBox;
+        window.speechSynthesis.speak(utterThis);
+        if (widgetNum) {
+           curWiget = 0;
+        }
+      } else if (keyCode === 13) {  // enter: page up
+        if (curSection > 1) {
+          curSection--;
+          sidebarId = "#sidebar-" + (curSection).toString();
+          widgetNum = ($(sidebarId).children('a')).length;
+          utterThis.text = "section " + (curSection).toString() + "contains" + (widgetNum).toString() + " widgets";
+          window.speechSynthesis.speak(utterThis);
+          var sectionId = "#section" + (curSection).toString();
+          $('html, body').animate({
+            scrollTop: $(sectionId).offset().top - 50
+          }, 500);
+          $('.ui.accordion').accordion('open', curSection - 1);
+        }
+      } else if (keyCode === 16 && shift === 2) {  // shift: page down
+        if (curSection < sectionNum) {
+          curSection++;
+          sidebarId = "#sidebar-" + (curSection).toString();
+          widgetNum = ($(sidebarId).children('a')).length;
+          utterThis.text = "section " + (curSection).toString() + "contains" + (widgetNum).toString() + " widgets";
+          window.speechSynthesis.speak(utterThis);
+          var sectionId = "#section" + (curSection).toString();
+          $('html, body').animate({
+            scrollTop: $(sectionId).offset().top - 50
+          }, 500);
+          $('.ui.accordion').accordion('open', curSection - 1);
+        }
+        shift = 0;
+      } if (keyCode === 27) { // Esc
+        curLevel = "page";
+        curBox = "page";
+        utterThis.text = "enter" + curBox;
+        window.speechSynthesis.speak(utterThis);
       }
     } else {
       if (keyCode === 27) { // Esc
@@ -550,6 +597,28 @@
       }
     }
   }
+  function keyFunctionSidebarSection(keyCode) {
+    if (keyCode === 220) {  // \: enter
+    } else if (keyCode === 13) {  // enter: page up
+      if (curWiget > 1) {
+        curWiget--;
+        utterThis.text = $(sidebarId).children('a').eq(curWiget - 1).text();
+        window.speechSynthesis.speak(utterThis);
+      }
+    } else if (keyCode === 16 && shift === 2) {  // shift: page down
+      if (curWiget < widgetNum) {
+        curWiget++;
+        utterThis.text = $(sidebarId).children('a').eq(curWiget - 1).text();
+        window.speechSynthesis.speak(utterThis);
+      }
+      shift = 0;
+    } if (keyCode === 27) { // Esc
+      curLevel = "container";
+      curBox = "sidebar";
+      utterThis.text = "enter" + curBox;
+      window.speechSynthesis.speak(utterThis);
+    }
+  }
   $(document).keydown(function (event) {
     playMoveSound();
     if (modal === 0) {
@@ -562,6 +631,8 @@
       } else if (curLevel === "section") {
         event.preventDefault();
         keyFunctionSection(keyCode);
+      } else if (curLevel === "sidebar-section") {
+        keyFunctionSidebarSection(keyCode);
       }
     } else if (modal === 1) {    // add section modal
       if (event.keyCode === 32) {  // space: confirm
