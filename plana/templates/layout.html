@@ -191,7 +191,10 @@
   var margin;
   var focus = "null";  //null, row, column, both
   var focusColumn = 0, focusRow = 0, focusObject = -1;
-  var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48]; //1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+  var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48,
+                   81, 87, 69, 82, 84, 89, 85, 73, 79, 80,
+                   65, 83, 68, 70, 71, 72, 74, 75, 76, 186,
+                   90, 88, 67, 86, 66, 78, 77, 188, 190, 191]; //1, 2, 3, 4, 5, 6, 7, 8, 9, 0
   var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
   var curWiget, sidebarId, widgetNum; // sidebar
   var shift = 0;
@@ -240,6 +243,8 @@
     curRow = focusRow;
     curColumn = focusColumn;
     if (focusObject !== -1) {
+      utterThis.text = "moving to column" + (curColumn + 1).toString() + "row " + (curRow + 1).toString();
+      window.speechSynthesis.speak(utterThis);
       margin = (curRow * 80 / sectionColumn).toString() + 'vw';
       $(".current").css("margin-top", margin)
       margin = (curColumn * 80 / sectionColumn).toString() + 'vw';
@@ -323,12 +328,12 @@
             window.speechSynthesis.speak(utterThis);
           }
         } else if (focusRow === 1) {
-          if (keyCode === 49) {
+          if (keyCode === 49 || keyCode === 81) {
             curBox = "body";
             focus = "both";
             utterThis.text = curBox;
             window.speechSynthesis.speak(utterThis);
-          } else if (keyCode === 50) {
+          } else if (keyCode === 50 || keyCode === 87) {
             curBox = "sidebar";
             focus = "both";
             utterThis.text = curBox;
@@ -338,7 +343,7 @@
             window.speechSynthesis.speak(utterThis);
           }
         } else if (focusRow === 2) {
-          if (keyCode === 49) {
+          if (keyCode === 49 || keyCode === 65) {
             curBox = "footer";
             focus = "both";
             utterThis.text = curBox;
@@ -517,7 +522,7 @@
           var sectionIndex = parseInt($(this).attr("section"));
           var blockX = parseInt($(this).attr("x"));
           var blockY = parseInt($(this).attr("y"));
-          if (sectionIndex === curSection && blockX === focusColumn && blockY  === focusRow) {
+          if (sectionIndex === curSection && blockX === focusColumn && blockY  === focusRow && focusObject === -1) {
             utterThis.text = "i d " + ($(this).attr("id")).toString() + ' selected';
             window.speechSynthesis.speak(utterThis);
             $(this).addClass('current');
@@ -543,8 +548,14 @@
       window.speechSynthesis.speak(utterThis);
       shift = 0;
     } else if (columnKey.indexOf(keyCode) >= 0) {
-      if (columnKey.indexOf(keyCode) < sectionColumn) {
-        focusColumn = columnKey.indexOf(keyCode);
+      var columnIndex = (columnKey.indexOf(keyCode) + 1) % 10;
+      if (columnIndex === 0) {
+        columnIndex = 9;
+      } else {
+        columnIndex -= 1;
+      }
+      if (columnIndex < sectionColumn) {
+        focusColumn = columnIndex;
         utterThis.text = "column " + (focusColumn + 1).toString();
         window.speechSynthesis.speak(utterThis);
         if (focus === "null" || focus === "both") {
