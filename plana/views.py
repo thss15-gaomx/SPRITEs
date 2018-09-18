@@ -3,6 +3,7 @@ from django.db.models import Q
 from .models import Block, Page, Section
 from .forms import UploadForm
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.http import HttpResponse
 import json
 
 color_map = ["#B03060", "#FE9A76", "#FFD700", "#32CD32", "#016936", "#008080", "#0E6EB8", "#EE82EE", "#B413EC",
@@ -28,6 +29,7 @@ def get_all_blocks():
     if all != "":
         all = all[:-1]
     return all
+
 
 def get_layout(pageId, block_id, section_id):
     page = Page.objects.get(id=pageId)
@@ -60,6 +62,23 @@ def get_layout(pageId, block_id, section_id):
         'section_id': cur_section
     }
     return info
+
+@csrf_exempt
+def playbox(request):
+    if request.method == 'POST':
+        key = int(request.POST.get('key'))
+
+    # return render(request, "playbox.html")
+        if key == 74:
+            result = 'right'
+        elif key == 70:
+            result = 'left'
+        elif key == 32:
+            result = 'both'
+        return_json = {'result': result}
+        return HttpResponse(json.dumps(return_json), content_type='application/json')
+    else:
+        return render(request, "playbox.html")
 
 
 def select(request, section_id):

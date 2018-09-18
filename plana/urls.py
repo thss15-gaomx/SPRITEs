@@ -15,5 +15,6 @@ urlpatterns = [
     url(r'^select/([a-zA-Z0-9]*)$', views.select, name='select'),
     url(r'^new-page$', views.new_page, name='new-page'),
     url(r'^delete/([a-zA-Z0-9]*)$', views.delete, name='delete'),
+    url(r'^playbox$', views.playbox, name='playbox'),
     url(r'^$', views.page, name='page'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
