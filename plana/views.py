@@ -5,6 +5,7 @@ from .forms import UploadForm
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.http import HttpResponse
 import json
+from .swipe_rec.test import swipe_convert
 
 color_map = ["#B03060", "#FE9A76", "#FFD700", "#32CD32", "#016936", "#008080", "#0E6EB8", "#EE82EE", "#B413EC",
              "#FF1493", "#A52A2A", "#A0A0A0", "#000000"]
@@ -66,15 +67,22 @@ def get_layout(pageId, block_id, section_id):
 @csrf_exempt
 def playbox(request):
     if request.method == 'POST':
-        key = int(request.POST.get('key'))
-
-    # return render(request, "playbox.html")
-        if key == 74:
-            result = 'right'
-        elif key == 70:
-            result = 'left'
-        elif key == 32:
-            result = 'both'
+        key = request.POST.get('key')
+        key = key[:-1]
+        keys = key.split(',')
+        num_keys = []
+        for item in keys:
+            num_keys.append(int(item))
+        result = 'loading'
+        if num_keys:
+            if swipe_convert(num_keys):
+                result = 'both'
+        # if key == 74:
+        #     result = 'right'
+        # elif key == 70:
+        #     result = 'left'
+        # elif key == 32:
+        #     result = 'both'
         return_json = {'result': result}
         return HttpResponse(json.dumps(return_json), content_type='application/json')
     else:
