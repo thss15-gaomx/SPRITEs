@@ -22,7 +22,10 @@
       </div>
     </div>
   </div>
-  <img style="margin-top: 50px; margin-left: 150px; position: absolute;" src="/static/loading.gif" id="loading">
+  <img style="margin-top: 50px; margin-left: 50px; position: absolute;" src="/static/loading2.gif">
+  <img style="margin-top: 50px; margin-left: 450px; position: absolute;" src="/static/full.gif" id="loading">
+  <img style="margin-top: 450px; margin-left: 150px; position: absolute;" src="/static/remove.gif" id="loading">
+  {# <img style="margin-top: 50px; margin-left: 150px; position: absolute;" src="/static/loading.gif" id="loading"> #}
   <img style="margin-left: -150px; margin-top: 50px; position: absolute; display: none;" src="/static/left.gif" id="left">
   <img style="margin-left: 400px; display: none;" src="/static/right.gif" id="right">
   <p style="margin-top: 600px; position: absolute; font-size: 40px; margin-left: 550px;"><span id='result'></span></p>
@@ -48,16 +51,22 @@
         }
         $.post("{% url 'playbox' %}",{'key': key}, function(ret){
           if (ret.result === 'left') {
+            utterThis.text = 'left';
+            window.speechSynthesis.speak(utterThis);
             $("#right").hide();
             $("#loading").hide();
             $("#left").css("margin-left", "200px");
             $("#left").show();
           } else if (ret.result === 'right') {
+            utterThis.text = 'right';
+            window.speechSynthesis.speak(utterThis);
             $("#left").hide();
             $("#loading").hide();
             $("#right").css("margin-left", "200px");
             $("#right").show();
           } else if (ret.result === 'both') {
+            utterThis.text = 'both';
+            window.speechSynthesis.speak(utterThis);
             $("#loading").hide();
             $("#left").css("margin-left", "-150px");
             $("#right").css("margin-left", "400px");
@@ -75,11 +84,14 @@
         $("#left").hide();
         $("#right").hide();
         $("#loading").show();
+        $('#result').html('loading');
       }
     } else {
+      keys = [];
       $("#left").hide();
       $("#right").hide();
       $("#loading").show();
+      $('#result').html('loading');
     }
   });
 </script>

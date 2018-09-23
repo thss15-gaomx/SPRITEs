@@ -8,7 +8,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.onnx
 import torch.optim as optim
-from .rnn_model import RNNModel
+from rnn_model import RNNModel
 
 class dataloader(object):
     def __init__(self, path, batch_size, max_length):
@@ -22,7 +22,7 @@ class dataloader(object):
             self.leng.append(len(data))
             data += [0] * (max_length - len(data))
             self.dataset.append(data)
-            self.label.append(1 if int(line.strip().split(' ')[1]) == 1 else 0)
+            self.label.append(int(line.strip().split(' ')[1]))
 
         self.st = 0
         self.length = len(self.dataset)
@@ -57,7 +57,7 @@ parser.add_argument('--lr', type=float, default=0.01,
                     help='initial learning rate')
 parser.add_argument('--clip', type=float, default=0.25,
                     help='gradient clipping')
-parser.add_argument('--epochs', type=int, default=100,
+parser.add_argument('--epochs', type=int, default=150,
                     help='upper epoch limit')
 parser.add_argument('--batch_size', type=int, default=1, metavar='N',
                     help='batch size')

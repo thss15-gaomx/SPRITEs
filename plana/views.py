@@ -75,14 +75,13 @@ def playbox(request):
             num_keys.append(int(item))
         result = 'loading'
         if num_keys:
-            if swipe_convert(num_keys):
+            swipe = swipe_convert(num_keys)
+            if swipe == 1:
                 result = 'both'
-        # if key == 74:
-        #     result = 'right'
-        # elif key == 70:
-        #     result = 'left'
-        # elif key == 32:
-        #     result = 'both'
+            elif swipe == 2:
+                result = 'right'
+            elif swipe == 3:
+                result = 'left'
         return_json = {'result': result}
         return HttpResponse(json.dumps(return_json), content_type='application/json')
     else:
