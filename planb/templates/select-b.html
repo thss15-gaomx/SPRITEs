@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="ui container">
+    <div class="ui large secondary inverted pointing menu">
+      <a href="{% url 'index' %}" class="item">Home</a>
+      <a href="{% url 'page' %}" class="active item">PlanA</a>
+      <a href="{% url 'grid-b' %}" class="item">PlanB</a>
+    </div>
+  </div>
+  <div class="ui inverted vertical masthead center aligned segment">
+    <h2>Please select a widget.</h2>
+    <div class="ui three column doubling stackable grid container">
+      <div class="column">
+        <div class="ui card">
+          <a class="image" href="{% url 'pic' section %}">
+            <img src="/static/pic.png">
+          </a>
+        </div>
+      </div>
+      <div class="column">
+        <div class="ui card">
+          <a class="image" href="{% url 'text' section %}">
+            <img src="/static/text.png">
+          </a>
+        </div>
+      </div>
+      <div class="column">
+        <div class="ui card">
+          <a class="image" href="{% url 'pic-text' %}">
+            <img src="/static/pic-text.png">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="ui three column doubling stackable grid container">
+      <div class="column">
+        <div class="ui card">
+          <a class="image" href="{% url 'video' %}">
+            <img src="/static/video.png">
+          </a>
+        </div>
+      </div>
+      <div class="column">
+        <div class="ui card">
+          <a class="image" href="{% url 'button' %}">
+            <img src="/static/button.png">
+          </a>
+        </div>
+      </div>
+      <div class="column">
+        <div class="ui card">
+          <a class="image" href="{% url 'input' %}">
+            <img src="/static/input.png">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var utterThis = new window.SpeechSynthesisUtterance();
+    utterThis.text = 'press one to six to select a widget type';
+    window.speechSynthesis.speak(utterThis);
+    $(document).keydown(function (event) {
+      if (event.keyCode === 49) {   // Pic
+        utterThis.text = 'picture';
+        window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 50) { // Text
+        utterThis.text = 'text';
+        window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 51) { // Pic Text
+        utterThis.text = 'link';
+        window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 52) { // Video
+        utterThis.text = 'video';
+        window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 53) { // Button
+        utterThis.text = 'button';
+        window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 54) { // Input
+        utterThis.text = 'input';
+        window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 220) { // Enter
+        if (utterThis.text === "picture") {
+          window.location.href = "{% url 'pic' section %}";
+        } else if (utterThis.text === "text") {
+          window.location.href = "{% url 'text' section %}";
+        }
+      } else if (event.keyCode === 27) { // Esc
+        window.location.href = "{% url 'index' %}";
+      }
+    });
+  </script>
+{% endblock %}

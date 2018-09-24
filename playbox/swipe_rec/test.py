@@ -14,7 +14,7 @@ def swipe_convert(src):
     length = torch.LongTensor([length])
     model = RNNModel('LSTM', 27, 1, 10, 1, 0.2)
     # Load the best saved model.
-    with open('./plana/swipe_rec/model.pt', 'rb') as f:
+    with open('./playbox/swipe_rec/model.pt', 'rb') as f:
         model = torch.load(f)
         # after load the rnn params are not a continuous chunk of memory
         # this makes them a continuous chunk, and will speed up forward pass

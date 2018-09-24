@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="ui container">
+    <div class="ui large secondary inverted pointing menu">
+      <a href="{% url 'index' %}" class="item" id='home' tabindex="-1">Home</a>
+      <a href="{% url 'page' %}" class="active item" id='plan-a' tabindex="-1">PlanA</a>
+      <a href="{% url 'grid-b' %}" class="item" id='plan-b'tabindex="-1">PlanB</a>
+    </div>
+  </div>
+  <div class="ui inverted vertical masthead center aligned segment">
+    <div class="ui text container">
+      <br><br>
+      <h2>Specify the size and content of text widget.</h2>
+      <div class="ui text container">
+        <div class="ui divided grid">
+          <div class="eight wide column">
+            <div class="widget">
+              <a class="image">
+                <img src="/static/text.png">
+              </a>
+            </div>
+          </div>
+          <div class="eight wide column">
+            <form method="post" action="{% url 'text' section %}" class="ui inverted form">
+              {% csrf_token %}
+              <div class="field">
+                <label>Size</label>
+                <div class="two fields">
+                  <div class="field">
+                    <div class="ui big left icon input">
+                      <input type="number" name="width" id="width" placeholder="Width" min="1" max="{{ section_width }}" required/>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <div class="ui big input">
+                      <input type="number" name="height" id="height" placeholder="Height" min="1" max="{{ section_height }}" required/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Features</label>
+                <div class="three fields">
+                  <div class="field">
+                    <select class="ui search dropdown" id="font-size" name="font-size">
+                      <option value="16px">normal</option>
+                      <option value="14px">small</option>
+                      <option value="20px">large</option>
+                      <option value="24px">huge</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <select class="ui search dropdown" id="font-color" name="font-color">
+                      <option value="black">black</option>
+                      <option value="white">white</option>
+                      <option value="rgba(0,0,0,.54)">dark grey</option>
+                      <option value="rgba(0,0,0,.15)">light grey</option>
+                      <option value="#957B5F">bronze</option>
+                      <option value="#03a87c">green</option>
+                      <option value="rgb(92, 88, 118)">dark blue</option>
+
+                      <option value="#B03060">red</option>
+                      <option value="#FE9A76">orange</option>
+                      <option value="#FFD700">yellow</option>
+                      <option value="#32CD32">olive</option>
+                      <option value="#FE9A76">orange</option>
+                      <option value="#016936">green</option>
+                      <option value="#008080">teal</option>
+                      <option value="#0E6EB8">blue</option>
+                      <option value="#EE82EE">violet</option>
+                      <option value="#B413EC">purple</option>
+                      <option value="#FF1493">pink</option>
+                      <option value="#A52A2A">brown</option>
+
+                    </select>
+                  </div>
+                  <div class="field">
+                    <select class="ui search dropdown" id="background-color" name="background-color">
+                      <option value="white">white</option>
+                      <option value="#993333">red</option>
+                      <option value="#CC9966">orange</option>
+                      <option value="#003300">green</option>
+                      <option value="#957B5F">bronze</option>
+
+                      <option value="#FFD700">yellow</option>
+                      <option value="#32CD32">olive</option>
+                      <option value="#008080">teal</option>
+                      <option value="#0E6EB8">blue</option>
+                      <option value="#EE82EE">violet</option>
+                      <option value="#B413EC">purple</option>
+                      <option value="#FF1493">pink</option>
+                      <option value="#A52A2A">brown</option>
+                      <option value="#A0A0A0">grey</option>
+                      <option value="#000000">black</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Content</label>
+                <textarea rows="5" name="content" id="text-content" placeholder="Please input the text content..."
+                          required/></textarea>
+              </div>
+              <div class="ui center aligned container">
+                <br>
+                <button type="submit" class="ui huge teal button" id="confirm">Confirm
+                </button>
+                <a class="ui huge inverted orange basic button" id="back" onclick="window.history.go(-1)" href="javascript:void(0);">Back</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="/static/jquery-buzz.js"></script>
+  <script type="text/javascript" src="/static/sound.js"></script>
+  <script type="text/javascript">
+    var utterThis = new window.SpeechSynthesisUtterance();
+    utterThis.text = 'specify the size and content of text widget';
+    window.speechSynthesis.speak(utterThis);
+    var columnKey = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57];
+    $('#width').focus(function() {
+      utterThis.text = 'width';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#height').focus(function() {
+      utterThis.text = 'height';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#font-size').focus(function() {
+      utterThis.text = 'font size';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#font-color').focus(function() {
+      utterThis.text = 'font color';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#background-color').focus(function() {
+      utterThis.text = 'background color';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#text-content').focus(function() {
+      utterThis.text = 'text content';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#confirm').focus(function() {
+      utterThis.text = 'confirm';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#back').focus(function() {
+      utterThis.text = 'back';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $(document).keydown(function (event) {
+      playMoveSound();
+      if (columnKey.indexOf(event.keyCode) >= 0) {
+        if ($('#width').is(':focus')) {
+          if ($('#width').val() === '') {
+            var curNum = 0;
+          } else {
+            var curNum = parseInt($('#height').val());
+          }
+          var inputNum = columnKey.indexOf(event.keyCode);
+          if (10 * curNum + inputNum > parseInt({{ section_width }})) {
+            event.preventDefault();
+            utterThis.text = "no more than " + {{ section_width }};
+            window.speechSynthesis.speak(utterThis);
+          } else {
+            utterThis.text = (inputNum).toString();
+            window.speechSynthesis.speak(utterThis);
+          }
+        } else if ($('#height').is(':focus')) {
+          if ($('#height').val() === '') {
+            var curNum = 0;
+          } else {
+            var curNum = parseInt($('#height').val());
+          }
+          var inputNum = columnKey.indexOf(event.keyCode);
+          if (10 * curNum + inputNum > parseInt({{ section_height }})) {
+            event.preventDefault();
+            utterThis.text = "no more than " + {{ section_height }};
+            window.speechSynthesis.speak(utterThis);
+          } else {
+            utterThis.text = (inputNum).toString();
+            window.speechSynthesis.speak(utterThis);
+          }
+        } else if ($('#text-content').is(':focus')) {
+          var inputNum = columnKey.indexOf(event.keyCode);
+          if (inputNum === 10) {
+            inputNum = 0;
+          }
+          utterThis.text = (inputNum).toString();
+          window.speechSynthesis.speak(utterThis);
+        }
+      } else if (event.keyCode >= 65 && event.keyCode <= 90) {
+        var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+                        'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+        if (event.keyCode === 69 && !$('#text-content').is(':focus')) {
+          event.preventDefault();
+        }
+        if ($('#text-content').is(':focus')) {
+          utterThis.text = alphabet[event.keyCode - 65];
+          window.speechSynthesis.speak(utterThis);
+        }
+      } else if (event.keyCode === 27) {  // esc: cancel
+        window.history.go(-1);
+      }
+    });
+    $("#font-size").change(function(){
+      var options = $("#font-size option:selected");
+      utterThis.text = options.text();
+      window.speechSynthesis.speak(utterThis);
+    });
+    $("#font-color").change(function(){
+      var options = $("#font-color option:selected");
+      utterThis.text = options.text();
+      window.speechSynthesis.speak(utterThis);
+    });
+    $("#background-color").change(function(){
+      var options = $("#background-color option:selected");
+      utterThis.text = options.text();
+      window.speechSynthesis.speak(utterThis);
+    });
+  </script>
+{% endblock %}

@@ -20,5 +20,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^plana/',include('plana.urls')),
     url(r'^planb/',include('planb.urls')),
+    url(r'^playbox/',include('playbox.urls')),
     url(r'^',include('index.urls')),
 ]

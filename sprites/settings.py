@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'index',
     'plana',
     'planb',
+    'playbox',
 ]
 
 MIDDLEWARE = [

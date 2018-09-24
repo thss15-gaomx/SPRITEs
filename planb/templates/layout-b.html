@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <script src="/static/jquery.js"></script>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/semantic-ui/2.1.8/semantic.min.css">
+    <script src="/static/semantic.min.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <title>SPRITEs</title>
+</head>
+<body>
+<div class="container">
+  <div class="grid header">
+    <div class="ui borderless main menu fixed" style="position: fixed; top: 0px; z-index: 10;">
+      <div class="ui text container">
+        <div class="header item">
+          SPRITEs Project
+        </div>
+        <a href="{% url 'index' %}" class="item">Index</a>
+        <a href="{% url 'page' %}" class="item">Pages</a>
+      </div>
+    </div>
+  </div>
+  <div class="grid content">
+    {% if sectionNum == 0 %}
+      <div class='content-section' style="height:80vh;">NoSections</div>
+    {% endif %}
+    {% for item in section %}
+      <div class='content-section'>
+        {% for block in item.blocks %}
+          {% if block.content_type == 'text' %}
+            <div class="text-block block" x="{{ block.pos_x }}" y="{{ block.pos_y }}"
+                width="{{ block.width }}" height="{{ block.height }}" id="{{ block.id }}" section="{{ item.section }}"
+                style="font-size: {{ block.font_size }}; color: {{ block.font_color }}; background-color: {{ block.background_color }};">
+              {{ block.text_content }}
+            </div>
+          {% elif block.content_type == 'pic' %}
+            <div class="pic-block block" x="{{ block.pos_x }}" y="{{ block.pos_y }}"
+                width="{{ block.width }}" height="{{ block.height }}" id="{{ block.id }}" section="{{ item.section }}">
+              <img src="..{{ block.pic_content.url }}">
+            </div>
+          {% endif %}
+        {% endfor %}
+        <table class="grid-container" id='section{{ item.section }}'>
+          {% for row in item.height %}
+            <tr>
+              {% for column in item.width %}
+                <td> 　</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </table>
+      </div>
+    {% endfor %}
+  </div>
+  <div class="grid sidebar">
+    <div class="ui sticky fixed top">
+      <h4 class="ui header">Sidebar</h4>
+      <div class="ui vertical following fluid accordion text menu">
+        {% for item in section %}
+          <div class="item"><a class="title" href="#section{{ item.section }}">
+            <i class="dropdown icon"></i> <b>Section {{ item.section }}</b></a>
+            <div class="content menu sidebar-title" id='sidebar-{{ forloop.counter }}'>
+              {% for block in item.blocks %}
+                <a class="item" href="#">Widget {{ block.id }}</a>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="grid footer">
+    <div class="ui inverted vertical footer segment">
+      <div class="ui center aligned container">
+        <div class="ui horizontal inverted small divided link list">
+          <a class="item" href="#">Site Help</a>
+          <a class="item" href="#">Contact Us</a>
+          <a class="item" href="#">Terms and Conditions</a>
+          <a class="item" href="#">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="ui basic modal one">
+  <div class="ui icon header">
+    <i class="table icon"></i>
+    Add New Section
+  </div>
+  <div class="content">
+    <form method="post" action="{% url 'section' pageId %}" class="ui inverted form" enctype="multipart/form-data">
+      {% csrf_token %}
+        <div class="field">
+          <label>Size</label>
+          <div class="two fields">
+            <div class="field">
+              <div class="ui big left icon input">
+                <input type="number" name="width" id="width" placeholder="Width" min="1" max="10" required/>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui big input">
+                <input type="number" name="height" id="height" placeholder="Height" min="1" required/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Name</label>
+          <div class="ui big input">
+            <input type="text" name="name" id="name" placeholder="Name" required/>
+          </div>
+        </div>
+      <div class="ui center aligned container actions">
+        <br>
+        <button type="submit" class="ui huge teal ok button" id="confirm">
+          <i class="add icon"></i>Create New Section
+        </button>
+        <a class="ui huge inverted orange basic cancel button" id="cancel1" onclick="alterModal()" href="javascript:void(0);">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="ui basic modal two">
+  <div class="ui icon header" id="delete-title">
+  </div>
+  <div class="content">
+    <p id="delete-hint"></p>
+  </div>
+  <div class="actions">
+    <a class="ui green ok inverted button" id="delete" href="">
+      <i class="checkmark icon"></i>
+      Yes
+    </a>
+    <button class="ui red basic cancel inverted button" id="cancel2" onclick="alterModal()">
+      <i class="remove icon"></i>
+      No
+    </button>
+  </div>
+</div>
+</body>
+</html>
+
+<script type="text/javascript" src="/static/jquery-buzz.js"></script>
+<script type="text/javascript" src="/static/sound.js"></script>
+{# todo: specify the focus id; add to the allString after drop; overlap judgement #}
+<script type="text/javascript">
+  var utterThis = new window.SpeechSynthesisUtterance();
+  utterThis.text = 'layout page';
+  utterThis.lang = 'en';
+  window.speechSynthesis.speak(utterThis);
+  $(document).ready(function(){
+     $('.ui.accordion').accordion();
+  });
+  var sectionNum = {{ sectionNum }}, sectionColumn, sectionRow;
+  var allString = ("{{ all }}").split(";");
+  var allDict = new Array();
+  for (var i = 0; i < allString.length; i++) {
+    item = allString[i].split(",");
+    allDict[i] = {'section': item[0], 'width': item[1], 'height': item[2]};
+  }
+  for (var i = 0; i < allDict.length; i++) {
+    sectionColumn = parseInt(allDict[i]['width']);
+    var gridLength = (80 / sectionColumn).toString() + "vw";
+    var id = '#section' + (i + 1).toString() + ' tr';
+    $(id).css("height", gridLength);
+  }
+  var marginLeft, marginTop, width, height;
+  $(".block").each(function(){
+    var sectionIndex = parseInt($(this).attr("section"));
+    sectionColumn = parseInt(allDict[sectionIndex - 1]['width']);
+    marginLeft = (parseInt($(this).attr("x")) * 80 / sectionColumn).toString() + 'vw';
+    $(this).css("margin-left", marginLeft);
+    marginTop = (parseInt($(this).attr("y")) * 80 / sectionColumn).toString() + 'vw';
+    $(this).css("margin-top", marginTop);
+    width = (parseInt($(this).attr("width")) * 80 / sectionColumn).toString() + 'vw';
+    $(this).css("width", width);
+    height = (parseInt($(this).attr("height")) * 80 / sectionColumn).toString() + 'vw';
+    $(this).css("height", height);
+  });
+  var curUnit = 1, unitNum = 0, curSection = 1;
+  var curLevel = "page"; // page, container, section, block
+  var curBox = "page";  // page, header, body, sidebar, footer, section1, section2, block1, block2
+  var blockWidth = 0;
+  var blockHeight = 0;
+  var type = "{{ type }}";
+  var curRow = 0, curColumn = 0;
+  var margin;
+  var focus = "null";  //null, row, column, both
+  var focusColumn = 0, focusRow = 0, focusObject = -1;
+  var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48,
+                   81, 87, 69, 82, 84, 89, 85, 73, 79, 80,
+                   65, 83, 68, 70, 71, 72, 74, 75, 76, 186,
+                   90, 88, 67, 86, 66, 78, 77, 188, 190, 191]; //1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+  var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
+  var curWiget, sidebarId, widgetNum; // sidebar
+  var shift = 0;
+  var modal = 0;
+  function alterModal() {
+    modal = 0;
+  }
+  if ({{ block_id }} !== -1) {
+    $('#' + ({{ block_id }}).toString()).addClass('current');
+    curSection = {{ section_id }};
+    var sectionId = "#section" + (curSection).toString();
+    $('html, body').animate({
+      scrollTop: $(sectionId).offset().top - 50
+    }, 500);
+    utterThis.text = "widget selected";
+    window.speechSynthesis.speak(utterThis);
+    focus = "both";
+    focusObject = {{ block_id }};
+    focusColumn = parseInt($('#' + ({{ block_id }}).toString()).attr('x'));
+    focusRow = parseInt($('#' + ({{ block_id }}).toString()).attr('y'));
+    curLevel = "section";
+    curSection = {{ section_id }};
+    curBox = "section" + (curSection).toString();
+    sectionColumn = parseInt(allDict[curSection - 1]['width']);
+    sectionRow = parseInt(allDict[curSection - 1]['height']);
+    var curUnit = 1;
+    unitNum = Math.ceil(sectionRow / 4);
+  }
+  if ({{ section_id }} !== 0 && {{ block_id }} === -1) {
+    curLevel = "container";
+    curBox = "body";
+    if ({{ section_id }} === -1) {
+      curSection = 1;
+    } else {
+      curSection = {{ section_id }};
+    }
+    utterThis.text = ({{ sectionNum }}).toString() + "sections, section " + (curSection).toString();
+    window.speechSynthesis.speak(utterThis);
+    var sectionId = "#section" + (curSection).toString();
+    $('html, body').animate({
+      scrollTop: $(sectionId).offset().top - 50
+    }, 500);
+  }
+  function setBlock() {
+    focus = "both";
+    curRow = focusRow;
+    curColumn = focusColumn;
+    if (focusObject !== -1) {
+      utterThis.text = "moving to column" + (curColumn + 1).toString() + "row " + (curRow + 1).toString();
+      window.speechSynthesis.speak(utterThis);
+      margin = (curRow * 80 / sectionColumn).toString() + 'vw';
+      $(".current").css("margin-top", margin)
+      margin = (curColumn * 80 / sectionColumn).toString() + 'vw';
+      $(".current").css("margin-left", margin);
+      $(".block").each(function(){
+        var sectionIndex = parseInt($(this).attr("section"));
+        var blockX = parseInt($(this).attr("x"));
+        var blockY = parseInt($(this).attr("y"));
+        if (sectionIndex === curSection && blockX === curColumn && blockY  === curRow) {
+          playOverlapSound();
+        }
+      });
+    } else {
+      var objectNum = 0;
+      $(".block").each(function(){
+        var sectionIndex = parseInt($(this).attr("section"));
+        var blockX = parseInt($(this).attr("x"));
+        var blockY = parseInt($(this).attr("y"));
+        if (sectionIndex === curSection && blockX === curColumn && blockY  === curRow) {
+          objectNum++;
+        }
+      });
+      utterThis.text = (objectNum).toString() + "objects";
+      window.speechSynthesis.speak(utterThis);
+    }
+  }
+  document.addEventListener("keydown", function(e){
+    shift = e.location;
+  });
+  function enterSection() {
+    sectionColumn = parseInt(allDict[curSection - 1]['width']);
+    sectionRow = parseInt(allDict[curSection - 1]['height']);
+    var curUnit = 1;
+    unitNum = Math.ceil(sectionRow / 4);
+    focusObject = -1;
+    $(".current").each(function(){
+      $(this).removeClass('current');
+    });
+  }
+  function keyFunctionPage(keyCode) {
+    if (keyCode === 220) {  // \: enter
+      utterThis.text = "enter" + curBox;
+      window.speechSynthesis.speak(utterThis);
+      if (curBox === "body") {
+        if (sectionNum) {
+          utterThis.text = (sectionNum).toString() + " sections, section 1";
+          curSection = 1;
+        } else {
+          utterThis.text = "0 sections";
+        }
+        window.speechSynthesis.speak(utterThis);
+      }
+      if (curBox === "sidebar") {
+        if (sectionNum) {
+          utterThis.text = (sectionNum).toString() + " sections";
+          curSection = 0;
+        } else {
+          utterThis.text = "0 sections";
+        }
+        window.speechSynthesis.speak(utterThis);
+      }
+      if (curBox !== 'page') {
+        curLevel = "container";
+      }
+      focus = "null";
+      focusColumn = 0;
+      focusRow = 0;
+    } else if (columnKey.indexOf(keyCode) >= 0) {
+      if (focus === "null") {
+        utterThis.text = "select the row first";
+        window.speechSynthesis.speak(utterThis);
+      } else {
+        if (focusRow === 0) {
+          if (keyCode === 49) {
+            curBox = "header";
+            focus = "both";
+            utterThis.text = curBox;
+            window.speechSynthesis.speak(utterThis);
+          } else {
+            utterThis.text = "only 1 column";
+            window.speechSynthesis.speak(utterThis);
+          }
+        } else if (focusRow === 1) {
+          if (keyCode === 49 || keyCode === 81) {
+            curBox = "body";
+            focus = "both";
+            utterThis.text = curBox;
+            window.speechSynthesis.speak(utterThis);
+          } else if (keyCode === 50 || keyCode === 87) {
+            curBox = "sidebar";
+            focus = "both";
+            utterThis.text = curBox;
+            window.speechSynthesis.speak(utterThis);
+          } else {
+            utterThis.text = "only 2 columns";
+            window.speechSynthesis.speak(utterThis);
+          }
+        } else if (focusRow === 2) {
+          if (keyCode === 49 || keyCode === 65) {
+            curBox = "footer";
+            focus = "both";
+            utterThis.text = curBox;
+            window.speechSynthesis.speak(utterThis);
+          } else {
+            utterThis.text = "only 1 column";
+            window.speechSynthesis.speak(utterThis);
+          }
+        }
+      }
+    } else if (rowKey.indexOf(keyCode) >= 0 && shift !== 2) {
+      curBox = "page";
+      if (keyCode === 16) {
+        utterThis.text = "only 3 rows";
+        window.speechSynthesis.speak(utterThis);
+      } else {
+        focusRow = rowKey.indexOf(keyCode);
+        focus = "row";
+        utterThis.text = "row " + (focusRow + 1).toString();
+        window.speechSynthesis.speak(utterThis);
+      }
+    } else if (keyCode === 27) { // Esc
+      window.location.href = "{% url 'page' %}";
+    }
+  }
+  function keyFunctionContainer(keyCode) {
+    if (curBox === "body") {
+      if (keyCode === 220) {  // \: enter
+        curLevel = "section";
+        curBox = "section" + (curSection).toString();
+        utterThis.text = "enter " + curBox;
+        window.speechSynthesis.speak(utterThis);
+        enterSection();
+      } else if (keyCode === 13) {  // enter: page up
+        if (curSection > 1) {
+          curSection--;
+        }
+        utterThis.text = "section " + (curSection).toString();
+        window.speechSynthesis.speak(utterThis);
+        var sectionId = "#section" + (curSection).toString();
+        $('html, body').animate({
+          scrollTop: $(sectionId).offset().top - 50
+        }, 500);
+      } else if (keyCode === 16 && shift === 2) {  // shift: page down
+        if (curSection < sectionNum) {
+          curSection++;
+        }
+        utterThis.text = "section " + (curSection).toString();
+        window.speechSynthesis.speak(utterThis);
+        var sectionId = "#section" + (curSection).toString();
+        $('html, body').animate({
+          scrollTop: $(sectionId).offset().top - 50
+        }, 500);
+        shift = 0;
+      } if (keyCode === 27) { // Esc
+        curLevel = "page";
+        curBox = "page";
+        utterThis.text = "enter" + curBox;
+        window.speechSynthesis.speak(utterThis);
+      } else if (keyCode === 187) { // Add
+        utterThis.text = "add section";
+        window.speechSynthesis.speak(utterThis);
+        $('.ui.basic.modal.one')
+          .modal('show')
+        ;
+        modal = 1;
+      } else if (keyCode === 8) { // Delete
+        utterThis.text = "delete section" + (curSection).toString()
+        window.speechSynthesis.speak(utterThis);
+        $("#delete-title").html("<i class='archive icon'></i>Delete Section");
+        var deleteHint = "You are tring to delete section " + (curSection).toString()
+                        + ". Are you sure to delete this section and the widgets in it?";
+        $("#delete-hint").html(deleteHint);
+        var deleteInfo = "/plana/delete/p" + {{ pageId }} + "s" + allDict[curSection - 1]['section'];
+        $("#delete").attr('href', deleteInfo);
+        $('.ui.basic.modal.two')
+          .modal('show')
+        ;
+        modal = 2;
+      }
+    } else if (curBox === "sidebar") {
+      if (keyCode === 220) {  // \: enter
+        if (curSection) {
+          curLevel = "sidebar-section";
+          curBox = "sidebar-section" + (curSection).toString();
+          utterThis.text = "enter " + curBox;
+          window.speechSynthesis.speak(utterThis);
+          if (widgetNum) {
+             curWiget = 0;
+          }
+        }
+      } else if (keyCode === 13) {  // enter: page up
+        if (curSection > 1) {
+          curSection--;
+          sidebarId = "#sidebar-" + (curSection).toString();
+          widgetNum = ($(sidebarId).children('a')).length;
+          utterThis.text = "section " + (curSection).toString() + "contains" + (widgetNum).toString() + " widgets";
+          window.speechSynthesis.speak(utterThis);
+          var sectionId = "#section" + (curSection).toString();
+          $('html, body').animate({
+            scrollTop: $(sectionId).offset().top - 50
+          }, 500);
+          $('.ui.accordion').accordion('open', curSection - 1);
+        }
+      } else if (keyCode === 16 && shift === 2) {  // shift: page down
+        if (curSection < sectionNum) {
+          curSection++;
+          sidebarId = "#sidebar-" + (curSection).toString();
+          widgetNum = ($(sidebarId).children('a')).length;
+          utterThis.text = "section " + (curSection).toString() + "contains" + (widgetNum).toString() + " widgets";
+          window.speechSynthesis.speak(utterThis);
+          var sectionId = "#section" + (curSection).toString();
+          $('html, body').animate({
+            scrollTop: $(sectionId).offset().top - 50
+          }, 500);
+          $('.ui.accordion').accordion('open', curSection - 1);
+        }
+        shift = 0;
+      } if (keyCode === 27) { // Esc
+        curLevel = "page";
+        curBox = "page";
+        utterThis.text = "enter" + curBox;
+        window.speechSynthesis.speak(utterThis);
+      }
+    } else {
+      if (keyCode === 27) { // Esc
+        curLevel = "page";
+        curBox = "page";
+        utterThis.text = "enter" + curBox;
+        window.speechSynthesis.speak(utterThis);
+      } else {
+        utterThis.text = curBox;
+        window.speechSynthesis.speak(utterThis);
+      }
+    }
+  }
+  function keyFunctionSection(keyCode) {
+    if (keyCode === 37) {   // left
+      if (curColumn > 0) {
+        curColumn--;
+        margin = (curColumn * 80 / sectionColumn).toString() + 'vw';
+        $(".current").css("margin-left", margin);
+      }
+    } else if (keyCode === 39) { // right
+      if (curColumn + blockWidth < sectionColumn) {
+        curColumn++;
+        margin = (curColumn * 80 / sectionColumn).toString() + 'vw';
+        $(".current").css("margin-left", margin);
+      }
+    } else if (keyCode === 38) {   // up
+      if (curRow > 0) {
+        curRow--;
+        margin = (curRow * 80 / sectionColumn).toString() + 'vw';
+        $(".current").css("margin-top", margin);
+      }
+    } else if (keyCode === 40) { // down
+      if (curRow + blockHeight < sectionRow) {
+        curRow++;
+        margin = (curRow * 80 / sectionColumn).toString() + 'vw';
+        $(".current").css("margin-top", margin);
+      }
+    } else if (keyCode === 32) {   // space: set position
+      $.post("{% url 'layout' pageId %}",{'x':curColumn, 'y':curRow, 'id': focusObject}, function(e){
+        $(".current").removeClass('current');
+        playDropSound();
+        $(".block").each(function(){
+          if (parseInt($(this).attr("id")) === focusObject) {
+            $(this).attr("x", (curColumn).toString());
+            $(this).attr("y", (curRow).toString());
+          }
+        });
+        focusObject = -1;
+        focus = "null";
+      });
+    } else if (keyCode === 220) {  // \: enter
+      if (focus === "both" && focusObject === -1) {
+        $(".block").each(function(){
+          var sectionIndex = parseInt($(this).attr("section"));
+          var blockX = parseInt($(this).attr("x"));
+          var blockY = parseInt($(this).attr("y"));
+          if (sectionIndex === curSection && blockX === focusColumn && blockY  === focusRow && focusObject === -1) {
+            utterThis.text = "i d " + ($(this).attr("id")).toString() + ' selected';
+            window.speechSynthesis.speak(utterThis);
+            $(this).addClass('current');
+            blockWidth = parseInt($(this).attr("width"));
+            blockHeight = parseInt($(this).attr("height"))
+            curRow = focusRow;
+            curColumn = focusColumn;
+            focusObject = parseInt($(this).attr("id"));
+          }
+        });
+      }
+    } else if (keyCode === 13) {  // enter: unit up
+      if (curUnit > 1) {
+        curUnit--;
+      }
+      utterThis.text = "unit " + (curUnit).toString();
+      window.speechSynthesis.speak(utterThis);
+    } else if (keyCode === 16 && shift === 2) {  // shift: unit down
+      if (curUnit < unitNum) {
+        curUnit++;
+      }
+      utterThis.text = "unit " + (curUnit).toString();
+      window.speechSynthesis.speak(utterThis);
+      shift = 0;
+    } else if (columnKey.indexOf(keyCode) >= 0) {
+      var columnIndex = (columnKey.indexOf(keyCode) + 1) % 10;
+      if (columnIndex === 0) {
+        columnIndex = 9;
+      } else {
+        columnIndex -= 1;
+      }
+      if (columnIndex < sectionColumn) {
+        focusColumn = columnIndex;
+        utterThis.text = "column " + (focusColumn + 1).toString();
+        window.speechSynthesis.speak(utterThis);
+        if (focus === "null" || focus === "both") {
+          focus = "column";
+        } else if (focus === "row") {
+          setBlock();
+        }
+      } else {
+        utterThis.text = "only " + (sectionColumn).toString() + "columns";
+        window.speechSynthesis.speak(utterThis);
+      }
+    } else if (rowKey.indexOf(keyCode) >= 0 && shift !== 2) {
+      if (rowKey.indexOf(keyCode) + (curUnit - 1) * 4 < sectionRow) {
+        focusRow = rowKey.indexOf(keyCode) + (curUnit - 1) * 4;
+        utterThis.text = "row " + (focusRow + 1).toString();
+        window.speechSynthesis.speak(utterThis);
+        if (focus === "null" || focus === "both") {
+          focus = "row";
+        } else if (focus === "column") {
+          setBlock();
+        }
+      } else {
+        utterThis.text = "only " + (sectionRow).toString() + "rows";
+        window.speechSynthesis.speak(utterThis);
+      }
+    } else if (keyCode === 27) { // Esc
+      curLevel = "container";
+      curBox = "body";
+      utterThis.text = "enter" + curBox;
+      window.speechSynthesis.speak(utterThis);
+    } else if (keyCode === 187) { // Add
+      utterThis.text = "add widget";
+      window.speechSynthesis.speak(utterThis);
+      window.location.href = "/plana/select/s" + allDict[curSection - 1]['section']
+                              + 'w' + (sectionColumn).toString() + 'h' + (sectionRow).toString();
+    } else if (keyCode === 8) { // Delete
+      if (focus === "both" && focusObject !== -1) {
+        utterThis.text = "delete widget " + (focusObject).toString()
+        window.speechSynthesis.speak(utterThis);
+        $("#delete-title").html("<i class='archive icon'></i>Delete Widget");
+        var deleteHint = "You are tring to delete widget " + (focusObject).toString()
+                        + ". Are you sure to delete this widget and the content in it?";
+        $("#delete-hint").html(deleteHint);
+        var deleteInfo = "/plana/delete/p" + {{ pageId }} + "w" + (focusObject).toString();
+        $("#delete").attr('href', deleteInfo);
+        $('.ui.basic.modal.two')
+          .modal('show')
+        ;
+        modal = 3;
+      }
+    }
+  }
+  function keyFunctionSidebarSection(keyCode) {
+    if (keyCode === 220) {  // \: enter
+      if (curWiget) {
+        var widgetId = $(sidebarId).children('a').eq(curWiget - 1).text().substring(7);
+        focus = 'both';
+        curLevel = "section";
+        curBox = "section" + (curSection).toString();
+        utterThis.text = "i d " + widgetId + ' selected';
+        window.speechSynthesis.speak(utterThis);
+        enterSection();
+        $('#' + widgetId).addClass('current');
+        blockWidth = parseInt($('#' + widgetId).attr("width"));
+        blockHeight = parseInt($('#' + widgetId).attr("height"))
+        curRow = parseInt($('#' + widgetId).attr("y"));
+        curColumn = parseInt($('#' + widgetId).attr("x"));
+        focusObject = parseInt(widgetId);
+      }
+    } else if (keyCode === 73) {  // I: info
+      var widgetId = $(sidebarId).children('a').eq(curWiget - 1).text().substring(7);
+      utterThis.text = $('#' + widgetId).text();
+      window.speechSynthesis.speak(utterThis);
+    } else if (keyCode === 80) {  // P: position
+      if (curWiget) {
+        var widgetId = $(sidebarId).children('a').eq(curWiget - 1).text().substring(7);
+        utterThis.text = 'column' + (parseInt($('#' + widgetId).attr("x")) + 1).toString()
+                       + 'row' + (parseInt($('#' + widgetId).attr("y")) + 1).toString();
+        window.speechSynthesis.speak(utterThis);
+      }
+    } else if (keyCode === 13) {  // enter: page up
+      if (curWiget > 1) {
+        curWiget--;
+        utterThis.text = $(sidebarId).children('a').eq(curWiget - 1).text();
+        window.speechSynthesis.speak(utterThis);
+      }
+    } else if (keyCode === 16 && shift === 2) {  // shift: page down
+      if (curWiget < widgetNum) {
+        curWiget++;
+        utterThis.text = $(sidebarId).children('a').eq(curWiget - 1).text();
+        window.speechSynthesis.speak(utterThis);
+      }
+      shift = 0;
+    } if (keyCode === 27) { // Esc
+      curLevel = "container";
+      curBox = "sidebar";
+      utterThis.text = "enter" + curBox;
+      window.speechSynthesis.speak(utterThis);
+    }
+  }
+  $(document).keydown(function (event) {
+    playMoveSound();
+    if (modal === 0) {
+      event.preventDefault();
+      var keyCode = event.keyCode;
+      if (curLevel === "page") {
+        keyFunctionPage(keyCode);
+      } else if (curLevel === "container") {
+        keyFunctionContainer(keyCode);
+      } else if (curLevel === "section") {
+        event.preventDefault();
+        keyFunctionSection(keyCode);
+      } else if (curLevel === "sidebar-section") {
+        keyFunctionSidebarSection(keyCode);
+      }
+    } else if (modal === 1) {    // add section modal
+      if (event.keyCode === 32) {  // space: confirm
+        utterThis.text = "confirm";
+        window.speechSynthesis.speak(utterThis);
+        $("#confirm").click();
+      } else if (event.keyCode === 27) {  // esc: cancel
+        utterThis.text = "cancel";
+        window.speechSynthesis.speak(utterThis);
+        $("#cancel1").click();
+      } else if (columnKey.indexOf(event.keyCode) >= 0) {
+        if ($('#width').is(':focus')) {
+          var curNum = $('#width').val();
+          var inputNum = columnKey.indexOf(event.keyCode) + 1;
+          if (!curNum || (curNum === '1' && inputNum === 10)) {
+            utterThis.text = (columnKey.indexOf(event.keyCode) + 1).toString();
+            window.speechSynthesis.speak(utterThis);
+          } else {
+            event.preventDefault();
+            utterThis.text = "no more than 10 columns";
+            window.speechSynthesis.speak(utterThis);
+          }
+        } else {
+          var inputNum = columnKey.indexOf(event.keyCode) + 1;
+          if (inputNum === 10) {
+            inputNum = 0;
+          }
+          utterThis.text = (inputNum).toString();
+          window.speechSynthesis.speak(utterThis);
+        }
+      } else if (event.keyCode >= 65 && event.keyCode <= 90) {
+        var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+                        'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+        if (event.keyCode === 69 && !$('#name').is(':focus')) {
+          event.preventDefault();
+        }
+        if ($('#name').is(':focus')) {
+          utterThis.text = alphabet[event.keyCode - 65];
+          window.speechSynthesis.speak(utterThis);
+        }
+      }
+    } else {   // delete: 2 section, 3 widget
+      event.preventDefault();
+      if (event.keyCode === 32) {  // space: confirm
+        utterThis.text = "confirm";
+        window.speechSynthesis.speak(utterThis);
+        if (modal === 2) {
+          window.location.href = "/plana/delete/p" + {{ pageId }} + "s" + allDict[curSection - 1]['section'];
+        } else if (modal === 3) {
+          window.location.href = "/plana/delete/p" + {{ pageId }} + "w" + (focusObject).toString();
+        }
+      } if (event.keyCode === 27) {  // esc: cancel
+        utterThis.text = "cancel";
+        window.speechSynthesis.speak(utterThis);
+        $("#cancel2").click();
+      }
+    }
+  });
+  $('#width').focus(function() {
+    utterThis.text = 'width';
+    window.speechSynthesis.speak(utterThis);
+  });
+  $('#height').focus(function() {
+    utterThis.text = 'height';
+    window.speechSynthesis.speak(utterThis);
+  });
+  $('#name').focus(function() {
+    utterThis.text = 'name';
+    window.speechSynthesis.speak(utterThis);
+  });
+  $('#confirm').focus(function() {
+    utterThis.text = 'confirm';
+    window.speechSynthesis.speak(utterThis);
+  });
+  $('#cancel1').focus(function() {
+    utterThis.text = 'cancel';
+    window.speechSynthesis.speak(utterThis);
+  });
+</script>

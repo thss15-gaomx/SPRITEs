@@ -5,7 +5,6 @@ from .forms import UploadForm
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.http import HttpResponse
 import json
-from .swipe_rec.test import swipe_convert
 
 color_map = ["#B03060", "#FE9A76", "#FFD700", "#32CD32", "#016936", "#008080", "#0E6EB8", "#EE82EE", "#B413EC",
              "#FF1493", "#A52A2A", "#A0A0A0", "#000000"]
@@ -63,29 +62,6 @@ def get_layout(pageId, block_id, section_id):
         'section_id': cur_section
     }
     return info
-
-@csrf_exempt
-def playbox(request):
-    if request.method == 'POST':
-        key = request.POST.get('key')
-        key = key[:-1]
-        keys = key.split(',')
-        num_keys = []
-        for item in keys:
-            num_keys.append(int(item))
-        result = 'loading'
-        if num_keys:
-            swipe = swipe_convert(num_keys)
-            if swipe == 1:
-                result = 'both'
-            elif swipe == 2:
-                result = 'right'
-            elif swipe == 3:
-                result = 'left'
-        return_json = {'result': result}
-        return HttpResponse(json.dumps(return_json), content_type='application/json')
-    else:
-        return render(request, "playbox.html")
 
 
 def select(request, section_id):
@@ -240,7 +216,6 @@ def delete(request, delete_info):
         return render(request, "layout.html", get_layout(page_id, -1, section_id))
     else:
         page_id = delete_info[1:]
-        print('hello')
         sections = Section.objects.filter(page_id=int(page_id))
         for section in sections:
             Block.objects.filter(section_id=int(section.id)).delete()
