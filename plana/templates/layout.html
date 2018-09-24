@@ -426,12 +426,14 @@
       }
     } else if (curBox === "sidebar") {
       if (keyCode === 220) {  // \: enter
-        curLevel = "sidebar-section";
-        curBox = "sidebar-section" + (curSection).toString();
-        utterThis.text = "enter " + curBox;
-        window.speechSynthesis.speak(utterThis);
-        if (widgetNum) {
-           curWiget = 0;
+        if (curSection) {
+          curLevel = "sidebar-section";
+          curBox = "sidebar-section" + (curSection).toString();
+          utterThis.text = "enter " + curBox;
+          window.speechSynthesis.speak(utterThis);
+          if (widgetNum) {
+             curWiget = 0;
+          }
         }
       } else if (keyCode === 13) {  // enter: page up
         if (curSection > 1) {
@@ -610,6 +612,32 @@
   }
   function keyFunctionSidebarSection(keyCode) {
     if (keyCode === 220) {  // \: enter
+      if (curWiget) {
+        var widgetId = $(sidebarId).children('a').eq(curWiget - 1).text().substring(7);
+        focus = 'both';
+        curLevel = "section";
+        curBox = "section" + (curSection).toString();
+        utterThis.text = "i d " + widgetId + ' selected';
+        window.speechSynthesis.speak(utterThis);
+        enterSection();
+        $('#' + widgetId).addClass('current');
+        blockWidth = parseInt($('#' + widgetId).attr("width"));
+        blockHeight = parseInt($('#' + widgetId).attr("height"))
+        curRow = parseInt($('#' + widgetId).attr("y"));
+        curColumn = parseInt($('#' + widgetId).attr("x"));
+        focusObject = parseInt(widgetId);
+      }
+    } else if (keyCode === 73) {  // I: info
+      var widgetId = $(sidebarId).children('a').eq(curWiget - 1).text().substring(7);
+      utterThis.text = $('#' + widgetId).text();
+      window.speechSynthesis.speak(utterThis);
+    } else if (keyCode === 80) {  // P: position
+      if (curWiget) {
+        var widgetId = $(sidebarId).children('a').eq(curWiget - 1).text().substring(7);
+        utterThis.text = 'column' + (parseInt($('#' + widgetId).attr("x")) + 1).toString()
+                       + 'row' + (parseInt($('#' + widgetId).attr("y")) + 1).toString();
+        window.speechSynthesis.speak(utterThis);
+      }
     } else if (keyCode === 13) {  // enter: page up
       if (curWiget > 1) {
         curWiget--;
