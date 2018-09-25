@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="ui container">
+    <div class="ui large secondary inverted pointing menu">
+      <a href="{% url 'index' %}" class="active item" id='home'>Home</a>
+      <a href="{% url 'page' %}" class="item" id='plan-a'>PlanA</a>
+      <a href="{% url 'page-b' %}" class="item" id='plan-b'>PlanB</a>
+    </div>
+  </div>
+  <div class="ui inverted vertical masthead center aligned segment">
+      <br>
+      <h2>Step 2) Locate and place the widget.</h2>
+      <div class="ui text container">
+        <p style="text-align: left; color: white;">When we locate to a position, there will be a hint about the number of widgets there.
+        We can enter the widget by pressing the back slash key. After activating the widget, we can move it to the position entered and press
+        the space key to place it</p>
+        <table class="ui inverted celled structured table">
+          <tbody>
+            <tr>
+              <td id='1-1'>1.1</td>
+              <td id='1-2'>1.2</td>
+              <td id='1-3'>1.3</td>
+              <td id='1-4'>1.4</td>
+              <td id='1-5'>1.5</td>
+              <td id='1-6'>1.6</td>
+              <td id='1-7'>1.7</td>
+              <td id='1-8'>1.8</td>
+              <td id='1-9'>1.9</td>
+              <td id='1-10'>1.10</td>
+            <tr>
+            <tr>
+              <td id='2-1'>2.1</td>
+              <td id='2-2'>2.2</td>
+              <td id='2-3'>2.3</td>
+              <td id='2-4'>2.4</td>
+              <td id='2-5'>2.5</td>
+              <td id='2-6'>2.6</td>
+              <td id='2-7'>2.7</td>
+              <td id='2-8'>2.8</td>
+              <td id='2-9'>2.9</td>
+              <td id='2-10'>2.10</td>
+            <tr>
+            <tr>
+              <td id='3-1'>3.1</td>
+              <td id='3-2'>3.2</td>
+              <td id='3-3'>3.3</td>
+              <td id='3-4'>3.4</td>
+              <td id='3-5'>3.5</td>
+              <td id='3-6'>3.6</td>
+              <td id='3-7'>3.7</td>
+              <td id='3-8'>3.8</td>
+              <td id='3-9'>3.9</td>
+              <td id='3-10'>3.10</td>
+            <tr>
+            <tr>
+              <td id='4-1'>4.1</td>
+              <td id='4-2'>4.2</td>
+              <td id='4-3'>4.3</td>
+              <td id='4-4'>4.4</td>
+              <td id='4-5'>4.5</td>
+              <td id='4-6'>4.6</td>
+              <td id='4-7'>4.7</td>
+              <td id='4-8'>4.8</td>
+              <td id='4-9'>4.9</td>
+              <td id='4-10'>4.10</td>
+            <tr>
+            <tr>
+              <td id='5-1'>5.1</td>
+              <td id='5-2'>5.2</td>
+              <td id='5-3'>5.3</td>
+              <td id='5-4'>5.4</td>
+              <td id='5-5'>5.5</td>
+              <td id='5-6'>5.6</td>
+              <td id='5-7'>5.7</td>
+              <td id='5-8'>5.8</td>
+              <td id='5-9'>5.9</td>
+              <td id='5-10'>5.10</td>
+            <tr>
+            <tr>
+              <td id='6-1'>6.1</td>
+              <td id='6-2'>6.2</td>
+              <td id='6-3'>6.3</td>
+              <td id='6-4'>6.4</td>
+              <td id='6-5'>6.5</td>
+              <td id='6-6'>6.6</td>
+              <td id='6-7'>6.7</td>
+              <td id='6-8'>6.8</td>
+              <td id='6-9'>6.9</td>
+              <td id='6-10'>6.10</td>
+            <tr>
+          </tbody>
+        </table>
+        <div class="ui center aligned container">
+          <br>
+          <a class="ui huge inverted teal button" href="{% url 'help1' %}">Before</a>
+          <a class="ui huge inverted orange button" href="{% url 'help3' %}" >Next</a>
+        </div>
+      </div>
+    </div>
+
+  <script type="text/javascript" src="/static/jquery-buzz.js"></script>
+  <script type="text/javascript" src="/static/sound.js"></script>
+  <script type="text/javascript">
+    var utterThis = new window.SpeechSynthesisUtterance();
+    utterThis.text = 'Step 2 Locate and place the widget. When we locate to a position, there will be a hint about the number of widgets there. We can enter the widget by pressing the back slash key. After activating the widget, we can move it to the position entered and press the space key to place it';
+    utterThis.lang = 'en';
+    window.speechSynthesis.speak(utterThis);
+    var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48,
+                     81, 87, 69, 82, 84, 89, 85, 73, 79, 80,
+                     65, 83, 68, 70, 71, 72, 74, 75, 76, 186,
+                     90, 88, 67, 86, 66, 78, 77, 188, 190, 191]; //1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+    var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
+    var columnContent = ["pages", "header", "body", "side bar", "footer"];
+    var shift = 0;
+    var curUnit = 1;
+    var focus = "null", focusColumn, focusRow;
+    var focusObject = 0;
+    var curColumn = 0, curRow = 0;
+    $('#1-1').addClass("white");
+    document.addEventListener("keydown", function(e){
+      shift = e.location;
+    });
+    $(document).keydown(function (event) {
+      playMoveSound();
+      event.preventDefault();
+
+      if (event.keyCode === 220) {  // \: enter
+        if (focus == "both" && !focusObject) {
+          if (focusColumn === curColumn && focusRow === curRow) {
+            focusObject = 1;
+            utterThis.text = "enter widget";
+            window.speechSynthesis.speak(utterThis);
+          }
+        }
+      } else if (event.keyCode === 32) {  // space
+        if (focusObject && focus == 'both') {
+          focusObject = 0;
+          focus = "null";
+          playDropSound();
+        }
+      } else if (event.keyCode === 13) {  // enter: unit up
+        if (curUnit > 1) {
+          curUnit--;
+        }
+        utterThis.text = "unit " + (curUnit).toString();
+        window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 16 && shift === 2) {  // shift: unit down
+        if (curUnit < 2) {
+          curUnit++;
+        }
+        utterThis.text = "unit " + (curUnit).toString();
+        window.speechSynthesis.speak(utterThis);
+        shift = 0;
+      } else if (columnKey.indexOf(event.keyCode) >= 0) {
+        var columnIndex = (columnKey.indexOf(event.keyCode) + 1) % 10;
+        if (columnIndex === 0) {
+          columnIndex = 9;
+        } else {
+          columnIndex -= 1;
+        }
+        focusColumn = columnIndex;
+        utterThis.text = "column" + (focusColumn + 1).toString();
+        window.speechSynthesis.speak(utterThis);
+        if (focus === "null" || focus === "both") {
+          focus = "column";
+        } else if (focus === "row") {
+          if (focusObject) {
+            $('#' + (curRow + 1).toString() + '-' + (curColumn + 1).toString()).removeClass("white");
+            utterThis.text = "moving to row " + (focusRow + 1).toString() + 'column ' + (focusColumn + 1).toString();
+            window.speechSynthesis.speak(utterThis);
+            curRow = focusRow;
+            curColumn = focusColumn;
+            $('#' + (focusRow + 1).toString() + '-' + (focusColumn + 1).toString()).addClass("white");
+          } else {
+            if (curRow === focusRow && curColumn === focusColumn) {
+              utterThis.text = "1 object";
+              window.speechSynthesis.speak(utterThis);
+            } else {
+              utterThis.text = "0 objects";
+              window.speechSynthesis.speak(utterThis);
+            }
+          }
+          focus = "both";
+        }
+      } else if (rowKey.indexOf(event.keyCode) >= 0 && shift !== 2) {
+        if (rowKey.indexOf(event.keyCode) + (curUnit - 1) * 4 < 6) {
+          focusRow = rowKey.indexOf(event.keyCode) + (curUnit - 1) * 4;
+          utterThis.text = "Row " + (focusRow + 1).toString();
+          window.speechSynthesis.speak(utterThis);
+          if (focus === "null" || focus === "both") {
+            focus = "row";
+          } else if (focus === "column") {
+            if (focusObject) {
+              $('#' + (curRow + 1).toString() + '-' + (curColumn + 1).toString()).removeClass("white");
+              utterThis.text = "moving to row " + (focusRow + 1).toString() + 'column ' + (focusColumn + 1).toString();
+              window.speechSynthesis.speak(utterThis);
+              curRow = focusRow;
+              curColumn = focusColumn;
+              $('#' + (focusRow + 1).toString() + '-' + (focusColumn + 1).toString()).addClass("white");
+            } else {
+              if (curRow === focusRow && curColumn === focusColumn) {
+                utterThis.text = "1 object";
+                window.speechSynthesis.speak(utterThis);
+              } else {
+                utterThis.text = "0 objects";
+                window.speechSynthesis.speak(utterThis);
+              }
+            }
+            focus = "both";
+          }
+        } else {
+          utterThis.text = "only 6 rows";
+          window.speechSynthesis.speak(utterThis);
+        }
+      } else if (event.keyCode === 39) {   // next
+        utterThis.text = 'Step 3';
+        window.speechSynthesis.speak(utterThis);
+        window.location.href = "{% url 'help3' %}";
+      } else if (event.keyCode === 37) {   // before
+        utterThis.text = 'Step 3';
+        window.speechSynthesis.speak(utterThis);
+        window.location.href = "{% url 'help1' %}";
+      }
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,379 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="ui container">
+    <div class="ui large secondary inverted pointing menu">
+      <a href="{% url 'index' %}" class="active item" id='home'>Home</a>
+      <a href="{% url 'page' %}" class="item" id='plan-a'>PlanA</a>
+      <a href="{% url 'page-b' %}" class="item" id='plan-b'>PlanB</a>
+    </div>
+  </div>
+  <div class="ui inverted vertical masthead center aligned segment">
+      <br>
+      <h2>Step 4) Add and delete.</h2>
+      <div class="ui text container">
+        <p style="text-align: left; color: white;">We can add a widget by pressing the plus key and delete by the delete key.
+        Before deleting, you need to navigate to the object that you want to delete. When you are filling in a form, using tab
+        and return to alter and confirm. Or you can press the space key to confirm and escape to cancel.</p>
+        <table class="ui inverted celled structured table">
+          <tbody>
+            <tr>
+              <td id='1-1'>1.1</td>
+              <td id='1-2'>1.2</td>
+              <td id='1-3'>1.3</td>
+              <td id='1-4'>1.4</td>
+              <td id='1-5'>1.5</td>
+              <td id='1-6'>1.6</td>
+              <td id='1-7'>1.7</td>
+              <td id='1-8'>1.8</td>
+              <td id='1-9'>1.9</td>
+              <td id='1-10'>1.10</td>
+            <tr>
+            <tr>
+              <td id='2-1'>2.1</td>
+              <td id='2-2'>2.2</td>
+              <td id='2-3'>2.3</td>
+              <td id='2-4'>2.4</td>
+              <td id='2-5'>2.5</td>
+              <td id='2-6'>2.6</td>
+              <td id='2-7'>2.7</td>
+              <td id='2-8'>2.8</td>
+              <td id='2-9'>2.9</td>
+              <td id='2-10'>2.10</td>
+            <tr>
+            <tr>
+              <td id='3-1'>3.1</td>
+              <td id='3-2'>3.2</td>
+              <td id='3-3'>3.3</td>
+              <td id='3-4'>3.4</td>
+              <td id='3-5'>3.5</td>
+              <td id='3-6'>3.6</td>
+              <td id='3-7'>3.7</td>
+              <td id='3-8'>3.8</td>
+              <td id='3-9'>3.9</td>
+              <td id='3-10'>3.10</td>
+            <tr>
+            <tr>
+              <td id='4-1'>4.1</td>
+              <td id='4-2'>4.2</td>
+              <td id='4-3'>4.3</td>
+              <td id='4-4'>4.4</td>
+              <td id='4-5'>4.5</td>
+              <td id='4-6'>4.6</td>
+              <td id='4-7'>4.7</td>
+              <td id='4-8'>4.8</td>
+              <td id='4-9'>4.9</td>
+              <td id='4-10'>4.10</td>
+            <tr>
+            <tr>
+              <td id='5-1'>5.1</td>
+              <td id='5-2'>5.2</td>
+              <td id='5-3'>5.3</td>
+              <td id='5-4'>5.4</td>
+              <td id='5-5'>5.5</td>
+              <td id='5-6'>5.6</td>
+              <td id='5-7'>5.7</td>
+              <td id='5-8'>5.8</td>
+              <td id='5-9'>5.9</td>
+              <td id='5-10'>5.10</td>
+            <tr>
+            <tr>
+              <td id='6-1'>6.1</td>
+              <td id='6-2'>6.2</td>
+              <td id='6-3'>6.3</td>
+              <td id='6-4'>6.4</td>
+              <td id='6-5'>6.5</td>
+              <td id='6-6'>6.6</td>
+              <td id='6-7'>6.7</td>
+              <td id='6-8'>6.8</td>
+              <td id='6-9'>6.9</td>
+              <td id='6-10'>6.10</td>
+            <tr>
+          </tbody>
+        </table>
+        <div class="ui center aligned container">
+          <br>
+          <a class="ui huge inverted teal button" href="{% url 'help1' %}">Before</a>
+          <a class="ui huge inverted orange button" href="{% url 'help3' %}" >Next</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ui basic modal one">
+      <div class="ui icon header">
+        <i class="table icon"></i>
+        Add New Widget
+      </div>
+      <div class="content">
+        <form method="post" action="{% url 'help4' %}" class="ui inverted form" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="field">
+            <label>Position</label>
+            <div class="two fields">
+              <div class="field">
+                <div class="ui big left icon input">
+                  <input type="number" name="column" id="column" placeholder="Column" min="1" max="10" required/>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui big input">
+                  <input type="number" name="row" id="row" placeholder="Row" min="1" max="6" required/>
+                </div>
+              </div>
+            </div>
+          </div>
+        <div class="ui center aligned container actions">
+          <br>
+          <button type="submit" class="ui huge teal ok button" id="confirm">
+            <i class="add icon"></i>Create New Widget
+          </button>
+          <a class="ui huge inverted orange basic cancel button" id="cancel1" onclick="alterModal()" href="javascript:void(0);">Cancel</a>
+        </div>
+      </div>
+    </div>
+    <div class="ui basic modal two">
+      <div class="ui icon header" id="delete-title">Delete Widget
+      </div>
+      <div class="content">
+        <p id="delete-hint">Are you sure to delete this widget?</p>
+      </div>
+      <div class="actions">
+        <button class="ui green ok inverted button" id="delete" onclick="deleteWidget()">
+          <i class="checkmark icon"></i>
+          Yes
+        </button>
+        <button class="ui red basic cancel inverted button" id="cancel2" onclick="alterModal()">
+          <i class="remove icon"></i>
+          No
+        </button>
+      </div>
+    </div>
+
+  <script type="text/javascript" src="/static/jquery-buzz.js"></script>
+  <script type="text/javascript" src="/static/sound.js"></script>
+  <script type="text/javascript">
+    var utterThis = new window.SpeechSynthesisUtterance();
+    utterThis.lang = 'en';
+    var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48,
+                     81, 87, 69, 82, 84, 89, 85, 73, 79, 80,
+                     65, 83, 68, 70, 71, 72, 74, 75, 76, 186,
+                     90, 88, 67, 86, 66, 78, 77, 188, 190, 191]; //1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+    var numberKey = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57]
+    var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
+    var columnContent = ["pages", "header", "body", "side bar", "footer"];
+    var shift = 0;
+    var curUnit = 1;
+    var focus = "null", focusColumn, focusRow;
+    var focusObject = 0;
+    var curColumn = 0, curRow = 0;
+    var modal = 0;
+    if ({{ column }} !== -1 && {{ row }} !== -1) {
+      curColumn = {{ column }};
+      curRow = {{ row }};
+      $('#' + (curRow + 1).toString() + '-' + (curColumn + 1).toString()).addClass("white");
+      focusObject = 1;
+    } else {
+      utterThis.text = 'Step 4 Add and delete. We can add a widget by pressing the plus key and delete by the delete key. Before deleting, you need to navigate to the object that you want to delete. When you are filling in a form, using tab and  return to alter and confirm. Or you can press the space key to confirm and escape to cancel.';
+      window.speechSynthesis.speak(utterThis);
+    }
+    function alterModal() {
+      modal = 0;
+    }
+    function deleteWidget() {
+      modal = 0;
+      focusObject = 0;
+      focus = 'null';
+      $('#' + (curRow + 1).toString() + '-' + (curColumn + 1).toString()).removeClass("white");
+    }
+    document.addEventListener("keydown", function(e){
+      shift = e.location;
+    });
+    $(document).keydown(function (event) {
+      playMoveSound();
+      if (modal === 1) {
+        if (event.keyCode === 32) {  // space: confirm
+          utterThis.text = "confirm";
+          window.speechSynthesis.speak(utterThis);
+          modal = 0;
+          $("#confirm").click();
+        } else if (event.keyCode === 27) {  // esc: cancel
+          utterThis.text = "cancel";
+          window.speechSynthesis.speak(utterThis);
+          $("#cancel1").click();
+        } else if (numberKey.indexOf(event.keyCode) >= 0) {
+          if ($('#column').is(':focus')) {
+            if ($('#column').val() === '') {
+              var curNum = 0;
+            } else {
+              var curNum = parseInt($('#column').val());
+            }
+            var inputNum = numberKey.indexOf(event.keyCode);
+            if (10 * curNum + inputNum > 10) {
+              event.preventDefault();
+              utterThis.text = "no more than 10";
+              window.speechSynthesis.speak(utterThis);
+            } else {
+              utterThis.text = (inputNum).toString();
+              window.speechSynthesis.speak(utterThis);
+            }
+          } else {
+            if ($('#row').val() === '') {
+              var curNum = 0;
+            } else {
+              var curNum = parseInt($('#row').val());
+            }
+            var inputNum = numberKey.indexOf(event.keyCode);
+            if (10 * curNum + inputNum > 6) {
+              event.preventDefault();
+              utterThis.text = "no more than 6";
+              window.speechSynthesis.speak(utterThis);
+            } else {
+              utterThis.text = (inputNum).toString();
+              window.speechSynthesis.speak(utterThis);
+            }
+          }
+        } else if (event.keyCode >= 65 && event.keyCode <= 90) {
+          var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+                          'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+          if (event.keyCode === 69 && !$('#name').is(':focus')) {
+            event.preventDefault();
+          }
+          if ($('#name').is(':focus')) {
+            utterThis.text = alphabet[event.keyCode - 65];
+            window.speechSynthesis.speak(utterThis);
+          }
+        }
+      } else if (modal === 2) {
+        event.preventDefault();
+        if (event.keyCode === 32) {  // space: confirm
+          utterThis.text = "confirm";
+          window.speechSynthesis.speak(utterThis);
+          $("#delete").click();
+        } if (event.keyCode === 27) {  // esc: cancel
+          utterThis.text = "cancel";
+          window.speechSynthesis.speak(utterThis);
+          $("#cancel2").click();
+        }
+      } else if (modal === 0) {
+        event.preventDefault();
+        if (event.keyCode === 187) {  // +: add
+          if (focusObject) {
+            utterThis.text = "widget exists";
+            window.speechSynthesis.speak(utterThis);
+          } else {
+            utterThis.text = "add a widget and set its position";
+            window.speechSynthesis.speak(utterThis);
+            $('.ui.basic.modal.one')
+              .modal('show')
+            ;
+            modal = 1;
+          }
+        } else if (event.keyCode === 8) {  // delete
+          if (focus === "both") {
+            if (focusColumn === curColumn && focusRow === curRow) {
+              utterThis.text = "delete the widget";
+              window.speechSynthesis.speak(utterThis);
+              $('.ui.basic.modal.two')
+                .modal('show')
+              ;
+              modal = 2;
+            }
+          }
+        } else if (event.keyCode === 13) {  // enter: unit up
+          if (curUnit > 1) {
+            curUnit--;
+          }
+          utterThis.text = "unit " + (curUnit).toString();
+          window.speechSynthesis.speak(utterThis);
+        } else if (event.keyCode === 16 && shift === 2) {  // shift: unit down
+          if (curUnit < 2) {
+            curUnit++;
+          }
+          utterThis.text = "unit " + (curUnit).toString();
+          window.speechSynthesis.speak(utterThis);
+          shift = 0;
+        } else if (columnKey.indexOf(event.keyCode) >= 0) {
+          if (focusObject) {
+            var columnIndex = (columnKey.indexOf(event.keyCode) + 1) % 10;
+            if (columnIndex === 0) {
+              columnIndex = 9;
+            } else {
+              columnIndex -= 1;
+            }
+            focusColumn = columnIndex;
+            utterThis.text = "column" + (focusColumn + 1).toString();
+            window.speechSynthesis.speak(utterThis);
+            if (focus === "null" || focus === "both") {
+              focus = "column";
+            } else if (focus === "row") {
+              if (focusObject) {
+                if (curRow === focusRow && curColumn === focusColumn) {
+                  utterThis.text = "1 object";
+                  window.speechSynthesis.speak(utterThis);
+                } else {
+                  utterThis.text = "0 objects";
+                  window.speechSynthesis.speak(utterThis);
+                }
+              }
+              focus = "both";
+            }
+          } else {
+            utterThis.text = "Press plus key to add a widget";
+            window.speechSynthesis.speak(utterThis);
+          }
+        } else if (rowKey.indexOf(event.keyCode) >= 0 && shift !== 2) {
+          if (focusObject) {
+            if (rowKey.indexOf(event.keyCode) + (curUnit - 1) * 4 < 6) {
+              focusRow = rowKey.indexOf(event.keyCode) + (curUnit - 1) * 4;
+              utterThis.text = "Row " + (focusRow + 1).toString();
+              window.speechSynthesis.speak(utterThis);
+              if (focus === "null" || focus === "both") {
+                focus = "row";
+              } else if (focus === "column") {
+                if (curRow === focusRow && curColumn === focusColumn) {
+                  utterThis.text = "1 object";
+                  window.speechSynthesis.speak(utterThis);
+                } else {
+                  utterThis.text = "0 objects";
+                  window.speechSynthesis.speak(utterThis);
+                }
+                focus = "both";
+              }
+            } else {
+              utterThis.text = "only 6 rows";
+              window.speechSynthesis.speak(utterThis);
+            }
+          } else {
+            utterThis.text = "Press plus key to add a widget";
+            window.speechSynthesis.speak(utterThis);
+          }
+        }
+      }
+
+      if (event.keyCode === 39) {   // next
+        utterThis.text = 'Step 5';
+        window.speechSynthesis.speak(utterThis);
+        window.location.href = "{% url 'help5' %}";
+      } else if (event.keyCode === 37) {   // before
+        utterThis.text = 'Step 3';
+        window.speechSynthesis.speak(utterThis);
+        window.location.href = "{% url 'help3' %}";
+      }
+    });
+    $('#column').focus(function() {
+      utterThis.text = 'column';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#row').focus(function() {
+      utterThis.text = 'row';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#confirm').focus(function() {
+      utterThis.text = 'confirm';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#cancel1').focus(function() {
+      utterThis.text = 'cancel';
+      window.speechSynthesis.speak(utterThis);
+    });
+  </script>
+{% endblock %}

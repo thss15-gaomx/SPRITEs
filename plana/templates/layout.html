@@ -677,6 +677,7 @@
       if (event.keyCode === 32) {  // space: confirm
         utterThis.text = "confirm";
         window.speechSynthesis.speak(utterThis);
+        modal = 0;
         $("#confirm").click();
       } else if (event.keyCode === 27) {  // esc: cancel
         utterThis.text = "cancel";

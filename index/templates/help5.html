@@ -1,0 +1,330 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="ui container">
+    <div class="ui large secondary inverted pointing menu">
+      <a href="{% url 'index' %}" class="active item" id='home'>Home</a>
+      <a href="{% url 'page' %}" class="item" id='plan-a'>PlanA</a>
+      <a href="{% url 'page-b' %}" class="item" id='plan-b'>PlanB</a>
+    </div>
+  </div>
+  <div class="ui inverted vertical masthead center aligned segment">
+      <br>
+      <h2>Step 5) Usage of sidebar.</h2>
+      <div class="ui text container">
+        <table class="ui inverted celled structured table">
+        <tbody>
+          <tr>
+            <td rowspan="3" colspan="2" class="red" style="border-bottom: 3px solid white !important;">column 1</td>
+            <td rowspan="3" colspan="2" class="red">column 2</td>
+            <td rowspan="3" colspan="2" class="red" style="border-right: 3px solid white !important;">column 3</td>
+            <td>column1</td>
+          </tr>
+          <tr>
+            <td>column2</td>
+          </tr>
+          <tr>
+            <td style="border-bottom: 3px solid white !important;">column3</td>
+          </tr>
+          <tr>
+            <td colspan="6" class="red" style="border-bottom: 3px solid white !important; border-right: 3px solid white !important;">
+              section
+            </td>
+            <td style="border-bottom: 3px solid white !important;">section</td>
+          </tr>
+          <tr>
+            <td rowspan="2" colspan="3" class="red">table 11</td>
+            <td rowspan="2" colspan="3" class="red" style="border-right: 3px solid white !important;">table 12</td>
+            <td>table 11</td>
+          </tr>
+          <tr>
+            <td>table 12</td>
+          </tr>
+          <tr>
+            <td rowspan="2" colspan="3" class="red">table 21</td>
+            <td rowspan="2" colspan="3" class="red" style="border-right: 3px solid white !important;">table 23</td>
+            <td>table 21</td>
+          </tr>
+          <tr>
+            <td>table 22</td>
+          </tr>
+        </tbody>
+        </table>
+        <div class="ui center aligned container">
+          <br>
+          <a class="ui huge inverted teal button" href="{% url 'help4' %}">Before</a>
+        </div>
+      </div>
+    </div>
+
+  <script type="text/javascript" src="/static/jquery-buzz.js"></script>
+  <script type="text/javascript" src="/static/sound.js"></script>
+  <script type="text/javascript">
+    var utterThis = new window.SpeechSynthesisUtterance();
+    utterThis.text = 'help';
+    utterThis.lang = 'en';
+    window.speechSynthesis.speak(utterThis);
+    var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48,
+                     81, 87, 69, 82, 84, 89, 85, 73, 79, 80,
+                     65, 83, 68, 70, 71, 72, 74, 75, 76, 186,
+                     90, 88, 67, 86, 66, 78, 77, 188, 190, 191]; //1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+    var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
+    var shift = 0;
+    var curUnit = 1;
+    var pageNum = 2;
+    var focus = "null", focusColumn, focusRow;
+    var curLevel = "page";
+    var curBox = "page";
+    var curSection, curWiget, widgetNum;
+    var widgetArray = [3, 1, 9]
+    function enterSection(section) {
+
+    }
+    function keyFunctionPage(keyCode) {
+      if (keyCode === 220) {  // \: enter
+        utterThis.text = "enter" + curBox;
+        window.speechSynthesis.speak(utterThis);
+        if (curBox === "body") {
+          utterThis.text = "3 sections, section 1";
+          window.speechSynthesis.speak(utterThis);
+          curSection = 1;
+        }
+        if (curBox === "sidebar") {
+          utterThis.text = "3 sections";
+          window.speechSynthesis.speak(utterThis);
+          curSection = 0;
+        }
+        if (curBox !== 'page') {
+          curLevel = "container";
+        }
+        focus = "null";
+        focusColumn = 0;
+        focusRow = 0;
+      } else if (columnKey.indexOf(keyCode) >= 0) {
+        if (focus === "null") {
+          utterThis.text = "select the row first";
+          window.speechSynthesis.speak(utterThis);
+        } else {
+          if (focusRow === 0) {
+            if (keyCode === 49) {
+              curBox = "body";
+              focus = "both";
+              utterThis.text = curBox;
+              window.speechSynthesis.speak(utterThis);
+            } else if (keyCode === 50) {
+              curBox = "sidebar";
+              focus = "both";
+              utterThis.text = curBox;
+              window.speechSynthesis.speak(utterThis);
+            } else {
+              utterThis.text = "only 2 columns";
+              window.speechSynthesis.speak(utterThis);
+            }
+          }
+        }
+      } else if (rowKey.indexOf(keyCode) >= 0 && shift !== 2) {
+        curBox = "page";
+        if (keyCode === 192) {
+          focusRow = rowKey.indexOf(keyCode);
+          focus = "row";
+          utterThis.text = "row " + (focusRow + 1).toString();
+          window.speechSynthesis.speak(utterThis);
+        } else {
+          utterThis.text = "only 1 row";
+          window.speechSynthesis.speak(utterThis);
+        }
+      } else if (keyCode === 27) { // Esc
+      }
+    }
+    function keyFunctionContainer(keyCode) {
+      if (curBox === "body") {
+        if (keyCode === 220) {  // \: enter
+          curLevel = "section";
+          curBox = "section" + (curSection).toString();
+          utterThis.text = "enter " + curBox;
+          window.speechSynthesis.speak(utterThis);
+          enterSection();
+        } else if (keyCode === 13) {  // enter: page up
+          if (curSection > 1) {
+            curSection--;
+          }
+          utterThis.text = "section " + (curSection).toString();
+          window.speechSynthesis.speak(utterThis);
+        } else if (keyCode === 16 && shift === 2) {  // shift: page down
+          if (curSection < 3) {
+            curSection++;
+          }
+          utterThis.text = "section " + (curSection).toString();
+          window.speechSynthesis.speak(utterThis);
+          shift = 0;
+        } if (keyCode === 27) { // Esc
+          curLevel = "page";
+          curBox = "page";
+          utterThis.text = "enter" + curBox;
+          window.speechSynthesis.speak(utterThis);
+        }
+      } else if (curBox === "sidebar") {
+        if (keyCode === 220) {  // \: enter
+          if (curSection) {
+            curLevel = "sidebar-section";
+            curBox = "sidebar-section" + (curSection).toString();
+            utterThis.text = "enter " + curBox;
+            window.speechSynthesis.speak(utterThis);
+            if (widgetNum) {
+               curWiget = 0;
+            }
+          }
+        } else if (keyCode === 13) {  // enter: page up
+          if (curSection > 1) {
+            curSection--;
+            widgetNum = widgetArray[curSection - 1];
+            utterThis.text = "section " + (curSection).toString() + "contains" + (widgetNum).toString() + " widgets";
+            window.speechSynthesis.speak(utterThis);
+          }
+        } else if (keyCode === 16 && shift === 2) {  // shift: page down
+          if (curSection < 3) {
+            curSection++;
+            widgetNum = widgetArray[curSection - 1];
+            utterThis.text = "section " + (curSection).toString() + "contains" + (widgetNum).toString() + " widgets";
+            window.speechSynthesis.speak(utterThis);
+          }
+          shift = 0;
+        } if (keyCode === 27) { // Esc
+          curLevel = "page";
+          curBox = "page";
+          utterThis.text = "enter" + curBox;
+          window.speechSynthesis.speak(utterThis);
+        }
+      } else {
+        if (keyCode === 27) { // Esc
+          curLevel = "page";
+          curBox = "page";
+          utterThis.text = "enter" + curBox;
+          window.speechSynthesis.speak(utterThis);
+        } else {
+          utterThis.text = curBox;
+          window.speechSynthesis.speak(utterThis);
+        }
+      }
+    }
+    function keyFunctionSection(keyCode) {
+      if (keyCode === 220) {  // \: enter
+        if (focus === "both" && focusObject === -1) {
+          utterThis.text = "i d " + ($(this).attr("id")).toString() + ' selected';
+          window.speechSynthesis.speak(utterThis);
+        }
+      } else if (keyCode === 13) {  // enter: unit up
+        utterThis.text = "unit 1";
+        window.speechSynthesis.speak(utterThis);
+      } else if (keyCode === 16 && shift === 2) {  // shift: unit down
+        utterThis.text = "unit 1";
+        window.speechSynthesis.speak(utterThis);
+        shift = 0;
+      } else if (columnKey.indexOf(keyCode) >= 0) {
+        var columnIndex = (columnKey.indexOf(keyCode) + 1) % 10;
+        if (columnIndex === 0) {
+          columnIndex = 9;
+        } else {
+          columnIndex -= 1;
+        }
+        if (columnIndex < sectionColumn) {
+          focusColumn = columnIndex;
+          utterThis.text = "column " + (focusColumn + 1).toString();
+          window.speechSynthesis.speak(utterThis);
+          if (focus === "null" || focus === "both") {
+            focus = "column";
+          } else if (focus === "row") {
+            setBlock();
+          }
+        } else {
+          utterThis.text = "only " + (sectionColumn).toString() + "columns";
+          window.speechSynthesis.speak(utterThis);
+        }
+      } else if (rowKey.indexOf(keyCode) >= 0 && shift !== 2) {
+        if (rowKey.indexOf(keyCode) + (curUnit - 1) * 4 < sectionRow) {
+          focusRow = rowKey.indexOf(keyCode) + (curUnit - 1) * 4;
+          utterThis.text = "row " + (focusRow + 1).toString();
+          window.speechSynthesis.speak(utterThis);
+          if (focus === "null" || focus === "both") {
+            focus = "row";
+          } else if (focus === "column") {
+            setBlock();
+          }
+        } else {
+          utterThis.text = "only " + (sectionRow).toString() + "rows";
+          window.speechSynthesis.speak(utterThis);
+        }
+      } else if (keyCode === 27) { // Esc
+        curLevel = "container";
+        curBox = "body";
+        utterThis.text = "enter" + curBox;
+        window.speechSynthesis.speak(utterThis);
+      }
+    }
+    function keyFunctionSidebarSection(keyCode) {
+      if (keyCode === 220) {  // \: enter
+        if (curWiget) {
+          var widgetId = $(sidebarId).children('a').eq(curWiget - 1).text().substring(7);
+          focus = 'both';
+          curLevel = "section";
+          curBox = "section" + (curSection).toString();
+          utterThis.text = "i d " + widgetId + ' selected';
+          window.speechSynthesis.speak(utterThis);
+          enterSection();
+          $('#' + widgetId).addClass('current');
+          blockWidth = parseInt($('#' + widgetId).attr("width"));
+          blockHeight = parseInt($('#' + widgetId).attr("height"))
+          curRow = parseInt($('#' + widgetId).attr("y"));
+          curColumn = parseInt($('#' + widgetId).attr("x"));
+          focusObject = parseInt(widgetId);
+        }
+      } else if (keyCode === 73) {  // I: info
+        var widgetId = $(sidebarId).children('a').eq(curWiget - 1).text().substring(7);
+        utterThis.text = $('#' + widgetId).text();
+        window.speechSynthesis.speak(utterThis);
+      } else if (keyCode === 80) {  // P: position
+        if (curWiget) {
+          var widgetId = $(sidebarId).children('a').eq(curWiget - 1).text().substring(7);
+          utterThis.text = 'column' + (parseInt($('#' + widgetId).attr("x")) + 1).toString()
+                         + 'row' + (parseInt($('#' + widgetId).attr("y")) + 1).toString();
+          window.speechSynthesis.speak(utterThis);
+        }
+      } else if (keyCode === 13) {  // enter: page up
+        if (curWiget > 1) {
+          curWiget--;
+          utterThis.text = $(sidebarId).children('a').eq(curWiget - 1).text();
+          window.speechSynthesis.speak(utterThis);
+        }
+      } else if (keyCode === 16 && shift === 2) {  // shift: page down
+        if (curWiget < widgetNum) {
+          curWiget++;
+          utterThis.text = $(sidebarId).children('a').eq(curWiget - 1).text();
+          window.speechSynthesis.speak(utterThis);
+        }
+        shift = 0;
+      } if (keyCode === 27) { // Esc
+        curLevel = "container";
+        curBox = "sidebar";
+        utterThis.text = "enter" + curBox;
+        window.speechSynthesis.speak(utterThis);
+      }
+    }
+    document.addEventListener("keydown", function(e){
+      shift = e.location;
+    });
+    $(document).keydown(function (event) {
+      playMoveSound();
+      event.preventDefault();
+      var keyCode = event.keyCode;
+      if (curLevel === "page") {
+        keyFunctionPage(keyCode);
+      } else if (curLevel === "container") {
+        keyFunctionContainer(keyCode);
+      } else if (curLevel === "section") {
+        event.preventDefault();
+        keyFunctionSection(keyCode);
+      } else if (curLevel === "sidebar-section") {
+        keyFunctionSidebarSection(keyCode);
+      }
+    });
+  </script>
+{% endblock %}

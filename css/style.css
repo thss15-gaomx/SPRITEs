@@ -161,3 +161,17 @@ table td {
 .ui.section.divider {
   margin: 0 !important;
 }
+
+.red {
+  background: #9f3a38;
+  color: white;
+}
+
+.white {
+  background: white;
+  color: black;
+}
+
+.text {
+  color: indianred;
+}

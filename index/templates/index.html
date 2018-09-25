@@ -53,12 +53,16 @@
         } else if (utterThis.text === "plan b") {
           window.location.href = "{% url 'grid-b' %}";
         }
-      }else if (event.keyCode === 49) {   // plan a
+      } else if (event.keyCode === 49) {   // plan a
         utterThis.text = 'plan a';
         window.speechSynthesis.speak(utterThis);
       } else if (event.keyCode === 50) { // plan b
         utterThis.text = 'plan b';
         window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 72) { // H: help
+        utterThis.text = 'help';
+        window.speechSynthesis.speak(utterThis);
+        window.location.href = "{% url 'help1' %}";
       }
     });
   </script>

@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="ui container">
+    <div class="ui large secondary inverted pointing menu">
+      <a href="{% url 'index' %}" class="active item" id='home'>Home</a>
+      <a href="{% url 'page' %}" class="item" id='plan-a'>PlanA</a>
+      <a href="{% url 'page-b' %}" class="item" id='plan-b'>PlanB</a>
+    </div>
+  </div>
+  <div class="ui inverted vertical masthead center aligned segment">
+      <br>
+      <h2>Step 1) Navigate in a form.</h2>
+      <div class="ui text container">
+        <p style="text-align: left; color: white;">In SPRITEs, we use the left most keys to represent rows. Due to limited number of the keyboard rows,
+          we use return and the right shift to alter the row units. As to the columns, you can access to corresponding
+          column either by the number keys or the letter keys.</p>
+        <table class="ui inverted celled structured table">
+          <thead>
+            <tr>
+              <th>Num</th>
+              <th>Col 1</th>
+              <th>Col 2</th>
+              <th>Col 3</th>
+              <th>Col 4</th>
+              <th>Col 5</th>
+              <th>Col 6</th>
+              <th>Col 7</th>
+              <th>Col 8</th>
+              <th>Col 9</th>
+              <th>Col 10</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Row 1</td>
+              <td id='1-1'>1.1</td>
+              <td id='1-2'>1.2</td>
+              <td id='1-3'>1.3</td>
+              <td id='1-4'>1.4</td>
+              <td id='1-5'>1.5</td>
+              <td id='1-6'>1.6</td>
+              <td id='1-7'>1.7</td>
+              <td id='1-8'>1.8</td>
+              <td id='1-9'>1.9</td>
+              <td id='1-10'>1.10</td>
+            <tr>
+            <tr>
+              <td>Row 2</td>
+              <td id='2-1'>2.1</td>
+              <td id='2-2'>2.2</td>
+              <td id='2-3'>2.3</td>
+              <td id='2-4'>2.4</td>
+              <td id='2-5'>2.5</td>
+              <td id='2-6'>2.6</td>
+              <td id='2-7'>2.7</td>
+              <td id='2-8'>2.8</td>
+              <td id='2-9'>2.9</td>
+              <td id='2-10'>2.10</td>
+            <tr>
+            <tr>
+              <td>Row 3</td>
+              <td id='3-1'>3.1</td>
+              <td id='3-2'>3.2</td>
+              <td id='3-3'>3.3</td>
+              <td id='3-4'>3.4</td>
+              <td id='3-5'>3.5</td>
+              <td id='3-6'>3.6</td>
+              <td id='3-7'>3.7</td>
+              <td id='3-8'>3.8</td>
+              <td id='3-9'>3.9</td>
+              <td id='3-10'>3.10</td>
+            <tr>
+            <tr>
+              <td>Row 4</td>
+              <td id='4-1'>4.1</td>
+              <td id='4-2'>4.2</td>
+              <td id='4-3'>4.3</td>
+              <td id='4-4'>4.4</td>
+              <td id='4-5'>4.5</td>
+              <td id='4-6'>4.6</td>
+              <td id='4-7'>4.7</td>
+              <td id='4-8'>4.8</td>
+              <td id='4-9'>4.9</td>
+              <td id='4-10'>4.10</td>
+            <tr>
+            <tr>
+              <td>Row 5</td>
+              <td id='5-1'>5.1</td>
+              <td id='5-2'>5.2</td>
+              <td id='5-3'>5.3</td>
+              <td id='5-4'>5.4</td>
+              <td id='5-5'>5.5</td>
+              <td id='5-6'>5.6</td>
+              <td id='5-7'>5.7</td>
+              <td id='5-8'>5.8</td>
+              <td id='5-9'>5.9</td>
+              <td id='5-10'>5.10</td>
+            <tr>
+            <tr>
+              <td>Row 6</td>
+              <td id='6-1'>6.1</td>
+              <td id='6-2'>6.2</td>
+              <td id='6-3'>6.3</td>
+              <td id='6-4'>6.4</td>
+              <td id='6-5'>6.5</td>
+              <td id='6-6'>6.6</td>
+              <td id='6-7'>6.7</td>
+              <td id='6-8'>6.8</td>
+              <td id='6-9'>6.9</td>
+              <td id='6-10'>6.10</td>
+            <tr>
+          </tbody>
+        </table>
+        <div class="ui center aligned container">
+          <br>
+          <a class="ui huge inverted orange button" href="{% url 'help2' %}">Next</a>
+        </div>
+      </div>
+    </div>
+
+  <script type="text/javascript" src="/static/jquery-buzz.js"></script>
+  <script type="text/javascript" src="/static/sound.js"></script>
+  <script type="text/javascript">
+    var utterThis = new window.SpeechSynthesisUtterance();
+    utterThis.text = 'Step 1, Navigate in a form. In SPRITEs, we use the left most keys to represent rows. Due to limited number of the keyboard rows, we use return and the right shift to alter the row units. As to the columns, you can access to corresponding column either by the number keys or the letter keys.';
+    utterThis.lang = 'en';
+    window.speechSynthesis.speak(utterThis);
+    var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48,
+                     81, 87, 69, 82, 84, 89, 85, 73, 79, 80,
+                     65, 83, 68, 70, 71, 72, 74, 75, 76, 186,
+                     90, 88, 67, 86, 66, 78, 77, 188, 190, 191]; //1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+    var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
+    var shift = 0;
+    var curUnit = 1;
+    var focus = "null", focusColumn, focusRow;
+    document.addEventListener("keydown", function(e){
+      shift = e.location;
+    });
+    $(document).keydown(function (event) {
+      playMoveSound();
+      event.preventDefault();
+      if (event.keyCode === 13) {  // enter: unit up
+        if (curUnit > 1) {
+          curUnit--;
+        }
+        utterThis.text = "unit " + (curUnit).toString();
+        window.speechSynthesis.speak(utterThis);
+      } else if (event.keyCode === 16 && shift === 2) {  // shift: unit down
+        if (curUnit < 2) {
+          curUnit++;
+        }
+        utterThis.text = "unit " + (curUnit).toString();
+        window.speechSynthesis.speak(utterThis);
+        shift = 0;
+      } else if (columnKey.indexOf(event.keyCode) >= 0) {
+        var columnIndex = (columnKey.indexOf(event.keyCode) + 1) % 10;
+        if (columnIndex === 0) {
+          columnIndex = 9;
+        } else {
+          columnIndex -= 1;
+        }
+        if (focus === "both") {
+          $('#' + (focusRow + 1).toString() + '-' + (focusColumn + 1).toString()).removeClass("white");
+        }
+        focusColumn = columnIndex;
+        if (focus === "null" || focus === "both") {
+          focus = "column";
+          utterThis.text = "column" + (focusColumn + 1).toString();
+          window.speechSynthesis.speak(utterThis);
+        } else if (focus === "row") {
+          utterThis.text = "row " + (focusRow + 1).toString() + 'column ' + (focusColumn + 1).toString();
+          window.speechSynthesis.speak(utterThis);
+          $('#' + (focusRow + 1).toString() + '-' + (focusColumn + 1).toString()).addClass("white");
+          focus = "both";
+        }
+      } else if (rowKey.indexOf(event.keyCode) >= 0 && shift !== 2) {
+        if (rowKey.indexOf(event.keyCode) + (curUnit - 1) * 4 < 6) {
+          if (focus === "both") {
+            $('#' + (focusRow + 1).toString() + '-' + (focusColumn + 1).toString()).removeClass("white");
+          }
+          focusRow = rowKey.indexOf(event.keyCode) + (curUnit - 1) * 4;
+          utterThis.text = "Row " + (focusRow + 1).toString();
+          window.speechSynthesis.speak(utterThis);
+          if (focus === "null" || focus === "both") {
+            focus = "row";
+          } else if (focus === "column") {
+            utterThis.text = "row " + (focusRow + 1).toString() + 'column ' + (focusColumn + 1).toString();
+            window.speechSynthesis.speak(utterThis);
+            $('#' + (focusRow + 1).toString() + '-' + (focusColumn + 1).toString()).addClass("white");
+            focus = "both";
+          }
+        } else {
+          utterThis.text = "only 6 rows";
+          window.speechSynthesis.speak(utterThis);
+        }
+      } else if (event.keyCode === 39) {
+        utterThis.text = 'Step 2';
+        window.speechSynthesis.speak(utterThis);
+        window.location.href = "{% url 'help2' %}";
+      }
+    });
+  </script>
+{% endblock %}
