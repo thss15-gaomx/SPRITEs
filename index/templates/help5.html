@@ -11,41 +11,45 @@
       <br>
       <h2>Step 5) Usage of sidebar.</h2>
       <div class="ui text container">
+        <p style="text-align: left; color: white;">Sidebar is used to show the structure of the page. You can alter the content inside
+        by return and right shift key. When you enter a certain widget, you can press 'i' to get relative information and 'p' for its position.
+        In addition, you can press back slash key to go to the widget in the body.
+        </p>
         <table class="ui inverted celled structured table">
         <tbody>
           <tr>
-            <td rowspan="3" colspan="2" class="red" style="border-bottom: 3px solid white !important;">column 1</td>
-            <td rowspan="3" colspan="2" class="red">column 2</td>
-            <td rowspan="3" colspan="2" class="red" style="border-right: 3px solid white !important;">column 3</td>
-            <td>column1</td>
+            <td class="b1 b1-1-1 red" rowspan="3" colspan="2" style="border-bottom: 3px solid white !important;">column 1</td>
+            <td class="b1 b1-1-2 red" rowspan="3" colspan="2">column 2</td>
+            <td class="b1 b1-1-3 red" rowspan="3" colspan="2" style="border-right: 3px solid white !important;">column 3</td>
+            <td class="s1 s1-1">column1</td>
           </tr>
           <tr>
-            <td>column2</td>
+            <td class="s1 s1-2">column2</td>
           </tr>
           <tr>
-            <td style="border-bottom: 3px solid white !important;">column3</td>
+            <td class="s1 s1-3" style="border-bottom: 3px solid white !important;">column3</td>
           </tr>
           <tr>
-            <td colspan="6" class="red" style="border-bottom: 3px solid white !important; border-right: 3px solid white !important;">
+            <td colspan="6" class="red b2 b2-1-1" style="border-bottom: 3px solid white !important; border-right: 3px solid white !important;">
               section
             </td>
-            <td style="border-bottom: 3px solid white !important;">section</td>
+            <td class="s2 s2-1" style="border-bottom: 3px solid white !important;">section</td>
           </tr>
           <tr>
-            <td rowspan="2" colspan="3" class="red">table 11</td>
-            <td rowspan="2" colspan="3" class="red" style="border-right: 3px solid white !important;">table 12</td>
-            <td>table 11</td>
+            <td rowspan="2" colspan="3" class="b3 b3-1-1 red">table 11</td>
+            <td rowspan="2" colspan="3" class="b3 b3-1-2 red" style="border-right: 3px solid white !important;">table 12</td>
+            <td class="s3 s3-1">table 11</td>
           </tr>
           <tr>
-            <td>table 12</td>
+            <td class="s3 s3-2">table 12</td>
           </tr>
           <tr>
-            <td rowspan="2" colspan="3" class="red">table 21</td>
-            <td rowspan="2" colspan="3" class="red" style="border-right: 3px solid white !important;">table 23</td>
-            <td>table 21</td>
+            <td rowspan="2" colspan="3" class="b3 b3-2-1 red">table 21</td>
+            <td rowspan="2" colspan="3" class="b3 b3-2-2 red" style="border-right: 3px solid white !important;">table 23</td>
+            <td class="s3 s3-3">table 21</td>
           </tr>
           <tr>
-            <td>table 22</td>
+            <td class="s3 s3-4">table 22</td>
           </tr>
         </tbody>
         </table>
@@ -60,7 +64,7 @@
   <script type="text/javascript" src="/static/sound.js"></script>
   <script type="text/javascript">
     var utterThis = new window.SpeechSynthesisUtterance();
-    utterThis.text = 'help';
+    utterThis.text = "Step 5, usage of sidebar. Sidebar is used to show the structure of the page. You can alter the content inside by return and right shift key. When you enter a certain widget, you can press 'i' to get relative information and 'p' for its position. In addition, you can press back slash key to go to the widget in the body.";
     utterThis.lang = 'en';
     window.speechSynthesis.speak(utterThis);
     var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48,
@@ -75,18 +79,23 @@
     var curLevel = "page";
     var curBox = "page";
     var curSection, curWiget, widgetNum;
-    var widgetArray = [3, 1, 9]
+    var widgetArray = [3, 1, 4];
+    var columnArray = [3, 1, 2];
+    var rowArray = [1, 1, 2];
+    var sectionColumn, sectionRow;
     function enterSection(section) {
-
+      sectionColumn = columnArray[curSection - 1];
+      sectionRow = rowArray[curSection - 1];
+      focus = "null";
     }
     function keyFunctionPage(keyCode) {
       if (keyCode === 220) {  // \: enter
         utterThis.text = "enter" + curBox;
         window.speechSynthesis.speak(utterThis);
         if (curBox === "body") {
-          utterThis.text = "3 sections, section 1";
+          utterThis.text = "3 sections";
           window.speechSynthesis.speak(utterThis);
-          curSection = 1;
+          curSection = 0;
         }
         if (curBox === "sidebar") {
           utterThis.text = "3 sections";
@@ -144,15 +153,21 @@
           window.speechSynthesis.speak(utterThis);
           enterSection();
         } else if (keyCode === 13) {  // enter: page up
+          if (curSection) {
+            $('.b' + (curSection).toString()).removeClass('white');
+          }
           if (curSection > 1) {
             curSection--;
           }
+          $('.b' + (curSection).toString()).addClass('white');
           utterThis.text = "section " + (curSection).toString();
           window.speechSynthesis.speak(utterThis);
         } else if (keyCode === 16 && shift === 2) {  // shift: page down
+          $('.b' + (curSection).toString()).removeClass('white');
           if (curSection < 3) {
             curSection++;
           }
+          $('.b' + (curSection).toString()).addClass('white');
           utterThis.text = "section " + (curSection).toString();
           window.speechSynthesis.speak(utterThis);
           shift = 0;
@@ -161,6 +176,7 @@
           curBox = "page";
           utterThis.text = "enter" + curBox;
           window.speechSynthesis.speak(utterThis);
+          $('.b' + (curSection).toString()).removeClass('white');
         }
       } else if (curBox === "sidebar") {
         if (keyCode === 220) {  // \: enter
@@ -175,14 +191,20 @@
           }
         } else if (keyCode === 13) {  // enter: page up
           if (curSection > 1) {
+            $(".s" + (curSection).toString()).removeClass("white");
             curSection--;
+            $(".s" + (curSection).toString()).addClass("white");
             widgetNum = widgetArray[curSection - 1];
             utterThis.text = "section " + (curSection).toString() + "contains" + (widgetNum).toString() + " widgets";
             window.speechSynthesis.speak(utterThis);
           }
         } else if (keyCode === 16 && shift === 2) {  // shift: page down
           if (curSection < 3) {
+            if (curSection) {
+              $(".s" + (curSection).toString()).removeClass("white");
+            }
             curSection++;
+            $(".s" + (curSection).toString()).addClass("white");
             widgetNum = widgetArray[curSection - 1];
             utterThis.text = "section " + (curSection).toString() + "contains" + (widgetNum).toString() + " widgets";
             window.speechSynthesis.speak(utterThis);
@@ -193,16 +215,8 @@
           curBox = "page";
           utterThis.text = "enter" + curBox;
           window.speechSynthesis.speak(utterThis);
-        }
-      } else {
-        if (keyCode === 27) { // Esc
-          curLevel = "page";
-          curBox = "page";
-          utterThis.text = "enter" + curBox;
-          window.speechSynthesis.speak(utterThis);
-        } else {
-          utterThis.text = curBox;
-          window.speechSynthesis.speak(utterThis);
+          $('.s' + (curSection).toString()).removeClass('white');
+          focus = "null";
         }
       }
     }
@@ -227,13 +241,18 @@
           columnIndex -= 1;
         }
         if (columnIndex < sectionColumn) {
+          if (focus === "both") {
+            $('.b' + (curSection).toString() + '-' + (focusRow + 1).toString() + '-' + (focusColumn + 1).toString()).removeClass("white");
+          }
           focusColumn = columnIndex;
           utterThis.text = "column " + (focusColumn + 1).toString();
           window.speechSynthesis.speak(utterThis);
           if (focus === "null" || focus === "both") {
             focus = "column";
           } else if (focus === "row") {
-            setBlock();
+            focus = "both";
+            $('.b' + (curSection).toString()).removeClass("white");
+            $('.b' + (curSection).toString() + '-' + (focusRow + 1).toString() + '-' + (focusColumn + 1).toString()).addClass("white");
           }
         } else {
           utterThis.text = "only " + (sectionColumn).toString() + "columns";
@@ -241,13 +260,18 @@
         }
       } else if (rowKey.indexOf(keyCode) >= 0 && shift !== 2) {
         if (rowKey.indexOf(keyCode) + (curUnit - 1) * 4 < sectionRow) {
+          if (focus === "both") {
+            $('.b' + (curSection).toString() + '-' + (focusRow + 1).toString() + '-' + (focusColumn + 1).toString()).removeClass("white");
+          }
           focusRow = rowKey.indexOf(keyCode) + (curUnit - 1) * 4;
           utterThis.text = "row " + (focusRow + 1).toString();
           window.speechSynthesis.speak(utterThis);
           if (focus === "null" || focus === "both") {
             focus = "row";
           } else if (focus === "column") {
-            setBlock();
+            focus = "both";
+            $('.b' + (curSection).toString()).removeClass("white");
+            $('.b' + (curSection).toString() + '-' + (focusRow + 1).toString() + '-' + (focusColumn + 1).toString()).addClass("white");
           }
         } else {
           utterThis.text = "only " + (sectionRow).toString() + "rows";
@@ -258,46 +282,58 @@
         curBox = "body";
         utterThis.text = "enter" + curBox;
         window.speechSynthesis.speak(utterThis);
+        $('.b' + (curSection).toString()).addClass("white");
+        focus = "null";
       }
     }
     function keyFunctionSidebarSection(keyCode) {
       if (keyCode === 220) {  // \: enter
         if (curWiget) {
-          var widgetId = $(sidebarId).children('a').eq(curWiget - 1).text().substring(7);
-          focus = 'both';
           curLevel = "section";
-          curBox = "section" + (curSection).toString();
-          utterThis.text = "i d " + widgetId + ' selected';
+          utterThis.text = 'enter' + $('.s' + (curSection).toString() + '-' + (curWiget).toString()).text();
           window.speechSynthesis.speak(utterThis);
+          $('.s' + (curSection).toString() + '-' + (curWiget).toString()).removeClass('white');
+          if (curSection === 1 || curSection === 2) {
+            $('.b' + (curSection).toString() + '-1-' + (curWiget).toString()).addClass('white');
+          } else {
+            var pos = $('.s' + (curSection).toString() + '-' + (curWiget).toString()).text();
+            $('.b' + (curSection).toString() + '-' + pos.substring(6,7) + '-' + pos.substring(7)).addClass('white');
+          }
           enterSection();
-          $('#' + widgetId).addClass('current');
-          blockWidth = parseInt($('#' + widgetId).attr("width"));
-          blockHeight = parseInt($('#' + widgetId).attr("height"))
-          curRow = parseInt($('#' + widgetId).attr("y"));
-          curColumn = parseInt($('#' + widgetId).attr("x"));
-          focusObject = parseInt(widgetId);
         }
       } else if (keyCode === 73) {  // I: info
-        var widgetId = $(sidebarId).children('a').eq(curWiget - 1).text().substring(7);
-        utterThis.text = $('#' + widgetId).text();
-        window.speechSynthesis.speak(utterThis);
+        if (curWiget) {
+          utterThis.text = $('.s' + (curSection).toString() + '-' + (curWiget).toString()).text();
+          window.speechSynthesis.speak(utterThis);
+        }
       } else if (keyCode === 80) {  // P: position
         if (curWiget) {
-          var widgetId = $(sidebarId).children('a').eq(curWiget - 1).text().substring(7);
-          utterThis.text = 'column' + (parseInt($('#' + widgetId).attr("x")) + 1).toString()
-                         + 'row' + (parseInt($('#' + widgetId).attr("y")) + 1).toString();
-          window.speechSynthesis.speak(utterThis);
+          if (curSection === 1) {
+            utterThis.text = 'column' + (curWiget).toString() + 'row 1';
+            window.speechSynthesis.speak(utterThis);
+          } else if (curSection === 2) {
+            utterThis.text = 'column 1 row 1';
+            window.speechSynthesis.speak(utterThis);
+          } else {
+            var pos = $('.s' + (curSection).toString() + '-' + (curWiget).toString()).text();
+            utterThis.text = 'column' + pos.substring(6,7) + ' row ' + pos.substring(7);
+            window.speechSynthesis.speak(utterThis);
+          }
         }
       } else if (keyCode === 13) {  // enter: page up
         if (curWiget > 1) {
+          $('.s' + (curSection).toString()).removeClass('white');
           curWiget--;
-          utterThis.text = $(sidebarId).children('a').eq(curWiget - 1).text();
+          $('.s' + (curSection).toString() + '-' + (curWiget).toString()).addClass('white');
+          utterThis.text = $('.s' + (curSection).toString() + '-' + (curWiget).toString()).text();
           window.speechSynthesis.speak(utterThis);
         }
       } else if (keyCode === 16 && shift === 2) {  // shift: page down
         if (curWiget < widgetNum) {
+          $('.s' + (curSection).toString()).removeClass('white');
           curWiget++;
-          utterThis.text = $(sidebarId).children('a').eq(curWiget - 1).text();
+          $('.s' + (curSection).toString() + '-' + (curWiget).toString()).addClass('white');
+          utterThis.text = $('.s' + (curSection).toString() + '-' + (curWiget).toString()).text();
           window.speechSynthesis.speak(utterThis);
         }
         shift = 0;
@@ -306,6 +342,7 @@
         curBox = "sidebar";
         utterThis.text = "enter" + curBox;
         window.speechSynthesis.speak(utterThis);
+        $('.s' + (curSection).toString()).addClass('white');
       }
     }
     document.addEventListener("keydown", function(e){
@@ -324,6 +361,11 @@
         keyFunctionSection(keyCode);
       } else if (curLevel === "sidebar-section") {
         keyFunctionSidebarSection(keyCode);
+      }
+      if (event.keyCode === 37) {   // before
+        utterThis.text = 'Step 4';
+        window.speechSynthesis.speak(utterThis);
+        window.location.href = "{% url 'help4' %}";
       }
     });
   </script>

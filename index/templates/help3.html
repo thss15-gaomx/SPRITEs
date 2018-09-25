@@ -285,7 +285,7 @@
         if (keyCode === 220) {  // \: enter
           if (curBox === "text") {
             $(".1-" + (focusRow).toString() + '-' + (focusColumn).toString()).removeClass('white');
-            $(".1-" + (focusRow).toString() + '-' + (focusColumn).toString()).addClass('text');
+            $(".1-" + (focusRow).toString() + '-' + (focusColumn).toString()).addClass('red-text');
             utterThis.text = "enter level 2, text";
             window.speechSynthesis.speak(utterThis);
           } else {
@@ -314,10 +314,10 @@
       else if (curLevel === 2) {
         if (keyCode === 220) {  // \: enter
           if (curBox === "lineItem") {
-            $(".line" + (focusRow + 1).toString()).addClass('text');
+            $(".line" + (focusRow + 1).toString()).addClass('red-text');
             $(".line" + (focusRow + 1).toString()).removeClass('white');
           } else if (curBox === "table") {
-            $(".table" + (focusRow + 1).toString() + (focusColumn + 1).toString()).addClass('text');
+            $(".table" + (focusRow + 1).toString() + (focusColumn + 1).toString()).addClass('red-text');
             $(".table" + (focusRow + 1).toString() + (focusColumn + 1).toString()).removeClass('white');
           }
           utterThis.text = "enter level 1, text";
@@ -329,7 +329,7 @@
           } else if (curBox === "table") {
             $(".table").addClass('white');
           } else {
-            $(".1-" + (focusRow).toString() + '-' + (focusColumn).toString()).removeClass('text');
+            $(".1-" + (focusRow).toString() + '-' + (focusColumn).toString()).removeClass('red-text');
             $(".1-" + (focusRow).toString() + '-' + (focusColumn).toString()).addClass('white');
           }
           curLevel = 3;
@@ -340,10 +340,10 @@
       else if (curLevel === 1) {
         if (keyCode === 27) {  // esc
           if (curBox === "lineItem") {
-            $(".line" + (focusRow + 1).toString()).removeClass('text');
+            $(".line" + (focusRow + 1).toString()).removeClass('red-text');
             $(".line" + (focusRow + 1).toString()).addClass('white');
           } else if (curBox === "table") {
-            $(".table" + (focusRow + 1).toString() + (focusColumn + 1).toString()).removeClass('text');
+            $(".table" + (focusRow + 1).toString() + (focusColumn + 1).toString()).removeClass('red-text');
             $(".table" + (focusRow + 1).toString() + (focusColumn + 1).toString()).addClass('white');
           }
           curLevel = 2;
