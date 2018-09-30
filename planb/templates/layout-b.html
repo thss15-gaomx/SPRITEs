@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8"/>
     <script src="/static/jquery.js"></script>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="http://cdn.bootcss.com/semantic-ui/2.1.8/semantic.min.css">
     <script src="/static/semantic.min.js"></script>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
@@ -11,7 +13,7 @@
     <title>SPRITEs</title>
 </head>
 <body>
-<div class="container">
+<div class="new-container">
   <div class="grid header">
     <div class="ui borderless main menu fixed" style="position: fixed; top: 0px; z-index: 10;">
       <div class="ui text container">
@@ -19,7 +21,7 @@
           SPRITEs Project
         </div>
         <a href="{% url 'index' %}" class="item">Index</a>
-        <a href="{% url 'page' %}" class="item">Pages</a>
+        <a href="{% url 'page-b' %}" class="item">Pages</a>
       </div>
     </div>
   </div>
@@ -27,31 +29,19 @@
     {% if sectionNum == 0 %}
       <div class='content-section' style="height:80vh;">NoSections</div>
     {% endif %}
-    {% for item in section %}
+    {% for item in sections %}
       <div class='content-section'>
-        {% for block in item.blocks %}
-          {% if block.content_type == 'text' %}
-            <div class="text-block block" x="{{ block.pos_x }}" y="{{ block.pos_y }}"
-                width="{{ block.width }}" height="{{ block.height }}" id="{{ block.id }}" section="{{ item.section }}"
-                style="font-size: {{ block.font_size }}; color: {{ block.font_color }}; background-color: {{ block.background_color }};">
-              {{ block.text_content }}
-            </div>
-          {% elif block.content_type == 'pic' %}
-            <div class="pic-block block" x="{{ block.pos_x }}" y="{{ block.pos_y }}"
-                width="{{ block.width }}" height="{{ block.height }}" id="{{ block.id }}" section="{{ item.section }}">
-              <img src="..{{ block.pic_content.url }}">
-            </div>
-          {% endif %}
-        {% endfor %}
-        <table class="grid-container" id='section{{ item.section }}'>
-          {% for row in item.height %}
-            <tr>
-              {% for column in item.width %}
-                <td> 　</td>
-              {% endfor %}
-            </tr>
-          {% endfor %}
-        </table>
+        <div class="container" id='section{{ item.section }}'>
+          <div class="row" style='color: black; min-height: 100px;'>
+            {% for column in item.columns %}
+              <div class="col-sm-{{ column }} col-xl-{{ column }}" id='section{{ item.section }}-column{{ forloop.counter }}'>
+                <div class="block-b">this is text</div>
+                <div class="block-b"><img style="width: 90%; height:auto;" src="/static/pic.png"></img></div>
+                <div class="block-b">this is also text</div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
       </div>
     {% endfor %}
   </div>
@@ -59,7 +49,7 @@
     <div class="ui sticky fixed top">
       <h4 class="ui header">Sidebar</h4>
       <div class="ui vertical following fluid accordion text menu">
-        {% for item in section %}
+        {% for item in sections %}
           <div class="item"><a class="title" href="#section{{ item.section }}">
             <i class="dropdown icon"></i> <b>Section {{ item.section }}</b></a>
             <div class="content menu sidebar-title" id='sidebar-{{ forloop.counter }}'>
@@ -91,27 +81,30 @@
     Add New Section
   </div>
   <div class="content">
-    <form method="post" action="{% url 'section' pageId %}" class="ui inverted form" enctype="multipart/form-data">
+    <form method="post" action="{% url 'section-b' pageId %}" class="ui inverted form" enctype="multipart/form-data">
       {% csrf_token %}
         <div class="field">
-          <label>Size</label>
           <div class="two fields">
             <div class="field">
-              <div class="ui big left icon input">
-                <input type="number" name="width" id="width" placeholder="Width" min="1" max="10" required/>
-              </div>
+              <label>Style</label>
+              <select class="ui search dropdown" id="style" name="style">
+                <option value="12">12</option>
+                <option value="6-6">6-6</option>
+                <option value="4-4-4">4-4-4</option>
+                <option value="3-9">3-9</option>
+                <option value="9-3">9-3</option>
+                <option value="3-6-3">3-6-3</option>
+                <option value="2-3-5-2">2-3-5-2</option>
+                <option value="2-2-2-4-2">2-2-2-4-2</option>
+                <option value="2-2-2-2-2-2">2-2-2-2-2-2</option>
+              </select>
             </div>
             <div class="field">
+              <label>Name</label>
               <div class="ui big input">
-                <input type="number" name="height" id="height" placeholder="Height" min="1" required/>
+                <input type="text" name="name" id="name" placeholder="Name" required/>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="field">
-          <label>Name</label>
-          <div class="ui big input">
-            <input type="text" name="name" id="name" placeholder="Name" required/>
           </div>
         </div>
       <div class="ui center aligned container actions">
@@ -155,134 +148,60 @@
   $(document).ready(function(){
      $('.ui.accordion').accordion();
   });
-  var sectionNum = {{ sectionNum }}, sectionColumn, sectionRow;
+  var sectionNum = {{ sectionNum }};
   var allString = ("{{ all }}").split(";");
   var allDict = new Array();
   for (var i = 0; i < allString.length; i++) {
     item = allString[i].split(",");
-    allDict[i] = {'section': item[0], 'width': item[1], 'height': item[2]};
+    allDict[i] = {'section': item[0], 'column': item[1], 'style': item[2]};
   }
-  for (var i = 0; i < allDict.length; i++) {
-    sectionColumn = parseInt(allDict[i]['width']);
-    var gridLength = (80 / sectionColumn).toString() + "vw";
-    var id = '#section' + (i + 1).toString() + ' tr';
-    $(id).css("height", gridLength);
-  }
-  var marginLeft, marginTop, width, height;
-  $(".block").each(function(){
-    var sectionIndex = parseInt($(this).attr("section"));
-    sectionColumn = parseInt(allDict[sectionIndex - 1]['width']);
-    marginLeft = (parseInt($(this).attr("x")) * 80 / sectionColumn).toString() + 'vw';
-    $(this).css("margin-left", marginLeft);
-    marginTop = (parseInt($(this).attr("y")) * 80 / sectionColumn).toString() + 'vw';
-    $(this).css("margin-top", marginTop);
-    width = (parseInt($(this).attr("width")) * 80 / sectionColumn).toString() + 'vw';
-    $(this).css("width", width);
-    height = (parseInt($(this).attr("height")) * 80 / sectionColumn).toString() + 'vw';
-    $(this).css("height", height);
-  });
+  var columnNum, columnStyle, curColumn;
+  var widgetNum, curWidget;
+  var columnId, widgetId;
+
+  // var margin, padding;
+  // $(".block").each(function(){
+  //   var sectionIndex = parseInt($(this).attr("section"));
+  //   sectionColumn = parseInt(allDict[sectionIndex - 1]['width']);
+  //   margin = (parseInt($(this).attr("x")) * 80 / sectionColumn).toString() + 'vw';
+  //   $(this).css("margin-left", marginLeft);
+  //   padding = (parseInt($(this).attr("y")) * 80 / sectionColumn).toString() + 'vw';
+  //   $(this).css("margin-top", marginTop);
+  // });
+
   var curUnit = 1, unitNum = 0, curSection = 1;
-  var curLevel = "page"; // page, container, section, block
+  var curLevel = "page"; // page, container, section, column, block
   var curBox = "page";  // page, header, body, sidebar, footer, section1, section2, block1, block2
-  var blockWidth = 0;
-  var blockHeight = 0;
   var type = "{{ type }}";
-  var curRow = 0, curColumn = 0;
-  var margin;
   var focus = "null";  //null, row, column, both
   var focusColumn = 0, focusRow = 0, focusObject = -1;
   var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48,
                    81, 87, 69, 82, 84, 89, 85, 73, 79, 80,
                    65, 83, 68, 70, 71, 72, 74, 75, 76, 186,
-                   90, 88, 67, 86, 66, 78, 77, 188, 190, 191]; //1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+                   90, 88, 67, 86, 66, 78, 77, 188, 190, 191];
   var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
-  var curWiget, sidebarId, widgetNum; // sidebar
+  var sidebarId; // sidebar
   var shift = 0;
   var modal = 0;
   function alterModal() {
     modal = 0;
   }
-  if ({{ block_id }} !== -1) {
-    $('#' + ({{ block_id }}).toString()).addClass('current');
-    curSection = {{ section_id }};
-    var sectionId = "#section" + (curSection).toString();
-    $('html, body').animate({
-      scrollTop: $(sectionId).offset().top - 50
-    }, 500);
-    utterThis.text = "widget selected";
-    window.speechSynthesis.speak(utterThis);
-    focus = "both";
-    focusObject = {{ block_id }};
-    focusColumn = parseInt($('#' + ({{ block_id }}).toString()).attr('x'));
-    focusRow = parseInt($('#' + ({{ block_id }}).toString()).attr('y'));
-    curLevel = "section";
-    curSection = {{ section_id }};
-    curBox = "section" + (curSection).toString();
-    sectionColumn = parseInt(allDict[curSection - 1]['width']);
-    sectionRow = parseInt(allDict[curSection - 1]['height']);
-    var curUnit = 1;
-    unitNum = Math.ceil(sectionRow / 4);
-  }
-  if ({{ section_id }} !== 0 && {{ block_id }} === -1) {
-    curLevel = "container";
-    curBox = "body";
-    if ({{ section_id }} === -1) {
-      curSection = 1;
-    } else {
-      curSection = {{ section_id }};
-    }
-    utterThis.text = ({{ sectionNum }}).toString() + "sections, section " + (curSection).toString();
-    window.speechSynthesis.speak(utterThis);
-    var sectionId = "#section" + (curSection).toString();
-    $('html, body').animate({
-      scrollTop: $(sectionId).offset().top - 50
-    }, 500);
-  }
-  function setBlock() {
-    focus = "both";
-    curRow = focusRow;
-    curColumn = focusColumn;
-    if (focusObject !== -1) {
-      utterThis.text = "moving to column" + (curColumn + 1).toString() + "row " + (curRow + 1).toString();
-      window.speechSynthesis.speak(utterThis);
-      margin = (curRow * 80 / sectionColumn).toString() + 'vw';
-      $(".current").css("margin-top", margin)
-      margin = (curColumn * 80 / sectionColumn).toString() + 'vw';
-      $(".current").css("margin-left", margin);
-      $(".block").each(function(){
-        var sectionIndex = parseInt($(this).attr("section"));
-        var blockX = parseInt($(this).attr("x"));
-        var blockY = parseInt($(this).attr("y"));
-        if (sectionIndex === curSection && blockX === curColumn && blockY  === curRow) {
-          playOverlapSound();
-        }
-      });
-    } else {
-      var objectNum = 0;
-      $(".block").each(function(){
-        var sectionIndex = parseInt($(this).attr("section"));
-        var blockX = parseInt($(this).attr("x"));
-        var blockY = parseInt($(this).attr("y"));
-        if (sectionIndex === curSection && blockX === curColumn && blockY  === curRow) {
-          objectNum++;
-        }
-      });
-      utterThis.text = (objectNum).toString() + "objects";
-      window.speechSynthesis.speak(utterThis);
-    }
-  }
   document.addEventListener("keydown", function(e){
     shift = e.location;
   });
   function enterSection() {
-    sectionColumn = parseInt(allDict[curSection - 1]['width']);
-    sectionRow = parseInt(allDict[curSection - 1]['height']);
-    var curUnit = 1;
-    unitNum = Math.ceil(sectionRow / 4);
-    focusObject = -1;
+    columnNum = parseInt(allDict[curSection - 1]['column']);
+    columnStyle = allDict[curSection - 1]['style'].split('-');
+    curColumn = 1;
     $(".current").each(function(){
       $(this).removeClass('current');
     });
+  }
+  function enterColumn() {
+    columnId = "section" + (curSection).toString() + "-column" + (curColumn).toString();
+    widgetNum = $('#' + columnId + ' div').length;
+    focusObject = -1;
+    curWidget = 1;
   }
   function keyFunctionPage(keyCode) {
     if (keyCode === 220) {  // \: enter
@@ -417,7 +336,7 @@
         var deleteHint = "You are tring to delete section " + (curSection).toString()
                         + ". Are you sure to delete this section and the widgets in it?";
         $("#delete-hint").html(deleteHint);
-        var deleteInfo = "/plana/delete/p" + {{ pageId }} + "s" + allDict[curSection - 1]['section'];
+        var deleteInfo = "/planb/delete/p" + {{ pageId }} + "s" + allDict[curSection - 1]['section'];
         $("#delete").attr('href', deleteInfo);
         $('.ui.basic.modal.two')
           .modal('show')
@@ -481,106 +400,22 @@
     }
   }
   function keyFunctionSection(keyCode) {
-    if (keyCode === 37) {   // left
-      if (curColumn > 0) {
-        curColumn--;
-        margin = (curColumn * 80 / sectionColumn).toString() + 'vw';
-        $(".current").css("margin-left", margin);
-      }
-    } else if (keyCode === 39) { // right
-      if (curColumn + blockWidth < sectionColumn) {
-        curColumn++;
-        margin = (curColumn * 80 / sectionColumn).toString() + 'vw';
-        $(".current").css("margin-left", margin);
-      }
-    } else if (keyCode === 38) {   // up
-      if (curRow > 0) {
-        curRow--;
-        margin = (curRow * 80 / sectionColumn).toString() + 'vw';
-        $(".current").css("margin-top", margin);
-      }
-    } else if (keyCode === 40) { // down
-      if (curRow + blockHeight < sectionRow) {
-        curRow++;
-        margin = (curRow * 80 / sectionColumn).toString() + 'vw';
-        $(".current").css("margin-top", margin);
-      }
-    } else if (keyCode === 32) {   // space: set position
-      $.post("{% url 'layout' pageId %}",{'x':curColumn, 'y':curRow, 'id': focusObject}, function(e){
-        $(".current").removeClass('current');
-        playDropSound();
-        $(".block").each(function(){
-          if (parseInt($(this).attr("id")) === focusObject) {
-            $(this).attr("x", (curColumn).toString());
-            $(this).attr("y", (curRow).toString());
-          }
-        });
-        focusObject = -1;
-        focus = "null";
-      });
-    } else if (keyCode === 220) {  // \: enter
-      if (focus === "both" && focusObject === -1) {
-        $(".block").each(function(){
-          var sectionIndex = parseInt($(this).attr("section"));
-          var blockX = parseInt($(this).attr("x"));
-          var blockY = parseInt($(this).attr("y"));
-          if (sectionIndex === curSection && blockX === focusColumn && blockY  === focusRow && focusObject === -1) {
-            utterThis.text = "i d " + ($(this).attr("id")).toString() + ' selected';
-            window.speechSynthesis.speak(utterThis);
-            $(this).addClass('current');
-            blockWidth = parseInt($(this).attr("width"));
-            blockHeight = parseInt($(this).attr("height"))
-            curRow = focusRow;
-            curColumn = focusColumn;
-            focusObject = parseInt($(this).attr("id"));
-          }
-        });
-      }
-    } else if (keyCode === 13) {  // enter: unit up
-      if (curUnit > 1) {
-        curUnit--;
-      }
-      utterThis.text = "unit " + (curUnit).toString();
+    if (keyCode === 220) {  // \: enter
+      curLevel = 'column';
+      enterColumn();
+      utterThis.text = "enter column " + (curColumn).toString() + " " + widgetNum + "widgets";
       window.speechSynthesis.speak(utterThis);
-    } else if (keyCode === 16 && shift === 2) {  // shift: unit down
-      if (curUnit < unitNum) {
-        curUnit++;
-      }
-      utterThis.text = "unit " + (curUnit).toString();
-      window.speechSynthesis.speak(utterThis);
-      shift = 0;
     } else if (columnKey.indexOf(keyCode) >= 0) {
       var columnIndex = (columnKey.indexOf(keyCode) + 1) % 10;
       if (columnIndex === 0) {
-        columnIndex = 9;
-      } else {
-        columnIndex -= 1;
+        columnIndex = 10;
       }
-      if (columnIndex < sectionColumn) {
-        focusColumn = columnIndex;
-        utterThis.text = "column " + (focusColumn + 1).toString();
+      if (columnIndex <= columnNum) {
+        curColumn = columnIndex;
+        utterThis.text = "column " + (curColumn).toString() + " " + columnStyle[curColumn - 1] + "units wide";
         window.speechSynthesis.speak(utterThis);
-        if (focus === "null" || focus === "both") {
-          focus = "column";
-        } else if (focus === "row") {
-          setBlock();
-        }
       } else {
-        utterThis.text = "only " + (sectionColumn).toString() + "columns";
-        window.speechSynthesis.speak(utterThis);
-      }
-    } else if (rowKey.indexOf(keyCode) >= 0 && shift !== 2) {
-      if (rowKey.indexOf(keyCode) + (curUnit - 1) * 4 < sectionRow) {
-        focusRow = rowKey.indexOf(keyCode) + (curUnit - 1) * 4;
-        utterThis.text = "row " + (focusRow + 1).toString();
-        window.speechSynthesis.speak(utterThis);
-        if (focus === "null" || focus === "both") {
-          focus = "row";
-        } else if (focus === "column") {
-          setBlock();
-        }
-      } else {
-        utterThis.text = "only " + (sectionRow).toString() + "rows";
+        utterThis.text = "only " + (columnNum).toString() + "columns";
         window.speechSynthesis.speak(utterThis);
       }
     } else if (keyCode === 27) { // Esc
@@ -588,20 +423,60 @@
       curBox = "body";
       utterThis.text = "enter" + curBox;
       window.speechSynthesis.speak(utterThis);
+    }
+  }
+  function keyFunctionColumn(keyCode) {
+    if (keyCode === 37) {   // left
+
+    } else if (keyCode === 39) { // right
+
+    } else if (keyCode === 38) {   // up
+
+    } else if (keyCode === 40) { // down
+
+    } else if (keyCode === 220) {  // \: enter(show details/editing)
+      if (focus === "both" && focusObject === -1) {
+        $(".block").each(function(){
+
+        });
+      }
+    } else if (keyCode === 13) {  // enter: previous widget
+      if (curWidget > 1) {
+        curWidget--;
+      }
+      utterThis.text = "widget " + (curWidget).toString();
+      window.speechSynthesis.speak(utterThis);
+    } else if (keyCode === 16 && shift === 2) {  // shift: next widget
+      if (curWidget < widgetNum) {
+        curWidget++;
+      }
+      utterThis.text = "widget " + (curWidget).toString();
+      window.speechSynthesis.speak(utterThis);
+      shift = 0;
+    } else if (columnKey.indexOf(keyCode) >= 0) {  // move to other columns
+
+    } else if (keyCode === 32) { // place the widget
+
+    } else if (keyCode === 27) { // Esc
+      curLevel = "section";
+      curBox = "section";
+      utterThis.text = "enter" + curBox;
+      window.speechSynthesis.speak(utterThis);
     } else if (keyCode === 187) { // Add
       utterThis.text = "add widget";
       window.speechSynthesis.speak(utterThis);
-      window.location.href = "/plana/select/s" + allDict[curSection - 1]['section']
+      window.location.href = "/planb/select/s" + allDict[curSection - 1]['section']
                               + 'w' + (sectionColumn).toString() + 'h' + (sectionRow).toString();
     } else if (keyCode === 8) { // Delete
       if (focus === "both" && focusObject !== -1) {
-        utterThis.text = "delete widget " + (focusObject).toString()
+        widgetId = $(columnId).children('.block').eq(curWiget - 1).attr('id');
+        utterThis.text = "delete widget id " + (widgetId).toString()
         window.speechSynthesis.speak(utterThis);
         $("#delete-title").html("<i class='archive icon'></i>Delete Widget");
-        var deleteHint = "You are tring to delete widget " + (focusObject).toString()
+        var deleteHint = "You are tring to delete widget " + (widgetId).toString()
                         + ". Are you sure to delete this widget and the content in it?";
         $("#delete-hint").html(deleteHint);
-        var deleteInfo = "/plana/delete/p" + {{ pageId }} + "w" + (focusObject).toString();
+        var deleteInfo = "/planb/delete/p" + {{ pageId }} + "w" + (widgetId).toString();
         $("#delete").attr('href', deleteInfo);
         $('.ui.basic.modal.two')
           .modal('show')
@@ -670,6 +545,9 @@
       } else if (curLevel === "section") {
         event.preventDefault();
         keyFunctionSection(keyCode);
+      } else if (curLevel === "column") {
+        event.preventDefault();
+        keyFunctionColumn(keyCode);
       } else if (curLevel === "sidebar-section") {
         keyFunctionSidebarSection(keyCode);
       }
@@ -730,12 +608,8 @@
       }
     }
   });
-  $('#width').focus(function() {
-    utterThis.text = 'width';
-    window.speechSynthesis.speak(utterThis);
-  });
-  $('#height').focus(function() {
-    utterThis.text = 'height';
+  $('#style').focus(function() {
+    utterThis.text = 'style';
     window.speechSynthesis.speak(utterThis);
   });
   $('#name').focus(function() {

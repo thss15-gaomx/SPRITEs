@@ -1,11 +1,44 @@
 from django.shortcuts import render
 from django.db.models import Q
-from .models import Page
+from .models import Page, Section, Block
 from .forms import UploadForm
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.http import HttpResponse
 import json
 
+
+def get_layout(pageId, block_id, section_id):
+    page = Page.objects.get(id=pageId)
+    sections = Section.objects.filter(page_id=pageId)
+    sectionList = []
+    index = 0
+    all = ''
+    cur_section = 0
+    for section in sections:
+        index += 1
+        columns = (section.style).split('-')
+        sectionList.append({
+            "num": len(columns),
+            "columns": columns,
+            "section": index
+        })
+        if int(section.id) == int(section_id):
+            cur_section = index
+        all += str(section.id) + ',' + str(len(columns)) + ',' + str(section.style) + ';'
+    if all != "":
+        all = all[:-1]
+    if not section_id:
+        cur_section = -1;
+    info = {
+        'pageId': pageId,
+        'sectionNum': page.section_num,
+        'sections': sectionList,
+        # 'section': sectionList,
+        'all': all,
+        # 'block_id': block_id,
+        'section_id': cur_section
+    }
+    return info
 
 def select(request, section_id):
     info = {'section': section_id}
@@ -59,6 +92,22 @@ def new_page(request):
         return render(request, "layout-b.html", get_layout(page.id, -1, -1))
     except:
         return render(request, "page-b.html", {"pages": Page.objects.all(), "num": len(Page.objects.all())})
+
+
+def section(request, pageId):
+    if request.method == 'POST':
+        section = Section()
+        section.page_id = pageId
+        section.style = request.POST.get('style')
+        section.name = request.POST.get('name')
+        section.level = 1
+        section.save()
+        page = Page.objects.get(id=pageId)
+        page.section_num += 1
+        page.save()
+        return render(request, "layout.html", get_layout(pageId, -1, section.id))
+    else:
+        return render(request, "layout.html", get_layout(pageId, -1, -1))
 
 
 @csrf_exempt

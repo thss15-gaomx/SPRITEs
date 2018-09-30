@@ -90,13 +90,17 @@ select.ui.dropdown {
     height: 100%;
 }
 
+.block-b {
+  display: grid;
+}
+
 .form-control {
     margin-top: 10px;
     width: 100%;
     font-size: 16px;
 }
 
-.container {
+.new-container {
   display: grid;
   grid-template-columns: 0.8fr 0 0.2fr;
   grid-template-rows: auto 5px auto 30px auto;
@@ -127,7 +131,7 @@ select.ui.dropdown {
 
 .content {
   grid-column-start: 1;
-  grid-column-end: 2;
+  grid-column-end: 3;
   grid-row-start: 3;
   grid-row-end: 4;
   padding: 0;

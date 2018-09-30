@@ -24,7 +24,7 @@
           <tbody>
             {% for page in pages %}
               <tr>
-                <td><a href="{% url 'layout' page.id %}"> Page {{ forloop.counter }}</a></td>
+                <td><a href="{% url 'layout-b' page.id %}"> Page {{ forloop.counter }}</a></td>
                 <td class="center aligned">
                   <i class="large green checkmark icon"></i>
                 </td>
@@ -43,7 +43,7 @@
         </table>
         <div class="ui center aligned container">
           <br>
-          <a class="ui huge teal button" id="confirm" href="{% url 'new-page' %}">New Page</a>
+          <a class="ui huge teal button" id="confirm" href="{% url 'new-page-b' %}">New Page</a>
           <a class="ui huge inverted orange basic button" href="{% url 'index' %}" id="back">Back</a>
         </div>
       </div>
@@ -146,7 +146,7 @@
             window.speechSynthesis.speak(utterThis);
           }
         } else if (event.keyCode === 187) {  // add new page
-          window.location.href = "{% url 'new-page' %}";
+          window.location.href = "{% url 'new-page-b' %}";
         } else if(event.keyCode == 27) {  // back
           window.location.href = "{% url 'index' %}";
         } else if (event.keyCode === 8) { // Delete
@@ -157,7 +157,7 @@
             var deleteHint = "You are tring to delete page " + (focusRow + 1).toString()
                             + ". Are you sure to delete this page and the contents in it?";
             $("#delete-hint").html(deleteHint);
-            var deleteInfo = "/plana/delete/p" + (focusRow + 1).toString();
+            var deleteInfo = "/planb/delete/p" + (focusRow + 1).toString();
             $("#delete").attr('href', deleteInfo);
             $('.ui.basic.modal')
               .modal('show')
@@ -171,7 +171,7 @@
           utterThis.text = "confirm";
           window.speechSynthesis.speak(utterThis);
           var id = $("#" + (focusRow + 1).toString()).attr("page-id");
-          window.location.href = "/plana/delete/p" + (id).toString();
+          window.location.href = "/planb/delete/p" + (id).toString();
         } if (event.keyCode === 27) {  // esc: cancel
           utterThis.text = "cancel";
           window.speechSynthesis.speak(utterThis);
