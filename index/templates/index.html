@@ -51,7 +51,7 @@
         if (utterThis.text === "plan a") {
           window.location.href = "{% url 'page' %}";
         } else if (utterThis.text === "plan b") {
-          window.location.href = "{% url 'grid-b' %}";
+          window.location.href = "{% url 'page-b' %}";
         }
       } else if (event.keyCode === 49) {   // plan a
         utterThis.text = 'plan a';

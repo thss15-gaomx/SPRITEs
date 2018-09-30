@@ -18,8 +18,7 @@ class Section(models.Model):
 class Block(models.Model):
     content_type = models.CharField(max_length=64, default="")  # the widget type of the block
     section_id = models.IntegerField(default=0)
-    pos = models.IntegerField(default=0)   # column number in the section
-    stack_num = models.IntegerField(default=0)  # its number in the column
+    column = models.IntegerField(default=0)   # column number in the section
 
     # layout settings
     padding = models.CharField(max_length=64, default="")

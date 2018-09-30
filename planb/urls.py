@@ -6,6 +6,7 @@ from django.conf import settings
 urlpatterns = [
     url(r'^layout/([0-9]*)$', views.layout, name='layout-b'),
     url(r'^text/([a-zA-Z0-9]*)$', views.text, name='text-b'),
+    url(r'^pic/([a-zA-Z0-9]*)$', views.pic, name='pic-b'),
     url(r'^select/([a-zA-Z0-9]*)$', views.select, name='select-b'),
     url(r'^section/([0-9]*)$', views.section, name='section-b'),
     url(r'^new-page$', views.new_page, name='new-page-b'),

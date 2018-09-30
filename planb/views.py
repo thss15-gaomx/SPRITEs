@@ -20,8 +20,10 @@ def get_layout(pageId, block_id, section_id):
         sectionList.append({
             "num": len(columns),
             "columns": columns,
-            "section": index
+            "section": index,
+            "blocks": Block.objects.filter(section_id=section.id)
         })
+        print(Block.objects.filter(section_id=section.id))
         if int(section.id) == int(section_id):
             cur_section = index
         all += str(section.id) + ',' + str(len(columns)) + ',' + str(section.style) + ';'
@@ -33,46 +35,68 @@ def get_layout(pageId, block_id, section_id):
         'pageId': pageId,
         'sectionNum': page.section_num,
         'sections': sectionList,
-        # 'section': sectionList,
         'all': all,
-        # 'block_id': block_id,
+        'block_id': block_id,
         'section_id': cur_section
     }
     return info
 
+
 def select(request, section_id):
     info = {'section': section_id}
-    return render(request, "select.html", info)
+    return render(request, "select-b.html", info)
 
 
 def text(request, info_str):
-    return render(request, "text.html")
-    # if 'w' in info_str:
-    #     index_1 = info_str.find('w')
-    #     section_id = info_str[1:index_1]
-    #     index_2 = info_str.find('h')
-    #     section_w= info_str[index_1+1:index_2]
-    #     section_h= info_str[index_2+1:]
-    # else:
-    #     section_id = info_str
-    # if request.method == 'POST':
-    #     width = request.POST.get('width')
-    #     height = request.POST.get('height')
-    #     block = create_block(width, height, "text", section_id)
-    #     block.text_content = request.POST.get('content')
-    #     block.font_size = request.POST.get('font-size')
-    #     block.font_color = request.POST.get('font-color')
-    #     block.background_color = request.POST.get('background-color')
-    #     block.save()
-    #     section = Section.objects.get(id=int(section_id))
-    #     info = get_layout(section.page_id, block.id, section_id)
-    #     try:
-    #         return render(request, "layout.html", info)
-    #     except:
-    #         return render(request, "text.html", {'section': section_id, 'section_width': '1', 'section_height': '1'})
-    # else:
-    #     return render(request, "text.html", {'section': section_id, 'section_width': section_w, 'section_height': section_h})
-    #
+    index = info_str.find('c')
+    section_id = info_str[1:index]
+    column = info_str[index+1:]
+    if request.method == 'POST':
+        block = Block()
+        block.content_type = "text"
+        block.section_id = int(section_id)
+        block.column = int(column)
+        block.text_content = request.POST.get('content')
+        block.font_size = request.POST.get('font-size')
+        block.font_color = request.POST.get('font-color')
+        block.save()
+        section = Section.objects.get(id=int(section_id))
+        info = get_layout(section.page_id, block.id, section_id)
+        try:
+            return render(request, "layout-b.html", info)
+        except:
+            return render(request, "text-b.html", {'section': info_str})
+    else:
+        return render(request, "text-b.html", {'section': info_str})
+
+
+def pic(request, info_str):
+    index = info_str.find('c')
+    section_id = info_str[1:index]
+    column = info_str[index+1:]
+    if request.method == 'POST':
+        form = UploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            upload_pic = request.FILES['upload_pic']
+            if form.cleaned_data['name']:
+                name = form.cleaned_data['name']
+            else:
+                name = upload_pic.name
+            block = Block()
+            block.content_type = "pic"
+            block.section_id = int(section_id)
+            block.column = int(column)
+            block.name = name
+            block.pic_content = upload_pic
+            block.save()
+            section = Section.objects.get(id=int(section_id))
+            info = get_layout(section.page_id, block.id, section_id)
+            try:
+                return render(request, "layout-b.html", info)
+            except:
+                return render(request, "pic-b.html", {'section': info_str})
+    else:
+        return render(request, "pic-b.html", {'section': info_str})
 
 
 def page(request):
@@ -105,9 +129,9 @@ def section(request, pageId):
         page = Page.objects.get(id=pageId)
         page.section_num += 1
         page.save()
-        return render(request, "layout.html", get_layout(pageId, -1, section.id))
+        return render(request, "layout-b.html", get_layout(pageId, -1, section.id))
     else:
-        return render(request, "layout.html", get_layout(pageId, -1, -1))
+        return render(request, "layout-b.html", get_layout(pageId, -1, -1))
 
 
 @csrf_exempt

@@ -138,10 +138,6 @@ select.ui.dropdown {
   background: #FAFAFA;
 }
 
-table td {
-  border: 1px solid rgba(34,36,38,.15);
-}
-
 .content-section {
   background: #FAFAFA;
   margin-bottom: 5px;
@@ -166,6 +162,17 @@ table td {
   margin: 0 !important;
 }
 
+.ui.active.modal {
+    top: 20vh !important;
+    left: 10vw !important;
+    margin-top: 0 !important;
+}
+
+.column {
+  padding: 0;
+}
+
+/* features in tutorial part */
 .red {
   background: #9f3a38;
   color: white;

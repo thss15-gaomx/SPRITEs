@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="ui container">
+    <div class="ui large secondary inverted pointing menu">
+      <a href="{% url 'index' %}" class="item" id='home' tabindex="-1">Home</a>
+      <a href="{% url 'page' %}" class="item" id='plan-a' tabindex="-1">PlanA</a>
+      <a href="{% url 'grid-b' %}" class="active item" id='plan-b' tabindex="-1">PlanB</a>
+    </div>
+  </div>
+  <div class="ui inverted vertical masthead center aligned segment">
+    <div class="ui text container">
+      <br><br>
+      <h2>Specify the name and content of pic widget.</h2>
+      <div class="ui text container">
+        <div class="ui divided grid">
+          <div class="eight wide column">
+            <div class="widget">
+              <a class="image">
+                <img src="/static/pic.png">
+              </a>
+            </div>
+          </div>
+          <div class="eight wide column">
+            <br><br>
+            <form method="post" action="{% url 'pic-b' section %}" class="ui inverted form" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="field">
+                <label>Name</label>
+                <div class="ui big input">
+                  <input type="text" name="name" id="name" placeholder="Please input the pic name..." required/>
+                </div>
+              </div>
+              <div class="field">
+                <label>Upload File</label>
+                <input type="file" class="form-control" id="upload_pic" name="upload_pic">
+              </div>
+              <div class="ui center aligned container">
+                <br>
+                <button type="submit" class="ui huge teal button" id="confirm">Confirm</button>
+                <a class="ui huge inverted orange basic button" onclick="window.history.go(-1)" id="back" href="javascript:void(0);">Back</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="/static/jquery-buzz.js"></script>
+  <script type="text/javascript" src="/static/sound.js"></script>
+  <script type="text/javascript">
+    var utterThis = new window.SpeechSynthesisUtterance();
+    utterThis.text = 'specify the name and content of picture widget';
+    utterThis.lang = 'en';
+    window.speechSynthesis.speak(utterThis);
+    var columnKey = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57];
+    $('#name').focus(function() {
+      utterThis.text = 'name';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#upload_pic').focus(function() {
+      utterThis.text = 'upload picture';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#confirm').focus(function() {
+      utterThis.text = 'confirm';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $('#back').focus(function() {
+      utterThis.text = 'back';
+      window.speechSynthesis.speak(utterThis);
+    });
+    $(document).keydown(function (event) {
+      playMoveSound();
+      if (columnKey.indexOf(event.keyCode) >= 0) {
+        if ($('#name').is(':focus')) {
+          var inputNum = columnKey.indexOf(event.keyCode);
+          if (inputNum === 10) {
+            inputNum = 0;
+          }
+          utterThis.text = (inputNum).toString();
+          window.speechSynthesis.speak(utterThis);
+        }
+      } else if (event.keyCode >= 65 && event.keyCode <= 90) {
+        var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+                        'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+        if (event.keyCode === 69 && !$('#name').is(':focus')) {
+          event.preventDefault();
+        }
+        if ($('#name').is(':focus')) {
+          utterThis.text = alphabet[event.keyCode - 65];
+          window.speechSynthesis.speak(utterThis);
+        }
+      } else if (event.keyCode === 27) {  // esc: cancel
+        window.history.go(-1);
+      }
+    });
+  </script>
+{% endblock %}

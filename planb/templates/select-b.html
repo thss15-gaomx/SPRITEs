@@ -3,8 +3,8 @@
   <div class="ui container">
     <div class="ui large secondary inverted pointing menu">
       <a href="{% url 'index' %}" class="item">Home</a>
-      <a href="{% url 'page' %}" class="active item">PlanA</a>
-      <a href="{% url 'grid-b' %}" class="item">PlanB</a>
+      <a href="{% url 'page' %}" class="item">PlanA</a>
+      <a href="{% url 'page-b' %}" class="active item">PlanB</a>
     </div>
   </div>
   <div class="ui inverted vertical masthead center aligned segment">
@@ -12,21 +12,21 @@
     <div class="ui three column doubling stackable grid container">
       <div class="column">
         <div class="ui card">
-          <a class="image" href="{% url 'pic' section %}">
+          <a class="image" href="{% url 'pic-b' section %}">
             <img src="/static/pic.png">
           </a>
         </div>
       </div>
       <div class="column">
         <div class="ui card">
-          <a class="image" href="{% url 'text' section %}">
+          <a class="image" href="{% url 'text-b' section %}">
             <img src="/static/text.png">
           </a>
         </div>
       </div>
       <div class="column">
         <div class="ui card">
-          <a class="image" href="{% url 'pic-text' %}">
+          <a class="image" href="">
             <img src="/static/pic-text.png">
           </a>
         </div>
@@ -35,21 +35,21 @@
     <div class="ui three column doubling stackable grid container">
       <div class="column">
         <div class="ui card">
-          <a class="image" href="{% url 'video' %}">
+          <a class="image" href="">
             <img src="/static/video.png">
           </a>
         </div>
       </div>
       <div class="column">
         <div class="ui card">
-          <a class="image" href="{% url 'button' %}">
+          <a class="image" href="">
             <img src="/static/button.png">
           </a>
         </div>
       </div>
       <div class="column">
         <div class="ui card">
-          <a class="image" href="{% url 'input' %}">
+          <a class="image" href="">
             <img src="/static/input.png">
           </a>
         </div>
@@ -60,6 +60,7 @@
   <script type="text/javascript">
     var utterThis = new window.SpeechSynthesisUtterance();
     utterThis.text = 'press one to six to select a widget type';
+    utterThis.lang = 'en';
     window.speechSynthesis.speak(utterThis);
     $(document).keydown(function (event) {
       if (event.keyCode === 49) {   // Pic
@@ -82,9 +83,9 @@
         window.speechSynthesis.speak(utterThis);
       } else if (event.keyCode === 220) { // Enter
         if (utterThis.text === "picture") {
-          window.location.href = "{% url 'pic' section %}";
+          window.location.href = "{% url 'pic-b' section %}";
         } else if (utterThis.text === "text") {
-          window.location.href = "{% url 'text' section %}";
+          window.location.href = "{% url 'text-b' section %}";
         }
       } else if (event.keyCode === 27) { // Esc
         window.location.href = "{% url 'index' %}";

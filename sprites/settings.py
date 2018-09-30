@@ -130,6 +130,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'media/sound').replace('\\', '/'),
     os.path.join(BASE_DIR, 'css').replace('\\', '/'),
     os.path.join(BASE_DIR, 'js').replace('\\', '/'),
+    os.path.join(BASE_DIR, 'semantic').replace('\\', '/'),
 )
 
 # Media files (Image, Music...)
