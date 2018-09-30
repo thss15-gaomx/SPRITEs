@@ -134,7 +134,7 @@
       <div class="ui icon header" id="delete-title">Delete Widget
       </div>
       <div class="content">
-        <p id="delete-hint">Are you sure to delete this widget?</p>
+        <p id="delete-hint">Are you sure to delete this widget? Use space and escape key to confirm and cancel.</p>
       </div>
       <div class="actions">
         <button class="ui green ok inverted button" id="delete" onclick="deleteWidget()">
@@ -171,8 +171,10 @@
       curRow = {{ row }};
       $('#' + (curRow + 1).toString() + '-' + (curColumn + 1).toString()).addClass("white");
       focusObject = 1;
+      utterThis.text = "place to column " + (curColumn + 1).toString() + " row " + (curRow + 1).toString();
+      window.speechSynthesis.speak(utterThis);
     } else {
-      utterThis.text = 'Step 4 Add and delete. We can add a widget by pressing the plus key and delete by the delete key. Before deleting, you need to navigate to the object that you want to delete. When you are filling in a form, using tab and  return to alter and confirm. Or you can press the space key to confirm and escape to cancel.';
+      utterThis.text = 'Step 4 Add and delete. We can add a widget by pressing the plus key and delete by the delete key. Before deleting, you need to navigate to the object that you want to delete.';
       window.speechSynthesis.speak(utterThis);
     }
     function alterModal() {
@@ -260,7 +262,7 @@
             utterThis.text = "widget exists";
             window.speechSynthesis.speak(utterThis);
           } else {
-            utterThis.text = "add a widget and set its position";
+            utterThis.text = "Add a widget and set its position. Using the tab and enter key to alter and confirm when filling in the form.";
             window.speechSynthesis.speak(utterThis);
             $('.ui.basic.modal.one')
               .modal('show')
@@ -270,7 +272,7 @@
         } else if (event.keyCode === 8) {  // delete
           if (focus === "both") {
             if (focusColumn === curColumn && focusRow === curRow) {
-              utterThis.text = "delete the widget";
+              utterThis.text = "delete the widget. Use space and escape key to confirm and cancel.";
               window.speechSynthesis.speak(utterThis);
               $('.ui.basic.modal.two')
                 .modal('show')

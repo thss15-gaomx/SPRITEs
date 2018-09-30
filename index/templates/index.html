@@ -4,7 +4,7 @@
     <div class="ui large secondary inverted pointing menu">
       <a href="{% url 'index' %}" class="active item" id='home'>Home</a>
       <a href="{% url 'page' %}" class="item" id='plan-a'>PlanA</a>
-      <a href="{% url 'grid-b' %}" class="item" id='plan-b'>PlanB</a>
+      <a href="{% url 'page-b' %}" class="item" id='plan-b'>PlanB</a>
       <a href="{% url 'playbox' %}" class="item">PlayBox</a>
     </div>
   </div>
@@ -20,7 +20,7 @@
 
   <script type="text/javascript">
     var utterThis = new window.SpeechSynthesisUtterance();
-    utterThis.text = 'press one or two to select a plan';
+    utterThis.text = 'Press one or two to select a plan. Press "h" to get help.';
     utterThis.lang = 'en';
     window.speechSynthesis.speak(utterThis);
     $(document).keydown(function (event) {

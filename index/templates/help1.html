@@ -13,7 +13,7 @@
       <div class="ui text container">
         <p style="text-align: left; color: white;">In SPRITEs, we use the left most keys to represent rows. Due to limited number of the keyboard rows,
           we use return and the right shift to alter the row units. As to the columns, you can access to corresponding
-          column either by the number keys or the letter keys.</p>
+          column either by the number keys or the letter keys in the selected row.</p>
         <table class="ui inverted celled structured table">
           <thead>
             <tr>
@@ -122,7 +122,7 @@
   <script type="text/javascript" src="/static/sound.js"></script>
   <script type="text/javascript">
     var utterThis = new window.SpeechSynthesisUtterance();
-    utterThis.text = 'Step 1, Navigate in a form. In SPRITEs, we use the left most keys to represent rows. Due to limited number of the keyboard rows, we use return and the right shift to alter the row units. As to the columns, you can access to corresponding column either by the number keys or the letter keys.';
+    utterThis.text = 'Step 1, Navigate in a form. In SPRITEs, we use the left most keys to represent rows. Due to limited number of the keyboard rows, we use return and the right shift to alter the row units. As to the columns, you can access to corresponding column either by the number keys or the letter keys in the selected row.';
     utterThis.lang = 'en';
     window.speechSynthesis.speak(utterThis);
     var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48,
