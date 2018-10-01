@@ -39,7 +39,7 @@
                     {% if block.column == pos %}
                       {% if block.content_type == 'text' %}
                         <div class="block-b" id="{{ block.id }}" section="{{ item.section }}"
-                            style="font-size: {{ block.font_size }}; color: {{ block.font_color }};">
+                            style="font-size: {{ block.font_size }}; color: {{ block.font_color }};" padding="{{ block.padding }}">
                           {{ block.text_content }}
                         </div>
                       {% elif block.content_type == 'pic' %}
@@ -65,9 +65,20 @@
           <div class="item"><a class="title" href="#section{{ item.section }}">
             <i class="dropdown icon"></i> <b>Section {{ item.section }}</b></a>
             <div class="content menu sidebar-title" id='sidebar-{{ forloop.counter }}'>
-              {% for block in item.blocks %}
-                <a class="item" href="#">Widget {{ block.id }}</a>
-              {% endfor %}
+              <div class="accordion">
+                {% for column in item.columns %}
+                  <div class="item" style="padding-left: 5px;"><a class="title" href="#">
+                    <i class="dropdown icon"></i> <b>Column {{ forloop.counter }}</b></a>
+                    {% with pos=forloop.counter %}
+                      {% for block in item.blocks %}
+                        {% if block.column == pos %}
+                          <a class="item content" href="#">Widget {{ block.id }}</a>
+                        {% endif %}
+                      {% endfor %}
+                    {% endwith %}
+                  </div>
+                {% endfor %}
+              </div>
             </div>
           </div>
         {% endfor %}
@@ -179,7 +190,7 @@
   });
 
   var curUnit = 1, unitNum = 0, curSection = 1;
-  var curLevel = "page"; // page, container, section, column, block
+  var curLevel = "page"; // page, container, section, column, widget
   var curBox = "page";  // page, header, body, sidebar, footer, section1, section2, block1, block2
   var type = "{{ type }}";
   var focus = "null";  //null, row, column, both
@@ -189,6 +200,8 @@
                    65, 83, 68, 70, 71, 72, 74, 75, 76, 186,
                    90, 88, 67, 86, 66, 78, 77, 188, 190, 191];
   var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
+  var padding = ['top', 'right', 'bottom', 'left'];
+  var paddingIndex = 0;
   var sidebarId; // sidebar
   var shift = 0;
   var modal = 0;
@@ -435,32 +448,32 @@
     }
   }
   function keyFunctionColumn(keyCode) {
-    if (keyCode === 37) {   // left
-
-    } else if (keyCode === 39) { // right
-
-    } else if (keyCode === 38) {   // up
-
-    } else if (keyCode === 40) { // down
-
-    } else if (keyCode === 220) {  // \: enter(show details/editing)
-      if (focus === "both" && focusObject === -1) {
-        $(".block").each(function(){
-
-        });
+    if (keyCode === 220) {  // \: enter(show details/editing)
+      if (widgetNum) {
+        widgetId = $('#' + columnId + ' .block-b').eq(curWidget - 1).attr('id');
+        utterThis.text = "enter widget " + (curWidget).toString();
+        window.speechSynthesis.speak(utterThis);
+        curLevel = "widget";
+      } else {
+        utterThis.text = "0 widgets";
+        window.speechSynthesis.speak(utterThis);
       }
     } else if (keyCode === 13) {  // enter: previous widget
-      if (curWidget > 1) {
-        curWidget--;
+      if (widgetNum) {
+        if (curWidget > 1) {
+          curWidget--;
+        }
+        utterThis.text = "widget " + (curWidget).toString();
+        window.speechSynthesis.speak(utterThis);
       }
-      utterThis.text = "widget " + (curWidget).toString();
-      window.speechSynthesis.speak(utterThis);
     } else if (keyCode === 16 && shift === 2) {  // shift: next widget
-      if (curWidget < widgetNum) {
-        curWidget++;
+      if (widgetNum) {
+        if (curWidget < widgetNum) {
+          curWidget++;
+        }
+        utterThis.text = "widget " + (curWidget).toString();
+        window.speechSynthesis.speak(utterThis);
       }
-      utterThis.text = "widget " + (curWidget).toString();
-      window.speechSynthesis.speak(utterThis);
       shift = 0;
     } else if (columnKey.indexOf(keyCode) >= 0) {  // move to other columns
 
@@ -477,8 +490,7 @@
       window.location.href = "/planb/select/s" + allDict[curSection - 1]['section'] + 'c' + (curColumn).toString();
     } else if (keyCode === 8) { // Delete
       widgetId = $('#' + columnId + ' .block-b').eq(curWidget - 1).attr('id');
-
-      utterThis.text = "delete widget id " + (widgetId).toString();
+      utterThis.text = "delete widget " + (curWiget).toString();
       window.speechSynthesis.speak(utterThis);
       $("#delete-title").html("<i class='archive icon'></i>Delete Widget");
       var deleteHint = "You are tring to delete widget " + (widgetId).toString()
@@ -490,6 +502,46 @@
         .modal('show')
       ;
       modal = 3;
+    }
+  }
+  function keyFunctionWidget(keyCode) {
+    if (keyCode === 37) {   // left
+      paddingIndex = (paddingIndex + 3) % 4;     // paddingIndex -= 1
+      utterThis.text = "padding" + padding[paddingIndex];
+      window.speechSynthesis.speak(utterThis);
+    } else if (keyCode === 39) { // right
+      paddingIndex = (paddingIndex + 1) % 4;    // paddingIndex += 1
+      utterThis.text = "padding" + padding[paddingIndex];
+      window.speechSynthesis.speak(utterThis);
+    } else if (keyCode === 38) {   // up
+      var widgetPadding = $('#' + widgetId).attr('padding').split(' ');
+      var curPadding = parseInt(widgetPadding[paddingIndex]);
+      curPadding += 1;
+      widgetPadding[paddingIndex] = (curPadding).toString();
+      $('#' + widgetId).css('padding-' + padding[paddingIndex], (curPadding).toString() + 'px');
+      $('#' + widgetId).attr('padding', widgetPadding[0].toString() + ' ' + widgetPadding[1].toString() + ' ' + widgetPadding[2].toString() + ' ' + widgetPadding[3].toString());
+      utterThis.text = (curPadding).toString() + 'pixel';
+      window.speechSynthesis.speak(utterThis);
+    } else if (keyCode === 40) { // down
+      var widgetPadding = $('#' + widgetId).attr('padding').split(' ');
+      var curPadding = parseInt(widgetPadding[paddingIndex]);
+      if (curPadding) {
+        curPadding -= 1;
+      }
+      widgetPadding[paddingIndex] = (curPadding).toString();
+      console.log(widgetPadding);
+      $('#' + widgetId).css('padding-' + padding[paddingIndex], (curPadding).toString() + 'px');
+      $('#' + widgetId).attr('padding', widgetPadding[0].toString() + ' ' + widgetPadding[1].toString() + ' ' + widgetPadding[2].toString() + ' ' + widgetPadding[3].toString());
+      utterThis.text = (curPadding).toString() + 'pixel';
+      window.speechSynthesis.speak(utterThis);
+    } else if (keyCode === 220) {  // \: enter(show details/editing)
+      // utterThis.text = "enter widget " + (curWidget).toString();
+      // window.speechSynthesis.speak(utterThis);
+    } else if (keyCode === 27) { // Esc
+      curLevel = "column";
+      curBox = "column";
+      utterThis.text = "enter" + curBox;
+      window.speechSynthesis.speak(utterThis);
     }
   }
   function keyFunctionSidebarSection(keyCode) {
@@ -555,6 +607,9 @@
       } else if (curLevel === "column") {
         event.preventDefault();
         keyFunctionColumn(keyCode);
+      } else if (curLevel === "widget") {
+        event.preventDefault();
+        keyFunctionWidget(keyCode);
       } else if (curLevel === "sidebar-section") {
         keyFunctionSidebarSection(keyCode);
       }
@@ -567,16 +622,16 @@
         utterThis.text = "cancel";
         window.speechSynthesis.speak(utterThis);
         $("#cancel1").click();
-      } 
+      }
     } else {   // delete: 2 section, 3 widget
       event.preventDefault();
       if (event.keyCode === 32) {  // space: confirm
         utterThis.text = "confirm";
         window.speechSynthesis.speak(utterThis);
         if (modal === 2) {
-          window.location.href = "/plana/delete/p" + {{ pageId }} + "s" + allDict[curSection - 1]['section'];
+          window.location.href = "/planb/delete/p" + {{ pageId }} + "s" + allDict[curSection - 1]['section'];
         } else if (modal === 3) {
-          window.location.href = "/plana/delete/p" + {{ pageId }} + "w" + (focusObject).toString();
+          window.location.href = "/planb/delete/p" + {{ pageId }} + "w" + (curWiget).toString();
         }
       } if (event.keyCode === 27) {  // esc: cancel
         utterThis.text = "cancel";

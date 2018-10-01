@@ -23,7 +23,6 @@ def get_layout(pageId, block_id, section_id):
             "section": index,
             "blocks": Block.objects.filter(section_id=section.id)
         })
-        print(Block.objects.filter(section_id=section.id))
         if int(section.id) == int(section_id):
             cur_section = index
         all += str(section.id) + ',' + str(len(columns)) + ',' + str(section.style) + ';'

@@ -21,8 +21,7 @@ class Block(models.Model):
     column = models.IntegerField(default=0)   # column number in the section
 
     # layout settings
-    padding = models.CharField(max_length=64, default="")
-    margin = models.CharField(max_length=64, default="")
+    padding = models.CharField(max_length=64, default="0 0 0 0")
 
     # text features
     text_content = models.TextField(null = True)

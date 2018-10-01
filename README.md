@@ -25,7 +25,7 @@ mysql -uroot -p
 ```
 Then input your password and create a database
 ```shell
-create database forum default character set utf8 collate utf8_unicode_ci;
+create database [your database name] default character set utf8 collate utf8_unicode_ci;
 ```
 Make migrations
 ```shell
