@@ -1,6 +1,7 @@
 # SPRITEs
 
 * a web design tool website using SPRITEs
+* a demo video can be reached [here](https://drive.google.com/open?id=1bf0RhkJqZWmkKfYPEV_jM75JURg-7Ha3)
 
 ## Set up the project
 ### Python Virtual Environment and Install Packages
