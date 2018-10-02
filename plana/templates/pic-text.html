@@ -37,7 +37,7 @@
       <div class="ui text container">
         <div class="ui divided grid">
           <div class="sixteen wide column">
-            <form method="post" action="{% url 'pic' %}" class="ui inverted form" enctype="multipart/form-data">
+            <form method="post" action="{% url 'pic-text' %}" class="ui inverted form" enctype="multipart/form-data">
               {% csrf_token %}
               <div class="field">
                 <label>Size</label>

@@ -153,31 +153,30 @@
   <script type="text/javascript">
     var utterThis = new window.SpeechSynthesisUtterance();
     utterThis.lang = 'en';
+    var numberKey = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57];
     var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48,
                      81, 87, 69, 82, 84, 89, 85, 73, 79, 80,
                      65, 83, 68, 70, 71, 72, 74, 75, 76, 186,
-                     90, 88, 67, 86, 66, 78, 77, 188, 190, 191]; //1, 2, 3, 4, 5, 6, 7, 8, 9, 0
-    var numberKey = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57]
+                     90, 88, 67, 86, 66, 78, 77, 188, 190, 191];
     var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
-    var columnContent = ["pages", "header", "body", "side bar", "footer"];
-    var shift = 0;
+    var shift = 0;  // right or left shift
     var curUnit = 1;
-    var focus = "null", focusColumn, focusRow;
+    var focus = "null", focusColumn, focusRow;  // focus status
     var focusObject = 0;
     var curColumn = 0, curRow = 0;
-    var modal = 0;
-    if ({{ column }} !== -1 && {{ row }} !== -1) {
+    var modal = 0;   // the modal status
+    if ({{ column }} !== -1 && {{ row }} !== -1) {  // if widget has been added
       curColumn = {{ column }};
       curRow = {{ row }};
       $('#' + (curRow + 1).toString() + '-' + (curColumn + 1).toString()).addClass("white");
       focusObject = 1;
       utterThis.text = "place to column " + (curColumn + 1).toString() + " row " + (curRow + 1).toString();
       window.speechSynthesis.speak(utterThis);
-    } else {
+    } else {    // if no widgets
       utterThis.text = 'Step 4 Add and delete. We can add a widget by pressing the plus key and delete by the delete key. Before deleting, you need to navigate to the object that you want to delete.';
       window.speechSynthesis.speak(utterThis);
     }
-    function alterModal() {
+    function alterModal() {  // change the modal status
       modal = 0;
     }
     function deleteWidget() {
@@ -191,7 +190,7 @@
     });
     $(document).keydown(function (event) {
       playMoveSound();
-      if (modal === 1) {
+      if (modal === 1) {   // add the widget modal
         if (event.keyCode === 32) {  // space: confirm
           utterThis.text = "confirm";
           window.speechSynthesis.speak(utterThis);
@@ -201,7 +200,7 @@
           utterThis.text = "cancel";
           window.speechSynthesis.speak(utterThis);
           $("#cancel1").click();
-        } else if (numberKey.indexOf(event.keyCode) >= 0) {
+        } else if (numberKey.indexOf(event.keyCode) >= 0) {   // column keys
           if ($('#column').is(':focus')) {
             if ($('#column').val() === '') {
               var curNum = 0;
@@ -224,7 +223,7 @@
               var curNum = parseInt($('#row').val());
             }
             var inputNum = numberKey.indexOf(event.keyCode);
-            if (10 * curNum + inputNum > 6) {
+            if (10 * curNum + inputNum > 6) {  // give hints when the input row exceeds
               event.preventDefault();
               utterThis.text = "no more than 6";
               window.speechSynthesis.speak(utterThis);
@@ -233,18 +232,18 @@
               window.speechSynthesis.speak(utterThis);
             }
           }
-        } else if (event.keyCode >= 65 && event.keyCode <= 90) {
+        } else if (event.keyCode >= 65 && event.keyCode <= 90) {  // letter keys
           var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
                           'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
           if (event.keyCode === 69 && !$('#name').is(':focus')) {
             event.preventDefault();
           }
-          if ($('#name').is(':focus')) {
+          if ($('#name').is(':focus')) {  // give hints when input the letters
             utterThis.text = alphabet[event.keyCode - 65];
             window.speechSynthesis.speak(utterThis);
           }
         }
-      } else if (modal === 2) {
+      } else if (modal === 2) {  // delete modal
         event.preventDefault();
         if (event.keyCode === 32) {  // space: confirm
           utterThis.text = "confirm";
@@ -255,7 +254,7 @@
           window.speechSynthesis.speak(utterThis);
           $("#cancel2").click();
         }
-      } else if (modal === 0) {
+      } else if (modal === 0) {  // no modal
         event.preventDefault();
         if (event.keyCode === 187) {  // +: add
           if (focusObject) {
@@ -293,7 +292,7 @@
           utterThis.text = "unit " + (curUnit).toString();
           window.speechSynthesis.speak(utterThis);
           shift = 0;
-        } else if (columnKey.indexOf(event.keyCode) >= 0) {
+        } else if (columnKey.indexOf(event.keyCode) >= 0) {  // column keys
           if (focusObject) {
             var columnIndex = (columnKey.indexOf(event.keyCode) + 1) % 10;
             if (columnIndex === 0) {
@@ -322,7 +321,7 @@
             utterThis.text = "Press plus key to add a widget";
             window.speechSynthesis.speak(utterThis);
           }
-        } else if (rowKey.indexOf(event.keyCode) >= 0 && shift !== 2) {
+        } else if (rowKey.indexOf(event.keyCode) >= 0 && shift !== 2) {  // row keys
           if (focusObject) {
             if (rowKey.indexOf(event.keyCode) + (curUnit - 1) * 4 < 6) {
               focusRow = rowKey.indexOf(event.keyCode) + (curUnit - 1) * 4;
@@ -360,6 +359,7 @@
         window.location.href = "{% url 'help3' %}";
       }
     });
+    // some hints when the input is focused
     $('#column').focus(function() {
       utterThis.text = 'column';
       window.speechSynthesis.speak(utterThis);

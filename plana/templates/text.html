@@ -119,8 +119,10 @@
   <script type="text/javascript">
     var utterThis = new window.SpeechSynthesisUtterance();
     utterThis.text = 'specify the size and content of text widget';
+    utterThis.lang = 'en';
     window.speechSynthesis.speak(utterThis);
     var columnKey = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57];
+    // hints when the input is focused
     $('#width').focus(function() {
       utterThis.text = 'width';
       window.speechSynthesis.speak(utterThis);
@@ -153,6 +155,21 @@
       utterThis.text = 'back';
       window.speechSynthesis.speak(utterThis);
     });
+    $("#font-size").change(function(){
+      var options = $("#font-size option:selected");
+      utterThis.text = options.text();
+      window.speechSynthesis.speak(utterThis);
+    });
+    $("#font-color").change(function(){
+      var options = $("#font-color option:selected");
+      utterThis.text = options.text();
+      window.speechSynthesis.speak(utterThis);
+    });
+    $("#background-color").change(function(){
+      var options = $("#background-color option:selected");
+      utterThis.text = options.text();
+      window.speechSynthesis.speak(utterThis);
+    });
     $(document).keydown(function (event) {
       playMoveSound();
       if (columnKey.indexOf(event.keyCode) >= 0) {
@@ -163,7 +180,7 @@
             var curNum = parseInt($('#height').val());
           }
           var inputNum = columnKey.indexOf(event.keyCode);
-          if (10 * curNum + inputNum > parseInt({{ section_width }})) {
+          if (10 * curNum + inputNum > parseInt({{ section_width }})) { // no more than the section settings
             event.preventDefault();
             utterThis.text = "no more than " + {{ section_width }};
             window.speechSynthesis.speak(utterThis);
@@ -178,7 +195,7 @@
             var curNum = parseInt($('#height').val());
           }
           var inputNum = columnKey.indexOf(event.keyCode);
-          if (10 * curNum + inputNum > parseInt({{ section_height }})) {
+          if (10 * curNum + inputNum > parseInt({{ section_height }})) {  // no more than the section settings
             event.preventDefault();
             utterThis.text = "no more than " + {{ section_height }};
             window.speechSynthesis.speak(utterThis);
@@ -194,7 +211,7 @@
           utterThis.text = (inputNum).toString();
           window.speechSynthesis.speak(utterThis);
         }
-      } else if (event.keyCode >= 65 && event.keyCode <= 90) {
+      } else if (event.keyCode >= 65 && event.keyCode <= 90) {  // hints when inputing the letters
         var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
                         'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
         if (event.keyCode === 69 && !$('#text-content').is(':focus')) {
@@ -207,21 +224,6 @@
       } else if (event.keyCode === 27) {  // esc: cancel
         window.history.go(-1);
       }
-    });
-    $("#font-size").change(function(){
-      var options = $("#font-size option:selected");
-      utterThis.text = options.text();
-      window.speechSynthesis.speak(utterThis);
-    });
-    $("#font-color").change(function(){
-      var options = $("#font-color option:selected");
-      utterThis.text = options.text();
-      window.speechSynthesis.speak(utterThis);
-    });
-    $("#background-color").change(function(){
-      var options = $("#background-color option:selected");
-      utterThis.text = options.text();
-      window.speechSynthesis.speak(utterThis);
     });
   </script>
 {% endblock %}

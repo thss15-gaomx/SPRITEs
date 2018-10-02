@@ -65,8 +65,10 @@
   <script type="text/javascript">
     var utterThis = new window.SpeechSynthesisUtterance();
     utterThis.text = 'specify the size and content of picture widget';
+    utterThis.lang = 'en';
     var columnKey = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57];
     window.speechSynthesis.speak(utterThis);
+    // hints when the inputs are focused
     $('#width').focus(function() {
       utterThis.text = 'width';
       window.speechSynthesis.speak(utterThis);
@@ -101,7 +103,7 @@
             var curNum = parseInt($('#height').val());
           }
           var inputNum = columnKey.indexOf(event.keyCode);
-          if (10 * curNum + inputNum > parseInt({{ section_width }})) {
+          if (10 * curNum + inputNum > parseInt({{ section_width }})) { // no more than the section settings
             event.preventDefault();
             utterThis.text = "no more than " + {{ section_width }};
             window.speechSynthesis.speak(utterThis);
@@ -116,7 +118,7 @@
             var curNum = parseInt($('#height').val());
           }
           var inputNum = columnKey.indexOf(event.keyCode);
-          if (10 * curNum + inputNum > parseInt({{ section_height }})) {
+          if (10 * curNum + inputNum > parseInt({{ section_height }})) {  // no more than the section settings
             event.preventDefault();
             utterThis.text = "no more than " + {{ section_height }};
             window.speechSynthesis.speak(utterThis);
@@ -132,13 +134,13 @@
           utterThis.text = (inputNum).toString();
           window.speechSynthesis.speak(utterThis);
         }
-      } else if (event.keyCode >= 65 && event.keyCode <= 90) {
+      } else if (event.keyCode >= 65 && event.keyCode <= 90) {  // letter keys
         var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
                         'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
         if (event.keyCode === 69 && !$('#name').is(':focus')) {
           event.preventDefault();
         }
-        if ($('#name').is(':focus')) {
+        if ($('#name').is(':focus')) {  // give hints when inputing the letters
           utterThis.text = alphabet[event.keyCode - 65];
           window.speechSynthesis.speak(utterThis);
         }

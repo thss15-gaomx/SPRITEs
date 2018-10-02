@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.http import HttpResponse
 import json
 
-
+# get the layout information: section num, section id and size, current widget, section, page
 def get_layout(pageId, block_id, section_id):
     page = Page.objects.get(id=pageId)
     sections = Section.objects.filter(page_id=pageId)
@@ -45,7 +45,7 @@ def select(request, section_id):
     info = {'section': section_id}
     return render(request, "select-b.html", info)
 
-
+# add a text widget
 def text(request, info_str):
     index = info_str.find('c')
     section_id = info_str[1:index]
@@ -68,7 +68,7 @@ def text(request, info_str):
     else:
         return render(request, "text-b.html", {'section': info_str})
 
-
+# add a picture widget
 def pic(request, info_str):
     index = info_str.find('c')
     section_id = info_str[1:index]
@@ -97,13 +97,13 @@ def pic(request, info_str):
     else:
         return render(request, "pic-b.html", {'section': info_str})
 
-
+# get the page list
 def page(request):
     pages = Page.objects.all()
     page_num = len(pages)
     return render(request, "page-b.html", {"pages": pages, "num": page_num})
 
-
+# add a new page
 def new_page(request):
     page = Page()
     page.header = 1
@@ -116,7 +116,7 @@ def new_page(request):
     except:
         return render(request, "page-b.html", {"pages": Page.objects.all(), "num": len(Page.objects.all())})
 
-
+# add a new section
 def section(request, pageId):
     if request.method == 'POST':
         section = Section()
@@ -132,12 +132,12 @@ def section(request, pageId):
     else:
         return render(request, "layout-b.html", get_layout(pageId, -1, -1))
 
-
+# set a widget (to do)
 @csrf_exempt
 def layout(request, pageId):
     if request.method == 'POST':
-        column = request.POST.get('x')
-        row = request.POST.get('y')
+        # column = request.POST.get('x')
+        # row = request.POST.get('y')
         id = request.POST.get('id')
         object = Block.objects.get(id=id)
         object.pos_x = column
@@ -147,7 +147,7 @@ def layout(request, pageId):
     else:
         return render(request, "layout-b.html", get_layout(pageId, -1, -1))
 
-
+# delete a section/page/widget
 @csrf_exempt
 def delete(request, delete_info):
     if 's' in delete_info:

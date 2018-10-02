@@ -1,3 +1,4 @@
+// to play the sound effects
 var DROP_SOUND = new buzz.sound([
     "/static/drop.mp3"
 ]);

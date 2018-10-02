@@ -2,9 +2,9 @@
 {% block content %}
   <div class="ui container">
     <div class="ui large secondary inverted pointing menu">
-      <a href="{% url 'index' %}" class="active item" id='home'>Home</a>
-      <a href="{% url 'page' %}" class="item" id='plan-a'>PlanA</a>
-      <a href="{% url 'page-b' %}" class="item" id='plan-b'>PlanB</a>
+      <a href="{% url 'index' %}" class="active item">Home</a>
+      <a href="{% url 'page' %}" class="item">PlanA</a>
+      <a href="{% url 'page-b' %}" class="item">PlanB</a>
       <a href="{% url 'playbox' %}" class="item">PlayBox</a>
     </div>
   </div>
@@ -13,8 +13,8 @@
       <h1 class="ui inverted header">Welcome back, designer!</h1>
       <h2>Click to select one mode.</h2>
       <br>
-      <a href="{% url 'page' %}" id="button-a" class="ui massive inverted teal button">PlanA</a>
-      <a href="{% url 'page-b' %}" id="button-b" class="ui massive inverted orange button">PlanB</a>
+      <a href="{% url 'page' %}" class="ui massive inverted teal button">PlanA</a>
+      <a href="{% url 'page-b' %}" class="ui massive inverted orange button">PlanB</a>
     </div>
   </div>
 
@@ -26,26 +26,6 @@
     $(document).keydown(function (event) {
       event.preventDefault();
     })
-    $('#home').focus(function() {
-      utterThis.text = 'home';
-      window.speechSynthesis.speak(utterThis);
-    });
-    $('#plan-a').focus(function() {
-      utterThis.text = 'plan a';
-      window.speechSynthesis.speak(utterThis);
-    });
-    $('#plan-b').focus(function() {
-      utterThis.text = 'plan b';
-      window.speechSynthesis.speak(utterThis);
-    });
-    $('#button-a').focus(function() {
-      utterThis.text = 'plan a';
-      window.speechSynthesis.speak(utterThis);
-    });
-    $('#button-b').focus(function() {
-      utterThis.text = 'plan b';
-      window.speechSynthesis.speak(utterThis);
-    });
     $(document).keydown(function (event) {
       if (event.keyCode === 220) { // Enter
         if (utterThis.text === "plan a") {

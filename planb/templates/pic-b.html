@@ -4,7 +4,7 @@
     <div class="ui large secondary inverted pointing menu">
       <a href="{% url 'index' %}" class="item" id='home' tabindex="-1">Home</a>
       <a href="{% url 'page' %}" class="item" id='plan-a' tabindex="-1">PlanA</a>
-      <a href="{% url 'grid-b' %}" class="active item" id='plan-b' tabindex="-1">PlanB</a>
+      <a href="{% url 'page-b' %}" class="active item" id='plan-b' tabindex="-1">PlanB</a>
     </div>
   </div>
   <div class="ui inverted vertical masthead center aligned segment">
@@ -54,6 +54,7 @@
     utterThis.lang = 'en';
     window.speechSynthesis.speak(utterThis);
     var columnKey = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57];
+    // hints when the input is focused
     $('#name').focus(function() {
       utterThis.text = 'name';
       window.speechSynthesis.speak(utterThis);
@@ -81,7 +82,7 @@
           utterThis.text = (inputNum).toString();
           window.speechSynthesis.speak(utterThis);
         }
-      } else if (event.keyCode >= 65 && event.keyCode <= 90) {
+      } else if (event.keyCode >= 65 && event.keyCode <= 90) {  // give hints when inputing the letters
         var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
                         'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
         if (event.keyCode === 69 && !$('#name').is(':focus')) {

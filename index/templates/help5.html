@@ -70,18 +70,17 @@
     var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48,
                      81, 87, 69, 82, 84, 89, 85, 73, 79, 80,
                      65, 83, 68, 70, 71, 72, 74, 75, 76, 186,
-                     90, 88, 67, 86, 66, 78, 77, 188, 190, 191]; //1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+                     90, 88, 67, 86, 66, 78, 77, 188, 190, 191];
     var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
-    var shift = 0;
+    var shift = 0;  // right or left shift
     var curUnit = 1;
-    var pageNum = 2;
     var focus = "null", focusColumn, focusRow;
     var curLevel = "page";
     var curBox = "page";
     var curSection, curWiget, widgetNum;
-    var widgetArray = [3, 1, 4];
-    var columnArray = [3, 1, 2];
-    var rowArray = [1, 1, 2];
+    var widgetArray = [3, 1, 4];   // widget number in each section
+    var columnArray = [3, 1, 2];   // column number in each section
+    var rowArray = [1, 1, 2];      // row number in each section
     var sectionColumn, sectionRow;
     function enterSection(section) {
       sectionColumn = columnArray[curSection - 1];
@@ -108,7 +107,7 @@
         focus = "null";
         focusColumn = 0;
         focusRow = 0;
-      } else if (columnKey.indexOf(keyCode) >= 0) {
+      } else if (columnKey.indexOf(keyCode) >= 0) {  // column keys
         if (focus === "null") {
           utterThis.text = "select the row first";
           window.speechSynthesis.speak(utterThis);
@@ -130,7 +129,7 @@
             }
           }
         }
-      } else if (rowKey.indexOf(keyCode) >= 0 && shift !== 2) {
+      } else if (rowKey.indexOf(keyCode) >= 0 && shift !== 2) {  // row keys
         curBox = "page";
         if (keyCode === 192) {
           focusRow = rowKey.indexOf(keyCode);
@@ -144,7 +143,7 @@
       } else if (keyCode === 27) { // Esc
       }
     }
-    function keyFunctionContainer(keyCode) {
+    function keyFunctionContainer(keyCode) {   // container level
       if (curBox === "body") {
         if (keyCode === 220) {  // \: enter
           curLevel = "section";
@@ -220,7 +219,7 @@
         }
       }
     }
-    function keyFunctionSection(keyCode) {
+    function keyFunctionSection(keyCode) {  // section level
       if (keyCode === 220) {  // \: enter
         if (focus === "both" && focusObject === -1) {
           utterThis.text = "i d " + ($(this).attr("id")).toString() + ' selected';
@@ -233,7 +232,7 @@
         utterThis.text = "unit 1";
         window.speechSynthesis.speak(utterThis);
         shift = 0;
-      } else if (columnKey.indexOf(keyCode) >= 0) {
+      } else if (columnKey.indexOf(keyCode) >= 0) {  // column num_keys
         var columnIndex = (columnKey.indexOf(keyCode) + 1) % 10;
         if (columnIndex === 0) {
           columnIndex = 9;
@@ -258,7 +257,7 @@
           utterThis.text = "only " + (sectionColumn).toString() + "columns";
           window.speechSynthesis.speak(utterThis);
         }
-      } else if (rowKey.indexOf(keyCode) >= 0 && shift !== 2) {
+      } else if (rowKey.indexOf(keyCode) >= 0 && shift !== 2) {  // row keys
         if (rowKey.indexOf(keyCode) + (curUnit - 1) * 4 < sectionRow) {
           if (focus === "both") {
             $('.b' + (curSection).toString() + '-' + (focusRow + 1).toString() + '-' + (focusColumn + 1).toString()).removeClass("white");
@@ -286,7 +285,7 @@
         focus = "null";
       }
     }
-    function keyFunctionSidebarSection(keyCode) {
+    function keyFunctionSidebarSection(keyCode) {   // sidebar section level
       if (keyCode === 220) {  // \: enter
         if (curWiget) {
           curLevel = "section";

@@ -4,7 +4,7 @@
     <div class="ui large secondary inverted pointing menu">
       <a href="{% url 'index' %}" class="item" id='home' tabindex="-1">Home</a>
       <a href="{% url 'page' %}" class="item" id='plan-a' tabindex="-1">PlanA</a>
-      <a href="{% url 'grid-b' %}" class="active item" id='plan-b'tabindex="-1">PlanB</a>
+      <a href="{% url 'page-b' %}" class="active item" id='plan-b'tabindex="-1">PlanB</a>
     </div>
   </div>
   <div class="ui inverted vertical masthead center aligned segment">
@@ -86,24 +86,13 @@
     utterThis.lang = 'en';
     window.speechSynthesis.speak(utterThis);
     var columnKey = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57];
-    $('#width').focus(function() {
-      utterThis.text = 'width';
-      window.speechSynthesis.speak(utterThis);
-    });
-    $('#height').focus(function() {
-      utterThis.text = 'height';
-      window.speechSynthesis.speak(utterThis);
-    });
+    // hints when the input is focused
     $('#font-size').focus(function() {
       utterThis.text = 'font size';
       window.speechSynthesis.speak(utterThis);
     });
     $('#font-color').focus(function() {
       utterThis.text = 'font color';
-      window.speechSynthesis.speak(utterThis);
-    });
-    $('#background-color').focus(function() {
-      utterThis.text = 'background color';
       window.speechSynthesis.speak(utterThis);
     });
     $('#text-content').focus(function() {
@@ -118,6 +107,16 @@
       utterThis.text = 'back';
       window.speechSynthesis.speak(utterThis);
     });
+    $("#font-size").change(function(){
+      var options = $("#font-size option:selected");
+      utterThis.text = options.text();
+      window.speechSynthesis.speak(utterThis);
+    });
+    $("#font-color").change(function(){
+      var options = $("#font-color option:selected");
+      utterThis.text = options.text();
+      window.speechSynthesis.speak(utterThis);
+    });
     $(document).keydown(function (event) {
       playMoveSound();
       if (columnKey.indexOf(event.keyCode) >= 0) {
@@ -129,7 +128,7 @@
           utterThis.text = (inputNum).toString();
           window.speechSynthesis.speak(utterThis);
         }
-      } else if (event.keyCode >= 65 && event.keyCode <= 90) {
+      } else if (event.keyCode >= 65 && event.keyCode <= 90) {  // give hints when inputing the letters
         var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
                         'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
         if (event.keyCode === 69 && !$('#text-content').is(':focus')) {
@@ -142,16 +141,6 @@
       } else if (event.keyCode === 27) {  // esc: cancel
         window.history.go(-1);
       }
-    });
-    $("#font-size").change(function(){
-      var options = $("#font-size option:selected");
-      utterThis.text = options.text();
-      window.speechSynthesis.speak(utterThis);
-    });
-    $("#font-color").change(function(){
-      var options = $("#font-color option:selected");
-      utterThis.text = options.text();
-      window.speechSynthesis.speak(utterThis);
     });
   </script>
 {% endblock %}

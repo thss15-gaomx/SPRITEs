@@ -17,7 +17,7 @@ def help3(request):
 
 
 def help4(request):
-    if request.method == 'POST':
+    if request.method == 'POST': # add the widget and input the position
         column = request.POST.get('column')
         row = request.POST.get('row')
         return render(request, "help4.html", {'column': int(column) - 1, 'row': int(row) - 1})

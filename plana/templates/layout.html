@@ -144,7 +144,6 @@
 
 <script type="text/javascript" src="/static/jquery-buzz.js"></script>
 <script type="text/javascript" src="/static/sound.js"></script>
-{# todo: specify the focus id; add to the allString after drop; overlap judgement #}
 <script type="text/javascript">
   var utterThis = new window.SpeechSynthesisUtterance();
   utterThis.text = 'layout page';
@@ -167,7 +166,7 @@
     $(id).css("height", gridLength);
   }
   var marginLeft, marginTop, width, height;
-  $(".block").each(function(){
+  $(".block").each(function() {  // set the position of all the blocks
     var sectionIndex = parseInt($(this).attr("section"));
     sectionColumn = parseInt(allDict[sectionIndex - 1]['width']);
     marginLeft = (parseInt($(this).attr("x")) * 80 / sectionColumn).toString() + 'vw';
@@ -181,9 +180,8 @@
   });
   var curUnit = 1, unitNum = 0, curSection = 1;
   var curLevel = "page"; // page, container, section, block
-  var curBox = "page";  // page, header, body, sidebar, footer, section1, section2, block1, block2
-  var blockWidth = 0;
-  var blockHeight = 0;
+  var curBox = "page";  // page, header, body, sidebar, footer, section
+  var blockWidth = 0, blockHeight = 0;
   var type = "{{ type }}";
   var curRow = 0, curColumn = 0;
   var margin;
@@ -192,7 +190,7 @@
   var columnKey = [49, 50, 51, 52, 53, 54, 55, 56, 57, 48,
                    81, 87, 69, 82, 84, 89, 85, 73, 79, 80,
                    65, 83, 68, 70, 71, 72, 74, 75, 76, 186,
-                   90, 88, 67, 86, 66, 78, 77, 188, 190, 191]; //1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+                   90, 88, 67, 86, 66, 78, 77, 188, 190, 191];
   var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
   var curWiget, sidebarId, widgetNum; // sidebar
   var shift = 0;
@@ -200,7 +198,7 @@
   function alterModal() {
     modal = 0;
   }
-  if ({{ block_id }} !== -1) {
+  if ({{ block_id }} !== -1) {  // if certain block is focused
     $('#' + ({{ block_id }}).toString()).addClass('current');
     curSection = {{ section_id }};
     var sectionId = "#section" + (curSection).toString();
@@ -221,7 +219,7 @@
     var curUnit = 1;
     unitNum = Math.ceil(sectionRow / 4);
   }
-  if ({{ section_id }} !== 0 && {{ block_id }} === -1) {
+  if ({{ section_id }} !== 0 && {{ block_id }} === -1) {  // if certain section is focused
     curLevel = "container";
     curBox = "body";
     if ({{ section_id }} === -1) {
@@ -236,11 +234,11 @@
       scrollTop: $(sectionId).offset().top - 50
     }, 500);
   }
-  function setBlock() {
+  function setBlock() {  // move block or tell the number of the blocks at the current position
     focus = "both";
     curRow = focusRow;
     curColumn = focusColumn;
-    if (focusObject !== -1) {
+    if (focusObject !== -1) {  // if object is focused
       utterThis.text = "moving to column" + (curColumn + 1).toString() + "row " + (curRow + 1).toString();
       window.speechSynthesis.speak(utterThis);
       margin = (curRow * 80 / sectionColumn).toString() + 'vw';
@@ -255,7 +253,7 @@
           playOverlapSound();
         }
       });
-    } else {
+    } else {  // if no objects are focused
       var objectNum = 0;
       $(".block").each(function(){
         var sectionIndex = parseInt($(this).attr("section"));
@@ -272,7 +270,7 @@
   document.addEventListener("keydown", function(e){
     shift = e.location;
   });
-  function enterSection() {
+  function enterSection() {  // init before entering the section
     sectionColumn = parseInt(allDict[curSection - 1]['width']);
     sectionRow = parseInt(allDict[curSection - 1]['height']);
     var curUnit = 1;
@@ -282,7 +280,7 @@
       $(this).removeClass('current');
     });
   }
-  function keyFunctionPage(keyCode) {
+  function keyFunctionPage(keyCode) {  // page level
     if (keyCode === 220) {  // \: enter
       utterThis.text = "enter" + curBox;
       window.speechSynthesis.speak(utterThis);
@@ -310,7 +308,7 @@
       focus = "null";
       focusColumn = 0;
       focusRow = 0;
-    } else if (columnKey.indexOf(keyCode) >= 0) {
+    } else if (columnKey.indexOf(keyCode) >= 0) {  // column keys
       if (focus === "null") {
         utterThis.text = "select the row first";
         window.speechSynthesis.speak(utterThis);
@@ -352,7 +350,7 @@
           }
         }
       }
-    } else if (rowKey.indexOf(keyCode) >= 0 && shift !== 2) {
+    } else if (rowKey.indexOf(keyCode) >= 0 && shift !== 2) {  // row keys
       curBox = "page";
       if (keyCode === 16) {
         utterThis.text = "only 3 rows";
@@ -367,8 +365,8 @@
       window.location.href = "{% url 'page' %}";
     }
   }
-  function keyFunctionContainer(keyCode) {
-    if (curBox === "body") {
+  function keyFunctionContainer(keyCode) {  // container level: body / sidebar
+    if (curBox === "body") {  // body
       if (keyCode === 220) {  // \: enter
         curLevel = "section";
         curBox = "section" + (curSection).toString();
@@ -408,7 +406,7 @@
           .modal('show')
         ;
         modal = 1;
-      } else if (keyCode === 8) { // Delete
+      } else if (keyCode === 8) { // delete section
         utterThis.text = "delete section" + (curSection).toString()
         window.speechSynthesis.speak(utterThis);
         $("#delete-title").html("<i class='archive icon'></i>Delete Section");
@@ -422,7 +420,7 @@
         ;
         modal = 2;
       }
-    } else if (curBox === "sidebar") {
+    } else if (curBox === "sidebar") { // sidebar
       if (keyCode === 220) {  // \: enter
         if (curSection) {
           curLevel = "sidebar-section";
@@ -478,7 +476,8 @@
       }
     }
   }
-  function keyFunctionSection(keyCode) {
+  function keyFunctionSection(keyCode) {  // section level
+    // temp operations for direction keys
     if (keyCode === 37) {   // left
       if (curColumn > 0) {
         curColumn--;
@@ -547,7 +546,7 @@
       utterThis.text = "unit " + (curUnit).toString();
       window.speechSynthesis.speak(utterThis);
       shift = 0;
-    } else if (columnKey.indexOf(keyCode) >= 0) {
+    } else if (columnKey.indexOf(keyCode) >= 0) {  // column keys
       var columnIndex = (columnKey.indexOf(keyCode) + 1) % 10;
       if (columnIndex === 0) {
         columnIndex = 9;
@@ -567,7 +566,7 @@
         utterThis.text = "only " + (sectionColumn).toString() + "columns";
         window.speechSynthesis.speak(utterThis);
       }
-    } else if (rowKey.indexOf(keyCode) >= 0 && shift !== 2) {
+    } else if (rowKey.indexOf(keyCode) >= 0 && shift !== 2) {  // row keys
       if (rowKey.indexOf(keyCode) + (curUnit - 1) * 4 < sectionRow) {
         focusRow = rowKey.indexOf(keyCode) + (curUnit - 1) * 4;
         utterThis.text = "row " + (focusRow + 1).toString();
@@ -586,12 +585,12 @@
       curBox = "body";
       utterThis.text = "enter" + curBox;
       window.speechSynthesis.speak(utterThis);
-    } else if (keyCode === 187) { // Add
+    } else if (keyCode === 187) { // Add widget
       utterThis.text = "add widget";
       window.speechSynthesis.speak(utterThis);
       window.location.href = "/plana/select/s" + allDict[curSection - 1]['section']
                               + 'w' + (sectionColumn).toString() + 'h' + (sectionRow).toString();
-    } else if (keyCode === 8) { // Delete
+    } else if (keyCode === 8) { // delete widget
       if (focus === "both" && focusObject !== -1) {
         utterThis.text = "delete widget " + (focusObject).toString()
         window.speechSynthesis.speak(utterThis);
@@ -608,7 +607,7 @@
       }
     }
   }
-  function keyFunctionSidebarSection(keyCode) {
+  function keyFunctionSidebarSection(keyCode) {  // sidebar section level
     if (keyCode === 220) {  // \: enter
       if (curWiget) {
         var widgetId = $(sidebarId).children('a').eq(curWiget - 1).text().substring(7);
@@ -726,6 +725,7 @@
       }
     }
   });
+  // some hints when the inputs are focused
   $('#width').focus(function() {
     utterThis.text = 'width';
     window.speechSynthesis.speak(utterThis);

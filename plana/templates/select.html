@@ -4,7 +4,7 @@
     <div class="ui large secondary inverted pointing menu">
       <a href="{% url 'index' %}" class="item">Home</a>
       <a href="{% url 'page' %}" class="active item">PlanA</a>
-      <a href="{% url 'grid-b' %}" class="item">PlanB</a>
+      <a href="{% url 'page-b' %}" class="item">PlanB</a>
     </div>
   </div>
   <div class="ui inverted vertical masthead center aligned segment">
@@ -63,6 +63,7 @@
     utterThis.lang = 'en';
     window.speechSynthesis.speak(utterThis);
     $(document).keydown(function (event) {
+      // select different widget type
       if (event.keyCode === 49) {   // Pic
         utterThis.text = 'picture';
         window.speechSynthesis.speak(utterThis);

@@ -28,6 +28,7 @@ def swipe(request):
             num_keys.append(int(item))
         result = 'loading'
         if num_keys:
+            # get the gesture of the input
             swipe = swipe_convert(num_keys)
             if swipe == 1:
                 result = 'both'

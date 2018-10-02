@@ -6,10 +6,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.http import HttpResponse
 import json
 
-color_map = ["#B03060", "#FE9A76", "#FFD700", "#32CD32", "#016936", "#008080", "#0E6EB8", "#EE82EE", "#B413EC",
-             "#FF1493", "#A52A2A", "#A0A0A0", "#000000"]
-
-
+#  create block with basic features
 def create_block(width, height, type, section):
     new_block = Block()
     new_block.pos_x = 0
@@ -21,7 +18,8 @@ def create_block(width, height, type, section):
     new_block.save()
     return new_block
 
-
+# to get all the blocks with their ids and position
+# return as a string
 def get_all_blocks():
     all = ""
     for block in Block.objects.all():
@@ -30,7 +28,7 @@ def get_all_blocks():
         all = all[:-1]
     return all
 
-
+# get the layout information: section num, section id and size, current widget, section, page
 def get_layout(pageId, block_id, section_id):
     page = Page.objects.get(id=pageId)
     sections = Section.objects.filter(page_id=pageId)
@@ -68,7 +66,7 @@ def select(request, section_id):
     info = {'section': section_id}
     return render(request, "select.html", info)
 
-
+# add a text widget
 def text(request, info_str):
     if 'w' in info_str:
         index_1 = info_str.find('w')
@@ -96,7 +94,7 @@ def text(request, info_str):
     else:
         return render(request, "text.html", {'section': section_id, 'section_width': section_w, 'section_height': section_h})
 
-
+# add a picture widget
 def pic(request, info_str):
     if 'w' in info_str:
         index_1 = info_str.find('w')
@@ -145,7 +143,7 @@ def input(request):
 def button(request):
     return render(request, "button.html")
 
-
+# add a new section
 def section(request, pageId):
     if request.method == 'POST':
         section = Section()
@@ -165,7 +163,7 @@ def page(request):
     page_num = len(pages)
     return render(request, "page.html", {"pages": pages, "num": page_num})
 
-
+# add a new page
 def new_page(request):
     page = Page()
     page.header = 1
@@ -178,7 +176,7 @@ def new_page(request):
     except:
         return render(request, "page.html", {"pages": Page.objects.all(), "num": len(Page.objects.all())})
 
-
+# place a widget
 @csrf_exempt
 def layout(request, pageId):
     if request.method == 'POST':
@@ -193,7 +191,7 @@ def layout(request, pageId):
     else:
         return render(request, "layout.html", get_layout(pageId, -1, -1))
 
-
+# delete widget/section/page
 @csrf_exempt
 def delete(request, delete_info):
     if 's' in delete_info:

@@ -200,18 +200,18 @@
                    65, 83, 68, 70, 71, 72, 74, 75, 76, 186,
                    90, 88, 67, 86, 66, 78, 77, 188, 190, 191];
   var rowKey = [192, 9, 20, 16] // ``, tab, caps lock, shift
-  var padding = ['top', 'right', 'bottom', 'left'];
+  var padding = ['top', 'right', 'bottom', 'left']; // padding array
   var paddingIndex = 0;
   var sidebarId; // sidebar
-  var shift = 0;
-  var modal = 0;
-  function alterModal() {
+  var shift = 0;  // left / right shift
+  var modal = 0;  // modal status
+  function alterModal() { // close the modal
     modal = 0;
   }
   document.addEventListener("keydown", function(e){
     shift = e.location;
   });
-  function enterSection() {
+  function enterSection() {  // init before entering the section
     columnNum = parseInt(allDict[curSection - 1]['column']);
     columnStyle = allDict[curSection - 1]['style'].split('-');
     curColumn = 1;
@@ -219,13 +219,13 @@
       $(this).removeClass('current');
     });
   }
-  function enterColumn() {
+  function enterColumn() {  // init before entering the column
     columnId = "section" + (curSection).toString() + "-column" + (curColumn).toString();
     widgetNum = $('#' + columnId + ' div').length;
     focusObject = -1;
     curWidget = 1;
   }
-  function keyFunctionPage(keyCode) {
+  function keyFunctionPage(keyCode) {  // page level
     if (keyCode === 220) {  // \: enter
       utterThis.text = "enter" + curBox;
       window.speechSynthesis.speak(utterThis);
@@ -253,7 +253,7 @@
       focus = "null";
       focusColumn = 0;
       focusRow = 0;
-    } else if (columnKey.indexOf(keyCode) >= 0) {
+    } else if (columnKey.indexOf(keyCode) >= 0) {  // column keys
       if (focus === "null") {
         utterThis.text = "select the row first";
         window.speechSynthesis.speak(utterThis);
@@ -295,7 +295,7 @@
           }
         }
       }
-    } else if (rowKey.indexOf(keyCode) >= 0 && shift !== 2) {
+    } else if (rowKey.indexOf(keyCode) >= 0 && shift !== 2) {  // row keys
       curBox = "page";
       if (keyCode === 16) {
         utterThis.text = "only 3 rows";
@@ -310,7 +310,7 @@
       window.location.href = "{% url 'page' %}";
     }
   }
-  function keyFunctionContainer(keyCode) {
+  function keyFunctionContainer(keyCode) { // container level: body, sidebar
     if (curBox === "body") {
       if (keyCode === 220) {  // \: enter
         curLevel = "section";
@@ -344,14 +344,14 @@
         curBox = "page";
         utterThis.text = "enter" + curBox;
         window.speechSynthesis.speak(utterThis);
-      } else if (keyCode === 187) { // Add
+      } else if (keyCode === 187) { // Add section
         utterThis.text = "add section";
         window.speechSynthesis.speak(utterThis);
         $('.ui.basic.modal.one')
           .modal('show')
         ;
         modal = 1;
-      } else if (keyCode === 8) { // Delete
+      } else if (keyCode === 8) { // Delete section
         utterThis.text = "delete section" + (curSection).toString()
         window.speechSynthesis.speak(utterThis);
         $("#delete-title").html("<i class='archive icon'></i>Delete Section");
@@ -365,7 +365,7 @@
         ;
         modal = 2;
       }
-    } else if (curBox === "sidebar") {
+    } else if (curBox === "sidebar") { // side bar
       if (keyCode === 220) {  // \: enter
         if (curSection) {
           curLevel = "sidebar-section";
@@ -421,7 +421,7 @@
       }
     }
   }
-  function keyFunctionSection(keyCode) {
+  function keyFunctionSection(keyCode) {  // section level
     if (keyCode === 220) {  // \: enter
       curLevel = 'column';
       enterColumn();
@@ -447,7 +447,7 @@
       window.speechSynthesis.speak(utterThis);
     }
   }
-  function keyFunctionColumn(keyCode) {
+  function keyFunctionColumn(keyCode) {  // column level
     if (keyCode === 220) {  // \: enter(show details/editing)
       if (widgetNum) {
         widgetId = $('#' + columnId + ' .block-b').eq(curWidget - 1).attr('id');
@@ -484,11 +484,11 @@
       curBox = "section";
       utterThis.text = "enter" + curBox;
       window.speechSynthesis.speak(utterThis);
-    } else if (keyCode === 187) { // Add
+    } else if (keyCode === 187) { // Add widget
       utterThis.text = "add widget";
       window.speechSynthesis.speak(utterThis);
       window.location.href = "/planb/select/s" + allDict[curSection - 1]['section'] + 'c' + (curColumn).toString();
-    } else if (keyCode === 8) { // Delete
+    } else if (keyCode === 8) { // Delete widget
       widgetId = $('#' + columnId + ' .block-b').eq(curWidget - 1).attr('id');
       utterThis.text = "delete widget " + (curWiget).toString();
       window.speechSynthesis.speak(utterThis);
@@ -504,16 +504,16 @@
       modal = 3;
     }
   }
-  function keyFunctionWidget(keyCode) {
-    if (keyCode === 37) {   // left
+  function keyFunctionWidget(keyCode) {  // widget level: set the paddings and show info (todo)
+    if (keyCode === 37) {   // left: alter padding direction
       paddingIndex = (paddingIndex + 3) % 4;     // paddingIndex -= 1
       utterThis.text = "padding" + padding[paddingIndex];
       window.speechSynthesis.speak(utterThis);
-    } else if (keyCode === 39) { // right
+    } else if (keyCode === 39) { // right: alter padding direction
       paddingIndex = (paddingIndex + 1) % 4;    // paddingIndex += 1
       utterThis.text = "padding" + padding[paddingIndex];
       window.speechSynthesis.speak(utterThis);
-    } else if (keyCode === 38) {   // up
+    } else if (keyCode === 38) {   // up: increase padding
       var widgetPadding = $('#' + widgetId).attr('padding').split(' ');
       var curPadding = parseInt(widgetPadding[paddingIndex]);
       curPadding += 1;
@@ -522,7 +522,7 @@
       $('#' + widgetId).attr('padding', widgetPadding[0].toString() + ' ' + widgetPadding[1].toString() + ' ' + widgetPadding[2].toString() + ' ' + widgetPadding[3].toString());
       utterThis.text = (curPadding).toString() + 'pixel';
       window.speechSynthesis.speak(utterThis);
-    } else if (keyCode === 40) { // down
+    } else if (keyCode === 40) { // down: decrease padding
       var widgetPadding = $('#' + widgetId).attr('padding').split(' ');
       var curPadding = parseInt(widgetPadding[paddingIndex]);
       if (curPadding) {
@@ -544,7 +544,7 @@
       window.speechSynthesis.speak(utterThis);
     }
   }
-  function keyFunctionSidebarSection(keyCode) {
+  function keyFunctionSidebarSection(keyCode) {  // sidebar level (todo)
     if (keyCode === 220) {  // \: enter
       if (curWiget) {
         var widgetId = $(sidebarId).children('a').eq(curWiget - 1).text().substring(7);
@@ -623,14 +623,14 @@
         window.speechSynthesis.speak(utterThis);
         $("#cancel1").click();
       }
-    } else {   // delete: 2 section, 3 widget
+    } else {   // delete
       event.preventDefault();
       if (event.keyCode === 32) {  // space: confirm
         utterThis.text = "confirm";
         window.speechSynthesis.speak(utterThis);
-        if (modal === 2) {
+        if (modal === 2) {  // delete section
           window.location.href = "/planb/delete/p" + {{ pageId }} + "s" + allDict[curSection - 1]['section'];
-        } else if (modal === 3) {
+        } else if (modal === 3) {   // delete widget
           window.location.href = "/planb/delete/p" + {{ pageId }} + "w" + (curWiget).toString();
         }
       } if (event.keyCode === 27) {  // esc: cancel
@@ -640,6 +640,8 @@
       }
     }
   });
+
+  // some hints when the input is focused
   $('#style').focus(function() {
     utterThis.text = 'style';
     window.speechSynthesis.speak(utterThis);

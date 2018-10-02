@@ -1,3 +1,5 @@
+
+/* adjustment to SemanticUI */
 .ui.card > .content, .ui.cards > .card > .content {
     padding: 5px;
 }
@@ -59,21 +61,28 @@ select.ui.dropdown {
   font-size: 20px;
 }
 
-.grid-page {
-    height: calc(180vh + 100px) !important;
+.ui.sticky.fixed {
+  margin-top: 70px !important;
+  height: 100%;
+  padding-left: 40px;
 }
 
-.grid-table {
-    width: 100vw;
-    height: 180vh;
-    margin-top: 20px;
+.ui.right.rail {
+  left: 75% !important;
+  border-left: 0 !important;
 }
 
-.grid-container {
-    width: 100%;
-    height: 100%;
+.ui.section.divider {
+  margin: 0 !important;
 }
 
+.ui.active.modal {
+    top: 20vh !important;
+    left: 10vw !important;
+    margin-top: 0 !important;
+}
+
+/* plan a block settings */
 .block {
     position: absolute;
     z-index: 9;
@@ -90,8 +99,26 @@ select.ui.dropdown {
     height: 100%;
 }
 
+/* plan b block settings */
 .block-b {
   display: grid;
+}
+
+
+/* page layout */
+.grid-page {
+    height: calc(180vh + 100px) !important;
+}
+
+.grid-table {
+    width: 100vw;
+    height: 180vh;
+    margin-top: 20px;
+}
+
+.grid-container {
+    width: 100%;
+    height: 100%;
 }
 
 .form-control {
@@ -116,17 +143,6 @@ select.ui.dropdown {
   grid-column-end: 4;
   grid-row-start: 1;
   grid-row-end: 2;
-}
-
-.ui.sticky.fixed {
-  margin-top: 70px !important;
-  height: 100%;
-  padding-left: 40px;
-}
-
-.ui.right.rail {
-  left: 75% !important;
-  border-left: 0 !important;
 }
 
 .content {
@@ -156,16 +172,6 @@ select.ui.dropdown {
   grid-column-end: 4;
   grid-row-start: 4;
   grid-row-end: 5;
-}
-
-.ui.section.divider {
-  margin: 0 !important;
-}
-
-.ui.active.modal {
-    top: 20vh !important;
-    left: 10vw !important;
-    margin-top: 0 !important;
 }
 
 .column {
